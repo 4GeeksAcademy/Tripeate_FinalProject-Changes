@@ -42,7 +42,22 @@ def signup_user():
     db.session.commit()
     return jsonify({"msg":"Usuario creado con exito", "user": user.serialize()})
 
-# @api.route('/login', methods=['POST'])
-# def user_login():
-#     body = request.get_json()
-#     if b
+@api.route('/login', methods=['POST'])
+def user_login():
+    body = request.get_json()
+    if body["email"] is None:
+        return jsonify({"msg":"Debe especificar una contraseña"}), 400
+    # Se busca el usuario en la base de datos y se verifica que exista
+    user = User.query.filter_by(email=body["email"]).first()
+    if user is None:
+        return jsonify({"msg":"Usuario no encontrado"}), 401
+    # Se comparar la contraseña proporcionada por el usuario con un hash de contraseña almacenado previamente
+    valid_password = bcrypt.check_password_hash(user.password, body["password"])
+    if not valid_password:
+        return jsonify({"msg": "Clave invalida"}), 401
+    # Se crea y se retorna el token de la sesión
+    token = create_access_token(identity=user.id, additional_claims={"role": "admin"})
+    return jsonify({"msg": "Login exitoso", "token": token})
+
+    
+    
