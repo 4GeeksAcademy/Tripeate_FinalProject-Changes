@@ -36,13 +36,23 @@ class Role(db.Model):
     def _repr_(self):
         return f'<Role {self.name}>'
 
+
+# Tabla de asociación para la relación muchos a muchos entre planes y planes por categoria
+planes_categorias = db.Table('planes_categorias',
+    db.Column('plan_id', db.Integer, db.ForeignKey('plans.id'), primary_key=True),
+    db.Column('beach_id', db.Integer, db.ForeignKey('beaches.id'), primary_key=True),
+    db.Column('mountain_id', db.Integer, db.ForeignKey('mountains.id'), primary_key=True),
+    db.Column('city_id', db.Integer, db.ForeignKey('cities.id'), primary_key=True)
+)
+
 class Plan(db.Model):
     __tablename__ = 'plans' 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     caption = db.Column(db.String(3800))
     image = db.Column(db.String(250))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    beach = db.relationship('Beach', secondary=planes_categorias, backref=db.backref('plans', lazy='dynamic'))
 
     def __repr__(self):
         return f'<Plan {self.name}>'
@@ -54,6 +64,37 @@ class Plan(db.Model):
             "caption": self.caption,
             "image": self.image,
         }
+
+class Beach(db.Model):
+    __tablename__ = 'beaches'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    caption = db.Column(db.String(3800))
+    image = db.Column(db.String(250))
+
+    def _repr_(self):
+        return f'<Beach {self.name}>'
+
+class Mountain(db.Model):
+    __tablename__ = 'mountains'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    caption = db.Column(db.String(3800))
+    image = db.Column(db.String(250))
+
+    def _repr_(self):
+        return f'<Mountain {self.name}>'
+
+class City(db.Model):
+    __tablename__ = 'cities'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    caption = db.Column(db.String(3800))
+    image = db.Column(db.String(250))
+
+    def _repr_(self):
+        return f'<City {self.name}>'
+
 
 class UserAdmin(db.Model):
     __tablename__ = 'users_admins'

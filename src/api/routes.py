@@ -42,3 +42,7 @@ def signup_user():
     db.session.commit()
     return jsonify({"msg":"Usuario creado con exito", "user": user.serialize()})
 
+# @api.route('/login', methods=['POST'])
+# def user_login():
+#     body = request.get_json()
+#     if b
