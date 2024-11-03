@@ -110,3 +110,8 @@ class UserAdmin(db.Model):
             "id": self.id,
             "username": self.username,
         }
+    
+class TokenBlockedList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(50), unique=True, nullable=False)
+    
