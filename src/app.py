@@ -30,8 +30,6 @@ def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
     token_blocked = TokenBlockedList.query.filter_by(jti = jwt_payload["jti"]).first()
     return token_blocked is not None
     
-
-
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
