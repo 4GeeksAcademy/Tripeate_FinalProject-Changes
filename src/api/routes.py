@@ -2,9 +2,9 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity, current_user
 from flask_bcrypt import Bcrypt
-from api.models import db, User, TokenBlockedList
+from api.models import db, User, Plan, TokenBlockedList
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -23,6 +23,7 @@ def handle_hello():
     }
     return jsonify(response_body), 200
 
+# Ruta para formulario de registro
 @api.route('/signup', methods=['POST'])
 def signup_user():
     # Se reciben los datos de la petición
@@ -40,6 +41,7 @@ def signup_user():
     db.session.commit()
     return jsonify({"msg":"Usuario creado con exito", "user": user.serialize()})
 
+# Ruta para formulario de inicio de sesión
 @api.route('/login', methods=['POST'])
 def user_login():
     body = request.get_json()
@@ -55,9 +57,9 @@ def user_login():
         return jsonify({"msg": "Clave invalida"}), 401
     # Se crea y se retorna el token de la sesión
     token = create_access_token(identity=user.id, additional_claims={"role": "admin"})
-    return jsonify({"msg": "Login exitoso", "token": token})
+    return jsonify({"msg": "Login exitoso", "token": token, "Id": user.id })
 
-
+# Ruta para perfil del usuario
 @api.route('/userinfo', methods=["GET"]) 
 # Protege una ruta con jwt_required, bloquea las peticiones sin un JWT válido
 @jwt_required()
@@ -67,6 +69,8 @@ def protected():
     user = User.query.get(current_user_id)
     return jsonify({"msg":"Perfil del usuario"}, user.serialize()), 200
 
+
+# Ruta para cierre de sesión
 @api.route('/logout', methods=["POST"])
 @jwt_required()
 def user_logout():
@@ -75,5 +79,31 @@ def user_logout():
     db.session.add(token_blocked)
     db.session.commit()
     return jsonify({"msg":"Sesión cerrada"}) 
+
+
+# Ruta para listar todos los usuarios existentes
+@api.route('/users', methods=['GET'])
+@jwt_required()  # Se proteje la ruta con JWT authentication
+def get_users():
+    # Check if current user is admin (optional, based on authorization rules)
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    if not current_user.is_admin:
+        return jsonify({"error": "Unauthorized access"}), 403
+
+    users = User.query.all()  # Fetch all users
+    user_data = [user.serialize() for user in users]  # Serialize user data
+    return jsonify({"users": user_data}), 200
+
+
+# Ruta para listar todos los planes existentes
+@api.route('/plans', methods=['GET'])
+def get_plans():
+    plans = Plan.query.all()  # Fetch todos los planes
+    plan_data = [plan.serialize() for plan in plans]  # Serialize plan data
+    return jsonify({"plans": plan_data}), 200
+
+
+
 
  

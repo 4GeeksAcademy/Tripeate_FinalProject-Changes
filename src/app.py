@@ -5,13 +5,16 @@ import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, jwt_required, current_user, get_jwt, get_jwt_identity
 from api.utils import APIException, generate_sitemap
-from api.models import db, TokenBlockedList
+from api.models import db, User, Plan, TokenBlockedList
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from datetime import timedelta
+#from flask_login import current_user, LoginManager
+
+
 
 # from models import Person
 
@@ -77,6 +80,43 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0  # avoid cache memory
     return response
+
+@app.route('/delete_user/<int:user_id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(user_id):
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    if current_user.is_admin:
+        user = User.query.get(user_id)
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            return jsonify({"msg":"Usuario eliminado exitosamente"})
+        else: 
+            return jsonify({"error":"Usuario no encontrado"})
+    else:
+        return jsonify({"error":"No autorizado"})
+
+
+@app.route('/delete_plan/<int:plan_id>', methods=['DELETE'])
+@jwt_required()
+def delete_plan(plan_id):
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+
+    # verifica si el usuario es admin o dueño del plan 
+    if current_user.is_admin or current_user.plans.filter_by(id=plan_id).first():
+        plan = Plan.query.get(plan_id)
+        if plan:
+            db.session.delete(plan)
+            db.session.commit()
+            return jsonify({"msg": "Plan eliminado exitosamente"})
+        else:
+            return jsonify({"error": "Plan no encontrado"})
+    else:
+        return jsonify({"error": "No autorizado"})
+
+
 
 
 # this only runs if `$ python src/main.py` is executed

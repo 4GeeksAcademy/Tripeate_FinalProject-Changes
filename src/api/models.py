@@ -14,6 +14,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     is_active = db.Column(db.Boolean(), default=True)
+    is_admin = db.Column(db.Boolean(), default=False)
     roles = db.relationship('Role', secondary=user_roles, backref=db.backref('users', lazy='dynamic'))
     plans = db.relationship('Plan', backref='user', lazy=True)
 
@@ -96,21 +97,7 @@ class City(db.Model):
         return f'<City {self.name}>'
 
 
-class UserAdmin(db.Model):
-    __tablename__ = 'users_admins'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
 
-    def __repr__(self):
-        return f'<Admin {self.username}>'
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "username": self.username,
-        }
-    
 class TokenBlockedList(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(50), unique=True, nullable=False)
