@@ -13,3 +13,17 @@
     mix-blend-mode: multiply;
     z-index: 1; 
 }
+
+.arteTrip{
+    z-index: -2;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 30rem;
+    
+}
+
+.subNav{
+    margin-top: 20rem;
+}

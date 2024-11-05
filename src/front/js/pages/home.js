@@ -1,15 +1,14 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
+import { TripCards } from "../component/tripCards";
+import  tripArte from "../../img/arteTrips.png";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
 		<div className="container-fluid text-center mt-3">
-
-
 
 			<div id="carouselExampleCaptions" className="carousel slide" data-bs-ride="carousel">
 				<div className="carousel-indicators">
@@ -59,6 +58,45 @@ export const Home = () => {
 					<span className="carousel-control-next-icon" aria-hidden="true"></span>
 					<span className="visually-hidden">Next</span>
 				</button>
+			</div>
+
+			<div className="arteTrip">
+			<img src={tripArte} />
+			</div>
+
+			<div className=" subNav container d-inline-flex justify-content-between">
+				<h4>Trips</h4>
+				<div className="btn-group dropend">
+					<button type="button" className="rounded-pill btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+						Categorias
+					</button>
+					<ul className="dropdown-menu">
+						<li>Playa</li>
+						<li>Montaña</li>
+						<li>Ciudad</li>
+						<li>Otros</li>
+					</ul>
+				</div>
+			</div>
+
+			<div classNameName="container allCards">
+				<div className="row ">
+					<div className="col-md-12 ">
+						<TripCards />
+						<TripCards />
+						<TripCards />
+					</div>
+				</div>
+				<div className="row ">
+					<div className="col-md-12 ">
+						<TripCards />
+						<TripCards />
+						<TripCards />
+					</div>
+				</div>
+
+
+
 			</div>
 
 
