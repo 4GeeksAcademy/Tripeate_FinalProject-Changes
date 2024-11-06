@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity, current_user
 from flask_bcrypt import Bcrypt
-from api.models import db, User, Plan, TokenBlockedList
+from api.models import db, User, Plan, PlanType, TokenBlockedList
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -23,7 +23,7 @@ def handle_hello():
     }
     return jsonify(response_body), 200
 
-# Ruta para formulario de registro
+# Ruta para formulario de registro de usuario
 @api.route('/signup', methods=['POST'])
 def signup_user():
     # Se reciben los datos de la petición
@@ -94,6 +94,32 @@ def get_users():
     users = User.query.all()  # Fetch all users
     user_data = [user.serialize() for user in users]  # Serialize user data
     return jsonify({"users": user_data}), 200
+
+# Ruta para formulario de registro de plan
+@api.route('/create_plan', methods=['POST'])
+@jwt_required()
+def create_plan():
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+# Obtener datos del formulario o del request JSON
+    body = request.get_json()
+    if body["name"] is None:
+        return jsonify({"msg":"Debe especificar un Destino"}), 400
+    name = body.get('name')
+    caption = body.get('caption')
+    image = body.get('image')
+    
+# Validación de datos
+    new_plan = Plan(
+        name=name,
+        caption=caption,
+        image=image,
+        user_id=current_user_id,
+        
+    )
+    db.session.add(new_plan)
+    db.session.commit()
+    return jsonify({"msg":"Plan creado exitosamente"}), 201
 
 
 # Ruta para listar todos los planes existentes

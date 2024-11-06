@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from enum import Enum 
 
 db = SQLAlchemy()
 
@@ -46,6 +47,11 @@ planes_categorias = db.Table('planes_categorias',
     db.Column('city_id', db.Integer, db.ForeignKey('cities.id'), primary_key=True)
 )
 
+class PlanType(Enum):
+    beach = 'playa'
+    mountain = 'montaña'
+    city = 'ciudad'   
+
 class Plan(db.Model):
     __tablename__ = 'plans' 
     id = db.Column(db.Integer, primary_key=True)
@@ -53,7 +59,10 @@ class Plan(db.Model):
     caption = db.Column(db.String(3800))
     image = db.Column(db.String(250))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    beach = db.relationship('Beach', secondary=planes_categorias, backref=db.backref('plans', lazy='dynamic'))
+    beach = db.relationship('Beach', secondary=planes_categorias, overlaps="mountain,city,plans")
+    mountain = db.relationship('Mountain', secondary=planes_categorias, overlaps="beach,city,plans")
+    city = db.relationship('City', secondary=planes_categorias, overlaps="beach,mountain,plans")
+    
 
     def __repr__(self):
         return f'<Plan {self.name}>'
@@ -63,7 +72,7 @@ class Plan(db.Model):
             "id": self.id,
             "name": self.name,
             "caption": self.caption,
-            "image": self.image,
+            "image": self.image
         }
 
 class Beach(db.Model):

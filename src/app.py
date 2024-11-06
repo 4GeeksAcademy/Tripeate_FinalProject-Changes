@@ -81,6 +81,7 @@ def serve_any_other_file(path):
     response.cache_control.max_age = 0  # avoid cache memory
     return response
 
+# Ruta para eliminar un usuario
 @app.route('/delete_user/<int:user_id>', methods=['DELETE'])
 @jwt_required()
 def delete_user(user_id):
@@ -97,15 +98,15 @@ def delete_user(user_id):
     else:
         return jsonify({"error":"No autorizado"})
 
-
+# Ruta para eliminar un plan
 @app.route('/delete_plan/<int:plan_id>', methods=['DELETE'])
 @jwt_required()
 def delete_plan(plan_id):
     current_user_id = get_jwt_identity()
     current_user = User.query.get(current_user_id)
-
     # verifica si el usuario es admin o dueño del plan 
-    if current_user.is_admin or current_user.plans.filter_by(id=plan_id).first():
+    if current_user.is_admin:
+       # plan = Plan.query.filter_by(id=plan_id, user_id=current_user_id).first():
         plan = Plan.query.get(plan_id)
         if plan:
             db.session.delete(plan)
