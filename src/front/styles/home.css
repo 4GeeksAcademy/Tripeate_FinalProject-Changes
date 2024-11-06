@@ -16,14 +16,10 @@
 
 .arteTrip{
     z-index: -2;
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 30rem;
-    
+    position: relative;
+    margin-top: 1rem;
 }
 
-.subNav{
-    margin-top: 20rem;
+li{
+    padding-left: .8em;
 }

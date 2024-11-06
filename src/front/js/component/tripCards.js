@@ -12,7 +12,7 @@ export const TripCards = () => {
 						<div className="card-body">
 							<h5 className="card-title">Card title</h5>
 							<p className="card-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcor</p>
-							<a href="#" className="rounded-pill btn btn-primary">Tripea más</a>
+							<a href="#" className="rounded-pill mt-3 btn btn-primary">Tripea más</a>
 						</div>		
 				</div>
 

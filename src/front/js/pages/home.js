@@ -61,10 +61,10 @@ export const Home = () => {
 			</div>
 
 			<div className="arteTrip">
-			<img src={tripArte} />
+			<img src={tripArte} className="img-fluid" />
 			</div>
 
-			<div className=" subNav container d-inline-flex justify-content-between">
+			<div className="container d-inline-flex justify-content-between">
 				<h4>Trips</h4>
 				<div className="btn-group dropend">
 					<button type="button" className="rounded-pill btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
