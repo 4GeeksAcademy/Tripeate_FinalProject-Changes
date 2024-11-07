@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from enum import Enum 
 
 db = SQLAlchemy()
 
@@ -14,6 +15,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     is_active = db.Column(db.Boolean(), default=True)
+    is_admin = db.Column(db.Boolean(), default=False)
     roles = db.relationship('Role', secondary=user_roles, backref=db.backref('users', lazy='dynamic'))
     plans = db.relationship('Plan', backref='user', lazy=True)
 
@@ -45,6 +47,11 @@ planes_categorias = db.Table('planes_categorias',
     db.Column('city_id', db.Integer, db.ForeignKey('cities.id'), primary_key=True)
 )
 
+class PlanType(Enum):
+    beach = 'playa'
+    mountain = 'montaña'
+    city = 'ciudad'   
+
 class Plan(db.Model):
     __tablename__ = 'plans' 
     id = db.Column(db.Integer, primary_key=True)
@@ -52,7 +59,10 @@ class Plan(db.Model):
     caption = db.Column(db.String(3800))
     image = db.Column(db.String(250))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    beach = db.relationship('Beach', secondary=planes_categorias, backref=db.backref('plans', lazy='dynamic'))
+    beach = db.relationship('Beach', secondary=planes_categorias, overlaps="mountain,city,plans")
+    mountain = db.relationship('Mountain', secondary=planes_categorias, overlaps="beach,city,plans")
+    city = db.relationship('City', secondary=planes_categorias, overlaps="beach,mountain,plans")
+    
 
     def __repr__(self):
         return f'<Plan {self.name}>'
@@ -62,7 +72,7 @@ class Plan(db.Model):
             "id": self.id,
             "name": self.name,
             "caption": self.caption,
-            "image": self.image,
+            "image": self.image
         }
 
 class Beach(db.Model):
@@ -96,21 +106,7 @@ class City(db.Model):
         return f'<City {self.name}>'
 
 
-class UserAdmin(db.Model):
-    __tablename__ = 'users_admins'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
 
-    def __repr__(self):
-        return f'<Admin {self.username}>'
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "username": self.username,
-        }
-    
 class TokenBlockedList(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(50), unique=True, nullable=False)
