@@ -37,7 +37,7 @@ export const Home = () => {
 							<p>Some representative placeholder content for the second slide.</p>
 						</div>
 					</div>
-					<div class="carousel-item">
+					<div class="carousel-item">https://meet.google.com/drq-kkgf-znu
 						<img src="https://fastly.picsum.photos/id/15/1180/520.jpg?hmac=l3V9r2I2L2s9ASxJaLo_3FZ-PnqkMNJ13zaq8pJZCDs" class="d-block w-100" alt="..." />
 						<div className="overlay"></div>
 						<div class="carousel-caption d-none d-md-block texto-fotos">
