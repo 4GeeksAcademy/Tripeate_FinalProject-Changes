@@ -1,7 +1,11 @@
+const backendURL = process.env.BACKEND_URL
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			user: null,
+			users: [],
+			plans: []
 			
 		},
 		actions: {
@@ -26,6 +30,34 @@ const getState = ({ getStore, getActions, setStore }) => {
 				  return null;
 				}
 			  },
+
+			getUsersList: async () => {
+				let resp = await fetch(backendURL + "/users", {
+					method: "GET",
+					headers: {
+						"Content-Type":"aplication/json",
+					  }
+				});
+				if (resp.ok) {
+					let dataUsers = await resp.json();
+					console.log({dataUsers})
+					setStore({users: dataUsers.users})
+				}
+			},
+
+			getPlansList: async () => {
+				let resp = await fetch(backendURL + "/plans", {
+					method: "GET",
+					headers: {
+						"Content-Type":"aplication/json",
+					}
+				});
+				if (resp.ok) {
+					let dataPlans = await resp.json();
+					console.log({dataPlans})
+					setStore({plans: dataPlans.plans})
+				}
+			},
 		}
 	};
 };
