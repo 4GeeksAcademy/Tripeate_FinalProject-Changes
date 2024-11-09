@@ -1,7 +1,8 @@
+import PropTypes from "prop-types";
 import React, { useContext, useState, useEffect } from "react";
 import "../../styles/home.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt, faTrashAlt, faLocationDot, faPhoneFlip, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Context } from "../store/appContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "./modal";
@@ -16,7 +17,7 @@ export const PerfilAdmin = () => {
     /*const [users, setUsers] = useState([]);
     const [plans, setPlans] = useState([]);*/
 
-    // Obtiener usuarios y planes
+    // Obtener usuarios y planes
     useEffect(() => {
         actions.getUsersList();
         actions.getPlansList(); 
@@ -130,7 +131,7 @@ export const PerfilAdmin = () => {
       
             <Modal
               showModal={showModal}
-              handleClose={closeModal}
+              handlerClose={closeModal}
               handlerDelete={() => {
                 itemId ? deleteUser(itemId) : deletePlan(itemId); // Differentiate based on itemId
               }}
