@@ -8,100 +8,133 @@ import { Modal } from "./modal";
 
 
 
-export const ContactCard = () => {
+export const PerfilAdmin = () => {
     const {store, actions} = useContext(Context);
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
-    const [contactId, setContactId] = useState(null);
+    const [itemId, setItemId] = useState(null);
+    /*const [users, setUsers] = useState([]);
+    const [plans, setPlans] = useState([]);*/
+
+    // Obtiener usuarios y planes
+    useEffect(() => {
+        actions.getUsersList();
+        actions.getPlansList(); 
+      }, []);
     
-        const openModal = (id) => {
-            console.log(id)
-            setContactId(id);
-            
-            setShowModal(true)
+
+      const openModal = (id) => {
+        setItemId(id);
+        setShowModal(true);
+      };
+    
+      const closeModal = () => {
+        setShowModal(false);
+      };
+    
+      const deleteUser = async (id) => {
+        if (itemId) {
+          await actions.deleteUser(id);
         }
+        closeModal();
+        await actions.getUsersList(); // Recuperar usuarios después de la eliminación
+      };
     
-        const closeModal = () => {
-            setShowModal(false)
+      const deletePlan = async (id) => {
+        if (itemId) {
+          await actions.deletePlan(id);
         }
+        closeModal();
+        await actions.getPlansList(); // Recuperar planes después de la eliminación
+      };
     
-        const HandlerDelete = async (id) => {
-            if (contactId) {
-                await actions.deleteContact(id);
-            }
-            closeModal();
-            await actions.getContactsList();
-        };
 
-    return (
-            
-            <ol className="list-group list-group-numbered">
-            <li className="list-group-item d-flex justify-content-between align-items-start">
-                <div className="ms-2 me-auto">
-                <div className="fw-bold">Subheading</div>
-                Content for list item
-                </div>
-                <span className="badge text-bg-primary rounded-pill">14</span>
-            </li>
-            <li className="list-group-item d-flex justify-content-between align-items-start">
-                <div className="ms-2 me-auto">
-                <div className="fw-bold">Subheading</div>
-                Content for list item
-                </div>
-                <span className="badge text-bg-primary rounded-pill">14</span>
-            </li>
-            <li className="list-group-item d-flex justify-content-between align-items-start">
-                <div className="ms-2 me-auto">
-                <div className="fw-bold">Subheading</div>
-                Content for list item
-                </div>
-                <span className="badge text-bg-primary rounded-pill">14</span>
-            </li>
-            </ol>
-
-
-
-        /*
-        <div className="container justify-content-center">
-    <div className="row">
-        {store.contacts.length > 0 ? (
-            store.contacts.map((contact, index) => (
-                <div className="row border border-1 p-2" key={index}>
-                    <div className="col-1 me-5 container-img ">
-                    <img src="https://picsum.photos/300/200" width="100" height="100"/>
-                    </div>
-                    <div className="col-6 list">
-                        <h5>{contact.name}</h5>
-                        <ul className="list-group border-none d-flex align-items-start flex-column p-0" style={{ listStyle: 'none' }}>
-                            <li>
-                                <p><FontAwesomeIcon icon={faLocationDot} className="me-2 icon" />{contact.address}</p> 
-                            </li>
-                            <li>
-                                <p><FontAwesomeIcon icon={faPhoneFlip} className="me-2 icon" />{contact.phone}</p> 
-                            </li>
-                            <li>
-                                <p><FontAwesomeIcon  icon={faEnvelope} className="me-2 icon" />{contact.email}</p>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="col-md-4">
-                        <div className="d-flex justify-content-end icons">
-                        <Link to={`/updateContact/${contact.id}`}>
-                                <FontAwesomeIcon icon={faPencilAlt} className="icon2 me-3" onClick={() => handleEdit(contact.id)} />
+        return ( <div className="container">
+            <h1>Administrador</h1>
+      
+            {/* Users Section */}
+            <h2>Usuarios</h2>
+            {store.users.length > 0 ? (
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {store.users.map((user, index) => (
+                    <tr key={index}>
+                      <th scope="row">{index + 1}</th>
+                      <td>{user.email}</td>
+                      <td>
+                        <Link
+                          to={`/editUser/${user.id}`} // Assuming edit user route
+                          className="btn btn-primary btn-sm me-2"
+                        >
+                          <FontAwesomeIcon icon={faPencilAlt} />
                         </Link>
-                                <FontAwesomeIcon icon={faTrashAlt} className="icon2 icon2-1" onClick={() => openModal(contact.id)}/>
-                        </div>
-                    </div>
-                </div>
-            ))
-        ) : (
-            <div className="col-12">
-                <p className="list-group-item">No hay contactos disponibles.</p>
-            </div> 
-        )}
-    </div>
-    <Modal showModal={showModal} handlerClose={closeModal} handlerDelete={() => {HandlerDelete(contactId)}} />
-</div>
-*/
-)
-};
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => openModal(user.id)}
+                        >
+                          <FontAwesomeIcon icon={faTrashAlt} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No hay usuarios disponibles.</p>
+            )}
+      
+            {/* Plans Section */}
+            <h2>Planes</h2>
+            {store.plans.length > 0 ? (
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {store.plans.map((plan, index) => (
+                    <tr key={index}>
+                      <th scope="row">{index + 1}</th>
+                      <td>{plan.name}</td>
+                      <td>
+                        <Link
+                          to={`/editPlan/${plan.id}`} // Assuming edit plan route
+                          className="btn btn-primary btn-sm me-2"
+                        >
+                          <FontAwesomeIcon icon={faPencilAlt} />
+                        </Link>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => openModal(plan.id)}
+                        >
+                          <FontAwesomeIcon icon={faTrashAlt} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No hay planes disponibles.</p>
+            )}
+      
+            <Modal
+              showModal={showModal}
+              handleClose={closeModal}
+              handlerDelete={() => {
+                itemId ? deleteUser(itemId) : deletePlan(itemId); // Differentiate based on itemId
+              }}
+            />
+          </div>
+        )
+        };

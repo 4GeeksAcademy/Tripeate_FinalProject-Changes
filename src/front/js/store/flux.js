@@ -58,7 +58,39 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({plans: dataPlans.plans})
 				}
 			},
-		}
+			deleteUser:async (id)=>{
+				let resp = await fetch(backendURL + "`/users/${id}`", {
+				  method: "DELETE",
+				  headers: {
+					  "Content-Type": "application/json",
+				  }
+			  });
+			  if (resp.status === 404) {
+				  console.log("No se puede eliminar el usuario")
+			  }
+			  if (resp.status === 200) {
+				  let data = await resp.json();
+				  console.log({ data });
+				  setStore({users:data});
+		 	}
+			},
+			deletePlan:async (id)=>{
+				let resp = await fetch(backendURL + "`/plans/${id}`", {
+				  method: "DELETE",
+				  headers: {
+					  "Content-Type": "application/json",
+				  }
+			  });
+			  if (resp.status === 404) {
+				  console.log("No se puede eliminar el Plan")
+			  }
+			  if (resp.status === 200) {
+				  let data = await resp.json();
+				  console.log({ data });
+				  setStore({plans:data});
+		 	}
+			}
+	}
 	};
 };
 
