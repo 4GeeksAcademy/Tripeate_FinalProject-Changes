@@ -46,7 +46,6 @@ def signup_user():
 # Ruta para formulario de inicio de sesión
 @api.route('/login', methods=['POST'])
 def user_login():
-    new_user = body
     body = request.get_json()
     if body["email"] is None:
         return jsonify({"msg":"Debe especificar un correo electrónico"}), 400
