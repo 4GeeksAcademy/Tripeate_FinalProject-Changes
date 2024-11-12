@@ -1,62 +1,53 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, } from "react";
+import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import "../../styles/registerUser.css";
 
 export const RegisterUser = () => {
-  const { actions, store } = useContext(Context);
+  const { actions, store } = useContext(Context); // Obtiene acciones y estado global
+  const navigate = useNavigate(); // Hook para la navegación entre rutas
   const [userData, setUserData] = useState({
-    name: "",
-    lastName: "",
-    user: "",
+    nombre: "",
+    apellido: "",
     email: "",
     password: "",
-    confirmPassword: "",
-  });
-  const [error, setError] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [checkTerms, setCheckTerms] = useState(false);
+  }); // Estado local para almacenar la información del usuario
+  const [error, setError] = useState(""); // Estado para gestionar los mensajes de error
+  const [showModal, setShowModal] = useState(false); // Estado para controlar la visibilidad del modal
+  const [checkTerms, setCheckTerms] = useState(false); // Estado para saber si el usuario aceptó los términos
 
+
+  //FUNCIONES
   const toggleModal = () => {
-    //muestra el modal al darle click en los terminos y condiciones
-    setShowModal(!showModal);
+    setShowModal(!showModal); // visibilidad del modal
   };
 
   const handleCheckboxChange = (e) => {
-    //Actualiza el estado checkTerms cada vez que el usuario marca o desmarca el checkbox
     const isChecked = e.target.checked;
-    setCheckTerms(isChecked);
-    if (!isChecked) {
-      setError("Debes aceptar los Términos y Condiciones");
-      return;
+    setCheckTerms(isChecked); // Actualiza el estado `checkTerms` según el estado del checkbox
+    if (isChecked) {
+      setShowModal(false); // Cierra el modal si se marca el checkbox
+    } else {
+      setError("Debes aceptar los Términos y Condiciones"); // Si no se marca el checkbox, muestra un error
     }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (userData.password !== userData.confirmPassword) {
-      setError("Las contraseñas no coinciden");
-      return;
-    }
-    if (!checkTerms) {
-      setError("Debes aceptar los Términos y Condiciones");
-      return;
-    }
-    setError(""); // Resetea el error
-
-    const registeredUser = await actions.registerUser(userData);
-    if (!registeredUser) {
-      setError("Error al registrar usuario");
+    e.preventDefault(); // Evita que el formulario se recargue
+    if (checkTerms) {
+      const response = await actions.signupUser(
+        userData.nombre, userData.apellido, userData.email, userData.password
+      );
+      if (!response.error) {
+        // Redirigir al usuario a la página de inicio o login
+        navigate("/loginuser"); // Por ejemplo, redirigir a la página de login
+      } else {
+        setError(response.msg); // Mostrar el mensaje de error si ocurre
+      }
     } else {
-      // Puedes redirigir o mostrar un mensaje de éxito
-      console.log("Usuario registrado con éxito:", registeredUser);
+      setError("Debes aceptar los Términos y Condiciones.");
     }
   };
-
   return (
     <div className="form-container">
       <form className="form mt-4" onSubmit={handleSubmit}>
@@ -64,40 +55,27 @@ export const RegisterUser = () => {
         {error && <p className="error-message">{error}</p>}
 
         <div className="form-group">
-          <label htmlFor="name">Nombre</label>
+          <label htmlFor="nombre">Nombre</label>
           <input
             type="text"
-            id="name"
-            name="name"
+            id="nombre"
+            name="nombre"
             placeholder="ingrese su nombre"
-            value={userData.name}
-            onChange={handleChange}
+            value={userData.nombre}
+            onChange={(e) => setUserData({ ...userData, nombre: e.target.value })}
             required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="lastName">Apellido</label>
+          <label htmlFor="apellido">Apellido</label>
           <input
             type="text"
-            id="lastName"
-            name="lastName"
-            placeholder="Enter your last name"
-            value={userData.lastName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="user">Usuario</label>
-          <input
-            type="text"
-            id="user"
-            name="user"
-            placeholder="Ingrese un Usuario"
-            value={userData.user}
-            onChange={handleChange}
+            id="apellido"
+            name="apellido"
+            placeholder="Ingrese su apellido"
+            value={userData.apellido}
+            onChange={(e) => setUserData({ ...userData, apellido: e.target.value })}
             required
           />
         </div>
@@ -110,12 +88,12 @@ export const RegisterUser = () => {
             name="email"
             placeholder="ingrese su correo"
             value={userData.email}
-            onChange={handleChange}
+            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
             required
           />
         </div>
 
-        <div className="form-group">
+       <div className="form-group">
           <label htmlFor="password">Contraseña</label>
           <input
             type="password"
@@ -123,23 +101,22 @@ export const RegisterUser = () => {
             name="password"
             placeholder="ingrese su contraseña"
             value={userData.password}
-            onChange={handleChange}
+            onChange={(e) => setUserData({ ...userData, password: e.target.value })}
             required
           />
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="confirmPassword">Confirmar Contraseña</label>
           <input
             type="password"
             id="confirmPassword"
             name="confirmPassword"
             placeholder="Confirme su contraseña"
-            value={userData.confirmPassword}
-            onChange={handleChange}
+
             required
           />
-        </div>
+        </div>*/}
 
         <div className="form-check d-flex gap-2 p-0">
           <input
