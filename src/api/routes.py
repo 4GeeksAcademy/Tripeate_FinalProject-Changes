@@ -87,12 +87,11 @@ def user_logout():
 @api.route('/users', methods=['GET'])
 @jwt_required()  # Se proteje la ruta con JWT authentication
 def get_users():
-    # Check if current user is admin (optional, based on authorization rules)
+    # Verificar si el usuario actual es admin
     current_user_id = get_jwt_identity()
     current_user = User.query.get(current_user_id)
     if not current_user.is_admin:
-        return jsonify({"error": "Unauthorized access"}), 403
-
+        return jsonify({"error": "Acceso no autorizado"}), 403
     users = User.query.all()  # Fetch all users
     user_data = [user.serialize() for user in users]  # Serialize user data
     return jsonify({"users": user_data}), 200
@@ -103,21 +102,26 @@ def get_users():
 def create_plan():
     current_user_id = get_jwt_identity()
     current_user = User.query.get(current_user_id)
-# Obtener datos del formulario o del request JSON
+    # Obtener datos del formulario o del request JSON
     body = request.get_json()
     if body["name"] is None:
         return jsonify({"msg":"Debe especificar un Destino"}), 400
     name = body.get('name')
     caption = body.get('caption')
     image = body.get('image')
+    type = body.get('type')
+    available_slots = body.get('available_slots')
+    status = body.get('status')
     
 # Validación de datos
     new_plan = Plan(
         name=name,
         caption=caption,
         image=image,
+        type=type,
         user_id=current_user_id,
-        
+        available_slots=available_slots,
+        status=status
     )
     db.session.add(new_plan)
     db.session.commit()
@@ -156,8 +160,9 @@ def delete_plan(plan_id):
     current_user_id = get_jwt_identity()
     current_user = User.query.get(current_user_id)
     # verifica si el usuario es admin o dueño del plan 
+    
     if current_user.is_admin:
-       # plan = Plan.query.filter_by(id=plan_id, user_id=current_user_id).first():
+        # plan = Plan.query.filter_by(id=plan_id, user_id=current_user_id).first():
         plan = Plan.query.get(plan_id)
         if plan:
             db.session.delete(plan)
