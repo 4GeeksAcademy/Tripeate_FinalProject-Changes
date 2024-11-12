@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
 import { TripCards } from "../component/tripCards";
-import  tripArte from "../../img/arteTrips.png";
+import tripArte from "../../img/arteTrips.png";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
@@ -29,16 +29,16 @@ export const Home = () => {
 							<p>Some representative placeholder content for the first slide.</p>
 						</div>
 					</div>
-					<div class="carousel-item">
-						<img src="https://fastly.picsum.photos/id/15/1180/520.jpg?hmac=l3V9r2I2L2s9ASxJaLo_3FZ-PnqkMNJ13zaq8pJZCDs" class="d-block w-100" alt="..." />
+					<div className="carousel-item">
+						<img src="https://fastly.picsum.photos/id/15/1180/520.jpg?hmac=l3V9r2I2L2s9ASxJaLo_3FZ-PnqkMNJ13zaq8pJZCDs" className="d-block w-100" alt="..." />
 						<div className="overlay"></div>
-						<div class="carousel-caption d-none d-md-block  texto-fotos">
+						<div className="carousel-caption d-none d-md-block  texto-fotos">
 							<h5>Second slide label</h5>
 							<p>Some representative placeholder content for the second slide.</p>
 						</div>
 					</div>
-					<div class="carousel-item">https://meet.google.com/drq-kkgf-znu
-						<img src="https://fastly.picsum.photos/id/15/1180/520.jpg?hmac=l3V9r2I2L2s9ASxJaLo_3FZ-PnqkMNJ13zaq8pJZCDs" class="d-block w-100" alt="..." />
+					<div className="carousel-item">
+						<img src="https://fastly.picsum.photos/id/15/1180/520.jpg?hmac=l3V9r2I2L2s9ASxJaLo_3FZ-PnqkMNJ13zaq8pJZCDs" className="d-block w-100" alt="..." />
 						<div className="overlay"></div>
 						<div class="carousel-caption d-none d-md-block texto-fotos">
 							<h5>Third slide label</h5>
@@ -61,7 +61,7 @@ export const Home = () => {
 			</div>
 
 			<div className="arteTrip">
-			<img src={tripArte} className="img-fluid" />
+				<img src={tripArte} className="img-fluid" />
 			</div>
 
 			<div className="container d-inline-flex justify-content-between">
@@ -79,7 +79,7 @@ export const Home = () => {
 				</div>
 			</div>
 
-			<div classNameName="container allCards">
+			<div className="container allCards">
 				<div className="row ">
 					<div className="col-md-12 ">
 						<TripCards />

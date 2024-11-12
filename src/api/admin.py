@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, User, Plan, Role, Beach, Mountain, City, TokenBlockedList
+from .models import db, User, Plan, Role, Category, TokenBlockedList
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
@@ -14,9 +14,7 @@ def setup_admin(app):
     admin.add_view(ModelView(User, db.session))
     admin.add_view(ModelView(Plan, db.session))
     admin.add_view(ModelView(Role, db.session))
-    admin.add_view(ModelView(Beach, db.session))
-    admin.add_view(ModelView(Mountain, db.session))
-    admin.add_view(ModelView(City, db.session))
+    admin.add_view(ModelView(Category, db.session))
     admin.add_view(ModelView(TokenBlockedList, db.session))
 
 
