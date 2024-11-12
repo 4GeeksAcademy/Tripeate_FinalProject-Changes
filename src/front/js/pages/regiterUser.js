@@ -55,12 +55,12 @@ export const RegisterUser = () => {
         {error && <p className="error-message">{error}</p>}
 
         <div className="form-group">
-          <label htmlFor="name">name</label>
+          <label htmlFor="name">Nombre</label>
           <input
             type="text"
             id="name"
             name="name"
-            placeholder="ingrese su name"
+            placeholder="Ingrese su Nombre"
             value={userData.name}
             onChange={(e) => setUserData({ ...userData, name: e.target.value })}
             required
@@ -68,12 +68,12 @@ export const RegisterUser = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="last_name">last_name</label>
+          <label htmlFor="last_name">Apellido</label>
           <input
             type="text"
             id="last_name"
             name="last_name"
-            placeholder="Ingrese su last_name"
+            placeholder="Ingrese su Apellido"
             value={userData.last_name}
             onChange={(e) => setUserData({ ...userData, last_name: e.target.value })}
             required
@@ -81,12 +81,12 @@ export const RegisterUser = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="email">Correo</label>
+          <label htmlFor="email">Correo electrónico</label>
           <input
             type="email"
             id="email"
             name="email"
-            placeholder="ingrese su correo"
+            placeholder="Ingrese su correo electrónico"
             value={userData.email}
             onChange={(e) => setUserData({ ...userData, email: e.target.value })}
             required
@@ -99,7 +99,7 @@ export const RegisterUser = () => {
             type="password"
             id="password"
             name="password"
-            placeholder="ingrese su contraseña"
+            placeholder="Ingrese su contraseña"
             value={userData.password}
             onChange={(e) => setUserData({ ...userData, password: e.target.value })}
             required
