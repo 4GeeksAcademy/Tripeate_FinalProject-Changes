@@ -7,8 +7,8 @@ export const RegisterUser = () => {
   const { actions, store } = useContext(Context); // Obtiene acciones y estado global
   const navigate = useNavigate(); // Hook para la navegación entre rutas
   const [userData, setUserData] = useState({
-    nombre: "",
-    apellido: "",
+    name: "",
+    last_name: "",
     email: "",
     password: "",
   }); // Estado local para almacenar la información del usuario
@@ -36,7 +36,7 @@ export const RegisterUser = () => {
     e.preventDefault(); // Evita que el formulario se recargue
     if (checkTerms) {
       const response = await actions.signupUser(
-        userData.nombre, userData.apellido, userData.email, userData.password
+        userData.name, userData.last_name, userData.email, userData.password
       );
       if (!response.error) {
         // Redirigir al usuario a la página de inicio o login
@@ -55,27 +55,27 @@ export const RegisterUser = () => {
         {error && <p className="error-message">{error}</p>}
 
         <div className="form-group">
-          <label htmlFor="nombre">Nombre</label>
+          <label htmlFor="name">name</label>
           <input
             type="text"
-            id="nombre"
-            name="nombre"
-            placeholder="ingrese su nombre"
-            value={userData.nombre}
-            onChange={(e) => setUserData({ ...userData, nombre: e.target.value })}
+            id="name"
+            name="name"
+            placeholder="ingrese su name"
+            value={userData.name}
+            onChange={(e) => setUserData({ ...userData, name: e.target.value })}
             required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="apellido">Apellido</label>
+          <label htmlFor="last_name">last_name</label>
           <input
             type="text"
-            id="apellido"
-            name="apellido"
-            placeholder="Ingrese su apellido"
-            value={userData.apellido}
-            onChange={(e) => setUserData({ ...userData, apellido: e.target.value })}
+            id="last_name"
+            name="last_name"
+            placeholder="Ingrese su last_name"
+            value={userData.last_name}
+            onChange={(e) => setUserData({ ...userData, last_name: e.target.value })}
             required
           />
         </div>
@@ -93,7 +93,7 @@ export const RegisterUser = () => {
           />
         </div>
 
-       <div className="form-group">
+        <div className="form-group">
           <label htmlFor="password">Contraseña</label>
           <input
             type="password"

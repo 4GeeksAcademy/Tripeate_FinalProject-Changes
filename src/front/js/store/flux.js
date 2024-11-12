@@ -9,16 +9,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 		},
 		actions: {
-			signupUser: async (nombre, apellido, email, password) => {
+			signupUser: async (name, last_name, email, password) => {
 				try {
-					const response = await fetch(`https://hidden-spider-5g49j5g447grc45x7-3001.app.github.dev/api/signup`, {
+					const response = await fetch(backendURL + "/signup", {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 						},
 						body: JSON.stringify({
-							nombre: nombre,
-							apellido: apellido,
+							name: name,
+							last_name: last_name,
 							email: email,
 							password: password,
 						}),
