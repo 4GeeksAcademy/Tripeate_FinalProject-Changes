@@ -12,6 +12,8 @@ user_roles = db.Table('user_roles',
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(120))
+    apellido = db.Column(db.String(120))
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     is_active = db.Column(db.Boolean(), default=True)
@@ -25,6 +27,8 @@ class User(db.Model):
     def serialize(self):
         return {
             "id": self.id,
+            "nombre": self.nombre,
+            "apellido": self.apellido,
             "email": self.email,
             "roles": [role.name for role in self.roles],
             "plans": [plan.name for plan in self.plans]
