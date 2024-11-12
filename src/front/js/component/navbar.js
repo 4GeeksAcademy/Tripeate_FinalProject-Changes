@@ -3,21 +3,24 @@ import { Link } from "react-router-dom";
 
 export const Navbar = () => {
   return (
-    <div className="container-fluid" style={{ background: "#ddd" }}>
+    <div className="container-fluid" style={{ background: "#4b3331" }}>
       <div className="container">
-        <nav className="navbar bg-body-secondary">
+        <nav className="navbar" style={{ backgroundColor: "#4b3331" }}> 
           <Link to="/">
             <div className="navbar-brand mb-0">
-              <h2>Tripeate</h2>
+              <h2 style={{ color: "white", fontWeight: "bold", fontFamily: "Arial, sans-serif" }}>Tripeate</h2>
             </div>
           </Link>
           <div className="ml-auto">
-            <Link to="/register">
-              <button className="btn btn-primary">Regístrate</button>
+            <Link to="/loginuser">
+              <button className="btn btn-light" style={{ fontWeight: "bold" }}>
+                Iniciar Sesión
+              </button>
             </Link>
           </div>
         </nav>
       </div>
     </div>
+
   );
 };

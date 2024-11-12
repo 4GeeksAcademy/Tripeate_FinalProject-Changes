@@ -32,6 +32,7 @@ def signup_user():
         return jsonify({"msg":"El campo nombre y apellido es obligatorio"})
     if body['email'] is None:
         return jsonify({"msg":"Por especifique un correo electrónico"}),400
+    # Se valida que se esta ingresando un usuario y contraseña
     if body['password'] is None:
         return jsonify({"msg":"Por favor especifique su contraseña"}),400
     # Se encripta la contraseña
@@ -42,7 +43,6 @@ def signup_user():
     db.session.commit()
     return jsonify({"msg":"Usuario creado con exito", "user": user.serialize()})
     
-
 # Ruta para formulario de inicio de sesión
 @api.route('/login', methods=['POST'])
 def user_login():
