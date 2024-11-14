@@ -31,7 +31,7 @@ export const PerfilAdmin = () => {
     
       const closeModal = () => {
         setShowModal(false);
-      };
+      }; 
     
       const deleteUser = async (id) => {
         if (itemId) {
