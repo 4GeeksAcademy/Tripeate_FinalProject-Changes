@@ -53,7 +53,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (response.ok) {
 						const data = await response.json();
 						console.log("Inicio de sesión exitoso:", data);
-						console.log("Email del usuario:", data.email);
+						console.log({"Email del usuario": data.user.email});
 						// Devuelve los datos recibidos, como el token y el ID de usuario
 						return { success: true, token: data.token, userId: data.Id };
 					} else {
