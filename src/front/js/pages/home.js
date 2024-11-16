@@ -40,7 +40,7 @@ export const Home = () => {
 					<div className="carousel-item">
 						<img src="https://fastly.picsum.photos/id/15/1180/520.jpg?hmac=l3V9r2I2L2s9ASxJaLo_3FZ-PnqkMNJ13zaq8pJZCDs" className="d-block w-100" alt="..." />
 						<div className="overlay"></div>
-						<div class="carousel-caption d-none d-md-block texto-fotos">
+						<div className="carousel-caption d-none d-md-block texto-fotos">
 							<h5>Third slide label</h5>
 							<p>Some representative placeholder content for the second slide.</p>
 						</div>
