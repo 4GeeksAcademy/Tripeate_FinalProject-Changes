@@ -3,6 +3,7 @@ const backendURL = process.env.BACKEND_URL
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			userEmail: "",
 			user: null,
 			users: [],
 			plans: []
@@ -35,11 +36,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				} catch (error) {
 					console.error("Error en el registro:", error);
-					return null;
-					console.error("Error en la solicitud:", error);
 					return { error: true, msg: "Error en la solicitud" }; // Indica un error de red u otro tipo de error
 				}
 			},
+
+			loginUser: async (email, password) => {
+				try {
+					const response = await fetch(backendURL + "/login", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ email, password }),
+					});
+
+					if (response.ok) {
+						const data = await response.json();
+						console.log("Inicio de sesión exitoso:", data);
+						console.log("Email del usuario:", data.email);
+						// Devuelve los datos recibidos, como el token y el ID de usuario
+						return { success: true, token: data.token, userId: data.Id };
+					} else {
+						const errorData = await response.json();
+						console.error("Error en el inicio de sesión:", errorData.msg);
+						return { error: true, msg: errorData.msg }; // Retorna el mensaje de error si el login falla
+					}
+				} catch (error) {
+					console.error("Error en la solicitud de inicio de sesión:", error);
+					return { error: true, msg: "Error en la solicitud" }; // Indica un error de red u otro tipo de error
+				}
+			},
+
 
 			getUsersList: async () => {
 				let resp = await fetch(backendURL + "/users", {
