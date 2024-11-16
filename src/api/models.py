@@ -31,6 +31,7 @@ class User(db.Model):
             "name": self.name,
             "last_name": self.last_name,
             "email": self.email,
+            "is_admin": self.is_admin,
             "roles": [role.name for role in self.roles],
             "plans": [{"id": plan.id, "name": plan.name}  for plan in self.plans]
         }
