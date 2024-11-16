@@ -2,14 +2,16 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
+import ErrorModal from "../component/modalError";
+
 
 export const LoginUser = () => {
     const { actions, store } = useContext(Context);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,7 +27,8 @@ export const LoginUser = () => {
                     navigate("/userinfo");
                 }
             } else {
-            setError(response.msg);
+                setError(response.msg);
+                setIsModalOpen(true);
         }
     };
     return (
@@ -36,58 +39,32 @@ export const LoginUser = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="form-group mb-4">
                             <label htmlFor="email" style={{ color: "#555", fontSize: "1rem" }}>Correo Electrónico</label>
-                            <input
-                                type="email"
-                                className="form-control"
-                                id="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Ingresa tu correo"
+                            <input type="email" className="form-control"
+                                id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Ingresa tu correo"
                                 required
-                                style={{
-                                    borderRadius: "10px",
-                                    border: "1px solid #ddd",
-                                    padding: "12px",
-                                    boxShadow: "none",
-                                    outline: "none",
-                                    fontSize: "1.1rem"
-                                }}
+                                style={{borderRadius: "10px", border: "1px solid #ddd", padding: "12px", boxShadow: "none", outline: "none", fontSize: "1.1rem" }}
                             />
                         </div>
                         <div className="form-group mb-4">
                             <label htmlFor="password" style={{ color: "#555", fontSize: "1rem" }}>Contraseña</label>
-                            <input
-                                type="password"
-                                className="form-control"
-                                id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Ingresa tu contraseña"
+                            <input type="password" className="form-control" id="password" value={password}
+                                onChange={(e) => setPassword(e.target.value)} placeholder="Ingresa tu contraseña"
                                 required
-                                style={{
-                                    borderRadius: "10px",
-                                    border: "1px solid #ddd",
-                                    padding: "12px",
-                                    boxShadow: "none",
-                                    outline: "none",
-                                    fontSize: "1.1rem"
-                                }}
+                                style={{borderRadius: "10px", border: "1px solid #ddd", padding: "12px", boxShadow: "none", outline: "none", fontSize: "1.1rem"}}
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary w-100" style={{
-                            backgroundColor: "#007bff",
-                            border: "none",
-                            borderRadius: "10px",
-                            padding: "14px",
-                            fontSize: "1.2rem",
-                            fontWeight: "600"
-                        }}>
+                        <button type="submit" className="btn btn-primary w-100" 
+                        style={{backgroundColor: "#007bff",border: "none", borderRadius: "10px", padding: "14px", fontSize: "1.2rem", fontWeight: "600"}}>
                             Iniciar Sesión
                         </button>
                     </form>
                     <p className="text-center mt-4" style={{ color: "#777", fontSize: "1rem" }}>
                         ¿No tienes una cuenta? <Link to="/register"><button className="text-primary border-0" style={{ fontWeight: "500", background: "transparent", }}>Regístrate</button></Link>
                     </p>
+                    <ErrorModal 
+                    isOpen={isModalOpen}
+                    onRequestClose={() => setIsModalOpen(false)}
+                    errorMessage={error}></ErrorModal>
                 </div>
             </div>
 
