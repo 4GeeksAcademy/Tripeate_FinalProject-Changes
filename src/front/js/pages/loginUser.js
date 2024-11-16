@@ -7,6 +7,7 @@ export const LoginUser = () => {
     const { actions, store } = useContext(Context);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
@@ -15,12 +16,15 @@ export const LoginUser = () => {
         
         // Llamamos a loginUser desde Flux
         const response = await actions.loginUser(email, password);
+        console.log(response)
 
         if (response.success) {
-            // Si el login es exitoso, redirige al usuario a la página principal o al perfil
-            navigate("/");
-        } else {
-            // Si hay un error, muestra el mensaje de error
+                if (response.is_admin) {
+                    navigate("/perfiladmin");
+                } else {
+                    navigate("/userinfo");
+                }
+            } else {
             setError(response.msg);
         }
     };

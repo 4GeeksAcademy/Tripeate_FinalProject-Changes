@@ -55,7 +55,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						console.log("Inicio de sesión exitoso:", data);
 						console.log({"Email del usuario": data.user.email});
 						// Devuelve los datos recibidos, como el token y el ID de usuario
-						return { success: true, token: data.token, userId: data.Id };
+						return { success: true, token: data.token, userId: data.Id, is_admin: data.is_admin};
 					} else {
 						const errorData = await response.json();
 						console.error("Error en el inicio de sesión:", errorData.msg);

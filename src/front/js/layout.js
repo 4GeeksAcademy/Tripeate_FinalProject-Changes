@@ -14,6 +14,7 @@ import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 
 import { PerfilAdmin } from "./component/perfiladmin";
+import { PerfilUser } from "./pages/userinfo";
 
 //create your first component
 const Layout = () => {
@@ -36,6 +37,8 @@ const Layout = () => {
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                         <Route element={<PerfilAdmin />} path="/perfiladmin" />
+                        <Route element={<PerfilUser />} path="/userinfo" />
+
                     </Routes>
                     <Footer />
                 </ScrollToTop>

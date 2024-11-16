@@ -23,7 +23,7 @@ class User(db.Model):
     plans = db.relationship('Plan', backref='user', lazy=True)
 
     def __repr__(self):
-        return f'<User {self.email}>'
+        return f'<User {self.email, self.is_admin}>'
 
     def serialize(self):
         return {

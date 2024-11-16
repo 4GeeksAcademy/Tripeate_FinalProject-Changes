@@ -59,7 +59,7 @@ def user_login():
         return jsonify({"msg": "Contraseña incorrecta"}), 401
     # Se crea y se retorna el token de la sesión
     token = create_access_token(identity=user.id, additional_claims={"is_admin": user.is_admin})
-    return jsonify({"msg": "Login exitoso", "token": token, "Id": user.id, "user": user.serialize() })
+    return jsonify({"msg": "Login exitoso", "token": token, "Id": user.id, "user": user.serialize(), "is_admin": user.is_admin })
 
 # Ruta para perfil del usuario
 @api.route('/userinfo', methods=["GET"]) 
