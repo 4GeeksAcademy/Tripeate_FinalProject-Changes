@@ -46,6 +46,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
+							"Authorization": `Bearer ${localStorage.getItem("token")}`
 						},
 						body: JSON.stringify({ email, password }),
 					});
@@ -54,6 +55,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						const data = await response.json();
 						console.log("Inicio de sesión exitoso:", data);
 						console.log({"Email del usuario": data.user.email});
+						setStore({ token: data.token })
 						// Devuelve los datos recibidos, como el token y el ID de usuario
 						return { success: true, token: data.token, userId: data.Id, is_admin: data.is_admin};
 					} else {
@@ -73,12 +75,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 					method: "GET",
 					headers: {
 						"Content-Type": "aplication/json",
+						"Authorization": `Bearer ${localStorage.getItem("token")}`
 					}
 				});
 				if (resp.ok) {
 					let dataUsers = await resp.json();
-					console.log({ dataUsers })
+					console.log({ dataUsers }) 
 					setStore({ users: dataUsers.users })
+					console.log({ dataUsers }) 
 				}
 			},
 
@@ -100,6 +104,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					method: "DELETE",
 					headers: {
 						"Content-Type": "application/json",
+						"Authorization": `Bearer ${localStorage.getItem("token")}`
 					}
 				});
 				if (resp.status === 404) {

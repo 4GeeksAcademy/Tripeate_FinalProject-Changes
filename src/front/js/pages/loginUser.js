@@ -19,6 +19,9 @@ export const LoginUser = () => {
         // Llamamos a loginUser desde Flux
         const response = await actions.loginUser(email, password);
         console.log(response)
+        if (response.token) {
+            localStorage.setItem("token", response.token); // Almacena el token
+        }
 
         if (response.success) {
                 if (response.is_admin) {

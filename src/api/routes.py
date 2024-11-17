@@ -92,8 +92,9 @@ def get_users():
     current_user = User.query.get(current_user_id)
     if not current_user.is_admin:
         return jsonify({"error": "Acceso no autorizado"}), 403
-    users = User.query.all()  # Fetch all users
-    user_data = [user.serialize() for user in users]  # Serialize user data
+    users = User.query.all()  # Fetch todos los usuarios
+    print(users)
+    user_data = [user.serialize() for user in users]  # Serialize la data del usuario
     return jsonify({"users": user_data}), 200
 
 # Ruta para formulario de registro de plan

@@ -8,11 +8,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "./modal";
 
 
-
-
 export const PerfilAdmin = () => {
     const {store, actions} = useContext(Context);
-    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [itemId, setItemId] = useState(null);
     const [acceptedPlans, setAcceptedPlans] = useState([]);
@@ -44,6 +41,9 @@ export const PerfilAdmin = () => {
       const deleteUser = async (id) => {
         if (itemId) {
           await actions.deleteUser(id);
+          if (deleteUser.token) {
+            localStorage.setItem("token", deleteUser.token); // Almacena el token
+          }
         }
         closeModal();
         await actions.getUsersList(); // Recuperar usuarios después de la eliminación
