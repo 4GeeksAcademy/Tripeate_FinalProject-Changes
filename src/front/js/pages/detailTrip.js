@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import "../../styles/detailTrip.css";
 import TripArte2 from "../../img/arte-detailTrip.png";
 
@@ -117,7 +118,9 @@ export const DetailTrip = () => {
                             <ul className="dropdown-menu">
                                 <li><a className="list-item text-black">$40,00 (USD)</a></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
-                                <button type="button" className="btn btn-link text-black"><strong>Comprar</strong></button>
+                                <Link to="/buyTrip">
+                                    <a type="button" className="btn btn-link text-black"><strong>Comprar</strong></a>
+                                </Link>
                             </ul>
                         </div>
                     </div> 
@@ -140,7 +143,9 @@ export const DetailTrip = () => {
                             <ul className="dropdown-menu">
                                 <li><a className="list-item text-black">$70,00 (USD)</a></li>
                                 <li className=''><hr className="dropdown-divider" /></li> 
-                                <button type="button" className="btn btn-link text-black"><strong>Comprar</strong></button>
+                                <Link to="/buyTrip">
+                                    <a type="button" className="btn btn-link text-black"><strong>Comprar</strong></a>
+                                </Link>
                             </ul>
                         </div>
                     </div>
@@ -165,7 +170,9 @@ export const DetailTrip = () => {
                             <ul className="dropdown-menu">     
                                 <li><a className="list-item text-black">$120,00 (USD)</a></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
-                                <button type="button" className="btn btn-link text-black"><strong>Comprar</strong></button>
+                                <Link to="/buyTrip">
+                                    <a type="button" className="btn btn-link text-black"><strong>Comprar</strong></a>
+                                </Link>
                             </ul>
                         </div>
                     </div>

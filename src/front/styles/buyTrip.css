@@ -1,0 +1,21 @@
+.buyCard {
+    height: 35em;
+    border-radius: 0px;
+    border: 0px none
+}
+
+.row > .col-md-6:first-child .buyCard {
+    border-top-left-radius: 15px; 
+    border-bottom-left-radius: 15px; 
+    box-shadow: 8px 12px 11px -6px rgba(0,0,0,0.41);
+}
+
+.row > .col-md-6:last-child .buyCard {
+    border-top-right-radius: 15px; 
+    border-bottom-right-radius: 15px; 
+    box-shadow: -6px 12px 11px -6px rgba(0,0,0,0.41);
+}
+
+.card-footer {
+    height: 5em;
+}
