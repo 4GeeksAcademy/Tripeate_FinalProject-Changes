@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from 'react';
 import "../../styles/detailTrip.css";
+import TripArte2 from "../../img/arte-detailTrip.png";
 
 export const DetailTrip = () => {
+
+
 
     return (
 
@@ -31,7 +34,8 @@ export const DetailTrip = () => {
             </div>
 
 
-            {/* Info de lugar e Info de Empresa */}
+
+            {/* Info de lugar */}
             <div className="card border-0 rounded-0 infoCard">
                 <div className="card-body">
                     <h3 className="card-title">Cayo Sombrero</h3>
@@ -42,27 +46,29 @@ export const DetailTrip = () => {
 
                     <div className="container border-bottom my-3 linea"></div>
 
+
+
                     {/* Info de Empresa */}
                     <div className="card-body d-flex">
                         <div className="me-5 text-center">
                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTy6U8APLewA6Lae1YGyu1dY8Vwe7BFt1ZbJA&s" className="card-img-top" alt="..." />
-                            <p className="card-text dniSeller">J-65655644894-0</p> 
+                            <p className="card-text dniSeller">J-65655644894-0</p>
                         </div>
 
                         <div className="card border-0 sellerInfo">
                             <div className="d-flex justify-content-between">
                                 <h4 className="card-title d-inline-flex">Tu Full Day Venezuela</h4>
-                                
+
                                 <div className="d-flex flex-row  rrSS">
                                     <i className="fa-brands fa-instagram mx-1"></i>
                                     <i className="fa-brands fa-facebook"></i>
                                 </div>
 
                             </div>
-                            <p className="card-text"> Empresa dedicada a los full-day en venezuela, contamos con mas de 15 anos realizando los viajes mas fantasticos de la region, ven y disfruta de una experiencia unica.</p>
-                            
+                            <p className="card-text"> Empresa dedicada a los full-day en venezuela, contamos con mas de 15 años realizando los viajes mas fantasticos de la region, ven y disfruta de una experiencia unica.</p>
+
                             <div className="card-group">
-                                
+
                                 <div className="card-body text-center mt-4">
                                     <i className="card-img-top fa-solid fa-van-shuttle"></i>
                                     <p className="card-text">Capacidad/Puestos</p>
@@ -76,28 +82,96 @@ export const DetailTrip = () => {
                                 </div>
 
                                 <div className="card-body d-block text-center mt-4">
+                                    <i class="fa-solid fa-stopwatch"></i>
+                                    <p>Salida/Llegada</p>
+                                    <p>6:30 AM /<br /> 6:00 PM</p>
+                                </div>
+
+                                <div className="card-body d-block text-center mt-4">
                                     <i className="card-img-top fa-solid fa-map-location"></i>
                                     <p>Capacidad/Puestos</p>
                                     <p>Pza. Venezuela</p>
                                 </div>
-
-
-                            </div>
-                        </div>
-
+                            </div>  
+                        </div>   
                     </div>
-
-                    
-
-
-
+                    <img src={TripArte2} className="imgPlanes card-img" />
                 </div>
             </div>
-
             
 
+            {/* Compra de Planes */}
+            <div className="card-group text-center">
+                <div className=" planBasico card">
+                    <div className="card-body">
+                        <h1 className="card-title">Basico</h1>
+                        <ul className="list-group list-group-flush">
+                            <li className="list-group-item">Transporte</li>
+                            <li className="list-group-item">Ague potable</li>
+                            <li className="list-group-item">Refrigerios</li>
+                        </ul>
+                        <div className="btn-group mt-5">
+                            <button type="button" className="btn btn-custom rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                ver precio
+                            </button>
+                            <ul className="dropdown-menu">
+                                <li><a className="list-item text-black">$40,00 (USD)</a></li>
+                                <li className=''><hr className="dropdown-divider" /></li>
+                                <button type="button" className="btn btn-link text-black"><strong>Comprar</strong></button>
+                            </ul>
+                        </div>
+                    </div> 
+                </div>
+
+                <div className=" planMedio card">
+                    <div className="card-body">
+                        <h1 className="card-title">Medio</h1>
+                        <ul className="list-group list-group-flush">
+                            <li className="list-group-item">Transporte</li>
+                            <li className="list-group-item">Desayuno</li>
+                            <li className="list-group-item">Agua potable</li>
+                            <li className="list-group-item">Refrigerios</li>
+                            <li className="list-group-item">Bebidas(6)</li>
+                        </ul>
+                        <div className="btn-group mt-5">
+                            <button type="button" className="btn btn-custom rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                ver precio
+                            </button>
+                            <ul className="dropdown-menu">
+                                <li><a className="list-item text-black">$70,00 (USD)</a></li>
+                                <li className=''><hr className="dropdown-divider" /></li> 
+                                <button type="button" className="btn btn-link text-black"><strong>Comprar</strong></button>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div className=" planFull card">
+                    <div className="card-body"> 
+                        <h1 className="card-title">Full-Trip</h1>
+                        <ul className="list-group list-group-flush">
+                            <li className="list-group-item">Transporte</li>
+                            <li className="list-group-item">Desayuno</li>
+                            <li className="list-group-item">Agua potable</li> 
+                            <li className="list-group-item">Refrigerios</li>
+                            <li className="list-group-item">Bebidas ilimitadas</li>
+                            <li className="list-group-item">Almuerzo</li>
+                            <li className="list-group-item">Masaje</li>
+                        </ul>
+                        <div className="btn-group mt-5">
+                            <button type="button" className="btn btn-custom rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                ver precio
+                            </button>
+                            <ul className="dropdown-menu">     
+                                <li><a className="list-item text-black">$120,00 (USD)</a></li>
+                                <li className=''><hr className="dropdown-divider" /></li>
+                                <button type="button" className="btn btn-link text-black"><strong>Comprar</strong></button>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
-
 
