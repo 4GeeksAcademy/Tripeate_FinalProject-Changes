@@ -61,22 +61,26 @@ export const PerfilAdmin = () => {
         await actions.managePlan(planId, action);
         // Actualizar las listas después de la acción
         const updatedPlans = await actions.getPlansList();
-        setAcceptedPlans(updatedPlans.filter(plan => plan.status === 'Aceptado'));
-        setRejectedPlans(updatedPlans.filter(plan => plan.status === 'Rechazado'));
-        setPendingPlans(updatedPlans.filter(plan => plan.status === 'Pendiente'));
+        console.log(plans)
+        setAcceptedPlans(updatedPlans.filter(plan => plan.status === 'Accepted'));
+        setRejectedPlans(updatedPlans.filter(plan => plan.status === 'Rejected'));
+        setPendingPlans(updatedPlans.filter(plan => plan.status === 'Pending'));
     };
 
 
         return ( <div className="container">
-            <h1>Administrador</h1>
+            <h1 className="text-center">Administrador</h1>
+            <h2>Bienvenido, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h2>
+            
       
             {/* Sección de Usuarios */}
-            <h2>Usuarios</h2>
+            <h3>Usuarios</h3>
             {store.users.length > 0 ? (
               <table className="table">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Nombre y Apellido</th>
                     <th scope="col">Email</th>
                     <th scope="col">Acciones</th>
                   </tr>
@@ -85,6 +89,7 @@ export const PerfilAdmin = () => {
                   {store.users.map((user, index) => (
                     <tr key={index}>
                       <th scope="row">{index + 1}</th>
+                      <td>{user.name} {user.last_name}</td>
                       <td>{user.email}</td>
                       <td>
                         <button
@@ -104,7 +109,7 @@ export const PerfilAdmin = () => {
       
             {/* Sección de Planes */}
             {/* Sección de Planes Aceptados */}
-            <h2>Planes Aceptados</h2>
+            <h3>Planes Aceptados</h3>
             {acceptedPlans.length > 0 ? (
                 <table className="table">
                     <thead>
@@ -136,7 +141,7 @@ export const PerfilAdmin = () => {
             )}
 
             {/* Sección de Planes Rechazados */}
-            <h2>Planes Rechazados</h2>
+            <h3>Planes Rechazados</h3>
             {rejectedPlans.length > 0 ? (
                 <table className="table">
                     <thead>
@@ -168,7 +173,7 @@ export const PerfilAdmin = () => {
             )}
 
             {/* Sección de Planes Pendientes */}
-            <h2>Planes Pendientes</h2>
+            <h3>Planes Pendientes</h3>
             {pendingPlans.length > 0 ? (
                 <table className="table">
                     <thead>

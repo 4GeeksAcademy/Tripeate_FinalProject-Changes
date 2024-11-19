@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_jwt_identity, current_user
 from flask_bcrypt import Bcrypt
-from api.models import db, User, Plan, TokenBlockedList
+from api.models import db, User, Plan, PlanStatus, TokenBlockedList
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -112,7 +112,7 @@ def create_plan():
     image = body.get('image')
     type = body.get('type')
     available_slots = body.get('available_slots')
-    status = body.get('status')
+    status = body.get('status', PlanStatus.Pending)
     
 # Validación de datos
     new_plan = Plan(
@@ -135,6 +135,36 @@ def get_plans():
     plans = Plan.query.all()  # Fetch todos los planes
     plan_data = [plan.serialize() for plan in plans]  # Serialize plan data
     return jsonify({"plans": plan_data}), 200
+
+
+@api.route('/manage_plan/<int:plan_id>', methods=['POST'])
+@jwt_required
+def manage_plan(plan_id):
+    action = request.json.get('action')
+    if not action:
+        return jsonify({"error": "Acción no proporcionada."}), 400
+    if not current_user.is_admin:  
+        return jsonify({"error": "No tienes permisos para gestionar planes."}), 403
+
+    plan = Plan.query.get(plan_id)
+    if plan:
+        if action == 'accept':
+            plan.status = PlanStatus.Accepted
+        elif action == 'rejected':
+            plan.status = PlanStatus.Rejected
+        else:
+            return jsonify({"error": "Acción no válida. Debe ser 'accept' o 'rejected'."}), 400
+        
+        try:
+            db.session.commit()
+            return jsonify({"message": f"Plan {plan_id} ha sido {action}."}), 200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": f"Error al actualizar el plan: {str(e)}"}), 500
+    else:
+        return jsonify({"error": "Plan no encontrado."}), 404
+
+
 
 
 # Ruta para eliminar un usuario

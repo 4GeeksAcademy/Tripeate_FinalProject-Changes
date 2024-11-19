@@ -131,7 +131,8 @@ class Plan(db.Model):
             "caption": self.caption,
             "image": self.image,
             "type": self.type.value,  # Serializar el tipo
-            "available_slots": self.available_slots # Serializar la cantidad de cupos disponibles 
+            "available_slots": self.available_slots,
+            "status": self.status.value # Serializar la cantidad de cupos disponibles 
         }
 
 class Category(db.Model):
