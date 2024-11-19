@@ -12,7 +12,7 @@ export const Footer = () => (
 			</a>
 
 			<a href="https://www.linkedin.com/in/sousan-wong-garc%C3%ADa-3067a1256/" target="_blank" rel="noopener noreferrer">
-				<i class="px-1 text-white fa-brands fa-linkedin"></i>
+				<i className="px-1 text-white fa-brands fa-linkedin"></i>
 			</a>
 		</p>
 		<hr></hr>
@@ -22,7 +22,7 @@ export const Footer = () => (
 			</a>
 
 			<a href="https://www.linkedin.com/in/marian-su%C3%A1rez-0a75a31b5/" target="_blank" rel="noopener noreferrer">
-				<i class="px-1 text-white fa-brands fa-linkedin"></i>
+				<i className="px-1 text-white fa-brands fa-linkedin"></i>
 			</a>
 		</p>
 		<hr></hr>
@@ -32,7 +32,7 @@ export const Footer = () => (
 			</a>
 
 			<a href="https://www.linkedin.com/in/odzm3/" target="_blank" rel="noopener noreferrer">
-				<i class="px-1 text-white fa-brands fa-linkedin"></i>
+				<i className="px-1 text-white fa-brands fa-linkedin"></i>
 			</a>
 
 			
