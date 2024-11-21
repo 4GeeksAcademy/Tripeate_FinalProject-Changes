@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, { useContext, useState, useEffect } from "react";
 import "../../styles/home.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faCircleCheck, faBan } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Context } from "../store/appContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "./modal";
@@ -16,7 +16,6 @@ export const PerfilAdmin = () => {
     const [rejectedPlans, setRejectedPlans] = useState([]);
     const [pendingPlans, setPendingPlans] = useState([])
     
-
     // Obtener usuarios y planes
     useEffect(() => {
         actions.getUsersList();
@@ -27,7 +26,6 @@ export const PerfilAdmin = () => {
           setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
       }); 
       }, []);
-    
 
       const openModal = (id) => {
         setItemId(id);
@@ -49,29 +47,28 @@ export const PerfilAdmin = () => {
         await actions.getUsersList(); // Recuperar usuarios después de la eliminación
       };
     
-      const deletePlan = async (id) => {
+      const deletePlan = async (planId) => {
         if (itemId) {
-          await actions.deletePlan(id);
+          await actions.deletePlan(planId);
         }
         closeModal();
         await actions.getPlansList(); // Recuperar planes después de la eliminación
       };
 
       const managePlan = async (planId, action) => {
-        await actions.managePlan(planId, action);
-        // Actualizar las listas después de la acción
-        const updatedPlans = await actions.getPlansList();
-        console.log(plans)
-        setAcceptedPlans(updatedPlans.filter(plan => plan.status === 'Accepted'));
-        setRejectedPlans(updatedPlans.filter(plan => plan.status === 'Rejected'));
-        setPendingPlans(updatedPlans.filter(plan => plan.status === 'Pending'));
+        const response = await actions.managePlan(planId, action);
+        console.log(response)
+        if (response.success) {
+            await actions.getPlansList(); // Actualiza la lista de planes después de la acción
+        } else {
+            console.error(response.error);
+        }
     };
 
 
         return ( <div className="container">
             <h1 className="text-center">Administrador</h1>
             <h2>Bienvenido, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h2>
-            
       
             {/* Sección de Usuarios */}
             <h3>Usuarios</h3>
@@ -197,7 +194,7 @@ export const PerfilAdmin = () => {
                                     </button>
                                     <button
                                         className="btn btn-warning btn-sm"
-                                        onClick={() => managePlan(plan.id, 'reject')}
+                                        onClick={() => managePlan(plan.id, 'rejected')}
                                     >
                                         Rechazar
                                     </button>

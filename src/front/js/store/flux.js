@@ -56,11 +56,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (response.ok) {
 						const data = await response.json();
 						console.log("Inicio de sesión exitoso:", data);
-						console.log({"Email del usuario": data.user.email});
+						console.log({ "Email del usuario": data.user.email });
 						setStore({ currentUser: data.user, token: data.token })
 						localStorage.setItem("currentUser", JSON.stringify(data.user));
 						// Devuelve los datos recibidos, como el token y el ID de usuario
-						return { success: true, token: data.token, userId: data.Id, is_admin: data.is_admin};
+						return { success: true, token: data.token, userId: data.Id, is_admin: data.is_admin };
 					} else {
 						const errorData = await response.json();
 						console.error("Error en el inicio de sesión:", errorData.msg);
@@ -76,15 +76,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 				let resp = await fetch(backendURL + "/users", {
 					method: "GET",
 					headers: {
-						"Content-Type": "aplication/json",
+						"Content-Type": "application/json",
 						"Authorization": `Bearer ${localStorage.getItem("token")}`
 					}
 				});
 				if (resp.ok) {
 					let dataUsers = await resp.json();
-					console.log({ dataUsers }) 
+					console.log({ dataUsers })
 					setStore({ users: dataUsers.users })
-					console.log({ dataUsers }) 
+					console.log({ dataUsers })
 				}
 			},
 
@@ -107,21 +107,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 						// Manejo de errores si la respuesta no es exitosa
 						const errorData = await resp.json();
 						console.error("Error al obtener planes:", errorData);
-						setStore({ plans: [] }); 
+						setStore({ plans: [] });
 					}
 				} catch (error) {
 					console.error("Error en la llamada a la API:", error);
-					setStore({ plans: [] }); 
+					setStore({ plans: [] });
 				}
 			},
-			managePlans: async () => {
-				let resp = await fetch(backendURL + "/users", {
-					method: "GET",
-					headers: {
-						"Content-Type": "aplication/json",
+			managePlan: async (planId, action) => {
+				try {
+
+					console.log({planId, action})
+					const bodyRequest = { "action": action }
+					const headers = {
+						"Content-Type": "application/json",
 						"Authorization": `Bearer ${localStorage.getItem("token")}`
 					}
-				})
+					console.log(headers)
+					let resp = await fetch(`${backendURL}/manage_plan/${planId}`, {
+						method: "POST",
+						body: JSON.stringify(bodyRequest),
+						headers
+					})
+					if (!resp.ok) {
+						console.error(resp.statusText)
+						return false
+					}
+					return true
+				} catch (error) {
+					console.log(error)
+				}
 			},
 			deleteUser: async (id) => {
 				let resp = await fetch(`${backendURL}/delete_user/${id}`, {
@@ -140,8 +155,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ users: data });
 				}
 			},
-			deletePlan: async (id) => {
-				let resp = await fetch(`${backendURL}/delete_plan/${id}`, {
+			deletePlan: async (planId) => {
+				let resp = await fetch(`${backendURL}/delete_plan/${planId}`, {
 					method: "DELETE",
 					headers: {
 						"Content-Type": "application/json",
@@ -158,6 +173,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			/*logoutUser: async = () => {
+				/*let store = getStore()
 				setStore({ token: null, currentUser: null });
 				localStorage.removeItem("currentUser"); // Elimina el usuario de localStorage
 			},*/

@@ -80,7 +80,7 @@ def user_logout():
     token_blocked = TokenBlockedList(jti = token_data["jti"])
     db.session.add(token_blocked)
     db.session.commit()
-    return jsonify({"msg":"Sesión cerrada"}) 
+    return jsonify({"msg":"Sesión cerrada"}), 200
 
 
 # Ruta para listar todos los usuarios existentes
@@ -138,33 +138,32 @@ def get_plans():
 
 
 @api.route('/manage_plan/<int:plan_id>', methods=['POST'])
-@jwt_required
+@jwt_required()
 def manage_plan(plan_id):
+    current_user = get_jwt_identity()
+    user = User.query.get(current_user)
+    if request.method == "OPTIONS":
+        return jsonify({"error":"error en el metodo"})
     action = request.json.get('action')
     if not action:
-        return jsonify({"error": "Acción no proporcionada."}), 400
-    if not current_user.is_admin:  
-        return jsonify({"error": "No tienes permisos para gestionar planes."}), 403
+         return jsonify({"error": "Acción no proporcionada."}), 400
+    if not user.is_admin:  
+         return jsonify({"error": "No tienes permisos para gestionar planes."}), 403
 
     plan = Plan.query.get(plan_id)
     if plan:
-        if action == 'accept':
-            plan.status = PlanStatus.Accepted
-        elif action == 'rejected':
-            plan.status = PlanStatus.Rejected
-        else:
-            return jsonify({"error": "Acción no válida. Debe ser 'accept' o 'rejected'."}), 400
-        
-        try:
+         if action == 'accept':
+             plan.status = PlanStatus.Accepted
+         elif action == 'rejected':
+             plan.status = PlanStatus.Rejected
+         else:
+            return jsonify({"error": "Acción no válida. Debe ser 'accept' o 'rejected'."}), 400 
+    try:
             db.session.commit()
             return jsonify({"message": f"Plan {plan_id} ha sido {action}."}), 200
-        except Exception as e:
+    except Exception as e:
             db.session.rollback()
             return jsonify({"error": f"Error al actualizar el plan: {str(e)}"}), 500
-    else:
-        return jsonify({"error": "Plan no encontrado."}), 404
-
-
 
 
 # Ruta para eliminar un usuario
