@@ -8,7 +8,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			user: null,
 			currentUser: storedUser ? JSON.parse(storedUser) : null,
 			users: [],
-			plans: []
+			plans: [], 
+			itemType: null
 
 		},
 		actions: {
@@ -82,7 +83,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (resp.ok) {
 					let dataUsers = await resp.json();
-					console.log({ dataUsers })
 					setStore({ users: dataUsers.users })
 					console.log({ dataUsers })
 				}
@@ -137,8 +137,48 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.log(error)
 				}
-			},
-			deleteUser: async (id) => {
+			},/*
+			handlerDelete: async (id, type) => {
+				const headers = {
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${localStorage.getItem("token")}`,
+				};
+			
+				try {
+					let resp;
+					if (type === 'user') {
+						resp = await fetch(`${backendURL}/delete_user/${id}`, {
+							method: "DELETE",
+							headers,
+						});
+					} else if (type === 'plan') {
+						resp = await fetch(`${backendURL}/delete_plan/${id}`, {
+							method: "DELETE",
+							headers,
+						});
+					} else {
+						console.error("Tipo no válido");
+						return;
+					}
+			
+					if (resp.status === 404) {
+						console.log(`No se puede eliminar el ${type}`);
+					} else if (resp.status === 200) {
+						if (type === 'user') {
+							let data = await resp.json();
+							setStore({ users: data });
+							console.log(`Usuario eliminado exitosamente`);
+						} else if (type === 'plan') {
+							let dataPlans = await resp.json();
+							setStore({ plans: dataPlans });
+							console.log(`Plan eliminado exitosamente`);
+						}
+					}
+				} catch (error) {
+					console.error("Error al eliminar:", error);
+				}
+			},*/
+			deleteUser: async (id, type) => {
 				let resp = await fetch(`${backendURL}/delete_user/${id}`, {
 					method: "DELETE",
 					headers: {
@@ -147,7 +187,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				});
 				if (resp.status === 404) {
-					console.log("No se puede eliminar el usuario")
+					console.log("No se puede eliminar el usuario");
+					console.log(`No se puede eliminar el ${type}`);
 				}
 				if (resp.status === 200) {
 					let data = await resp.json();
@@ -155,8 +196,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ users: data });
 				}
 			},
-			deletePlan: async (planId) => {
-				let resp = await fetch(`${backendURL}/delete_plan/${planId}`, {
+			deletePlan: async (id, type) => {
+				let resp = await fetch(`${backendURL}/delete_plan/${id}`, {
 					method: "DELETE",
 					headers: {
 						"Content-Type": "application/json",
@@ -164,12 +205,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				});
 				if (resp.status === 404) {
-					console.log("No se puede eliminar el Plan")
+					console.log("No se puede eliminar el Plan");
+					console.log(`No se puede eliminar el ${type}`);
 				}
 				if (resp.status === 200) {
-					let data = await resp.json();
-					console.log({ data });
-					setStore({ plans: data });
+					let dataPlans = await resp.json();
+					console.log({ dataPlans });
+					setStore({ plans: dataPlans });
 				}
 			},
 			/*logoutUser: async = () => {
