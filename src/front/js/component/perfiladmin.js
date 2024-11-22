@@ -8,12 +8,13 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "./modal";
 
 
+
 export const PerfilAdmin = () => {
-  const { store, actions } = useContext(Context);
+  const { store, actions, setStore } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
   const [itemId, setItemId] = useState(null);
   const [itemType, setItemType] = useState(null);
-  const [Users, setUsers] = useState([]);
+  const [user, setUser] = useState([]);
   const [acceptedPlans, setAcceptedPlans] = useState([]);
   const [rejectedPlans, setRejectedPlans] = useState([]);
   const [pendingPlans, setPendingPlans] = useState([])
@@ -52,11 +53,6 @@ export const PerfilAdmin = () => {
     try {
         if (itemType === 'user') {
             await actions.deleteUser(itemId);
-            // Actualiza el estado local eliminando el usuario
-            setStore(prevStore => ({
-                ...prevStore,
-                users: prevStore.users.filter(user => user.id !== itemId)
-            }));
         } else if (itemType === 'plan') {
             await actions.deletePlan(itemId);
             // Actualiza el estado local eliminando el plan
