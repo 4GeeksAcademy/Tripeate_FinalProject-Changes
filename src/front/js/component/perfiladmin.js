@@ -8,13 +8,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "./modal";
 
 
-
 export const PerfilAdmin = () => {
   const { store, actions, setStore } = useContext(Context);
   const [showModal, setShowModal] = useState(false);
   const [itemId, setItemId] = useState(null);
   const [itemType, setItemType] = useState(null);
-  const [user, setUser] = useState([]);
   const [acceptedPlans, setAcceptedPlans] = useState([]);
   const [rejectedPlans, setRejectedPlans] = useState([]);
   const [pendingPlans, setPendingPlans] = useState([])
@@ -65,27 +63,27 @@ export const PerfilAdmin = () => {
     } catch (error) {
         console.error("Error al eliminar:", error);
     }
-};
+  };
 
-const managePlan = async (planId, action) => {
-    const response = await actions.managePlan(planId, action);
-    console.log(response);
-    try {
-        if (response.success) {
-            // Actualiza el estado local según la acción
-            if (action === 'accept') {
-                setAcceptedPlans(prevPlans => [...prevPlans, response.plan]);
-                setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
-            } else if (action === 'rejected') {
-                setRejectedPlans(prevPlans => [...prevPlans, response.plan]);
-                setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
-            }
-        }
-    } catch (error) {
-        console.error(response.statusText);
-    }
-    await fetchData();
-};
+  const managePlan = async (planId, action) => {
+      const response = await actions.managePlan(planId, action);
+      console.log(response);
+      try {
+          if (response.success) {
+              // Actualiza el estado local según la acción
+              if (action === 'accept') {
+                  setAcceptedPlans(prevPlans => [...prevPlans, response.plan]);
+                  setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
+              } else if (action === 'rejected') {
+                  setRejectedPlans(prevPlans => [...prevPlans, response.plan]);
+                  setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
+              }
+          }
+      } catch (error) {
+          console.error(response.statusText);
+      }
+      await fetchData();
+  };
 
   return (<div className="container">
     <h1 className="text-center">Administrador</h1>

@@ -137,47 +137,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.log(error)
 				}
-			},/*
-			handlerDelete: async (id, type) => {
-				const headers = {
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${localStorage.getItem("token")}`,
-				};
-			
-				try {
-					let resp;
-					if (type === 'user') {
-						resp = await fetch(`${backendURL}/delete_user/${id}`, {
-							method: "DELETE",
-							headers,
-						});
-					} else if (type === 'plan') {
-						resp = await fetch(`${backendURL}/delete_plan/${id}`, {
-							method: "DELETE",
-							headers,
-						});
-					} else {
-						console.error("Tipo no válido");
-						return;
-					}
-			
-					if (resp.status === 404) {
-						console.log(`No se puede eliminar el ${type}`);
-					} else if (resp.status === 200) {
-						if (type === 'user') {
-							let data = await resp.json();
-							setStore({ users: data });
-							console.log(`Usuario eliminado exitosamente`);
-						} else if (type === 'plan') {
-							let dataPlans = await resp.json();
-							setStore({ plans: dataPlans });
-							console.log(`Plan eliminado exitosamente`);
-						}
-					}
-				} catch (error) {
-					console.error("Error al eliminar:", error);
-				}
-			},*/
+			},
 			deleteUser: async (id, type) => {
 				let resp = await fetch(`${backendURL}/delete_user/${id}`, {
 					method: "DELETE",
