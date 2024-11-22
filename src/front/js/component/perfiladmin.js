@@ -64,8 +64,8 @@ export const PerfilAdmin = () => {
             setRejectedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
             setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
         }
-        await fetchData();
         closeModal();
+        await fetchData();
     } catch (error) {
         console.error("Error al eliminar:", error);
     }
