@@ -39,6 +39,14 @@ export const PerfilAdmin = () => {
     setShowModal(false);
   };
 
+  const fetchData = async () => {
+    await actions.getUsersList();
+    const plans = await actions.getPlansList();
+    setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'));
+    setRejectedPlans(plans.filter(plan => plan.status === 'Rechazado'));
+    setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
+  };
+
   const handlerDelete = async () => {
     if (!itemId || !itemType) return;
     try {
@@ -56,6 +64,7 @@ export const PerfilAdmin = () => {
             setRejectedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
             setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
         }
+        await fetchData();
         closeModal();
     } catch (error) {
         console.error("Error al eliminar:", error);
@@ -79,6 +88,7 @@ const managePlan = async (planId, action) => {
     } catch (error) {
         console.error(response.statusText);
     }
+    await fetchData();
 };
 
   return (<div className="container">
