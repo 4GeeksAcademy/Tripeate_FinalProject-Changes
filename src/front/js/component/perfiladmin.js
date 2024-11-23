@@ -132,6 +132,7 @@ export const PerfilAdmin = () => {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
+            <th scope="col">Descripción</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
@@ -140,6 +141,7 @@ export const PerfilAdmin = () => {
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{plan.name}</td>
+              <td>{plan.caption}</td>
               <td>
                 <button
                   className="btn btn-danger btn-sm"
@@ -164,6 +166,7 @@ export const PerfilAdmin = () => {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
+            <th scope="col">Descripción</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
@@ -172,6 +175,7 @@ export const PerfilAdmin = () => {
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{plan.name}</td>
+              <td>{plan.caption}</td>
               <td>
                 <button
                   className="btn btn-danger btn-sm"
@@ -196,6 +200,7 @@ export const PerfilAdmin = () => {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
+            <th scope="col">Descripción</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
@@ -204,6 +209,7 @@ export const PerfilAdmin = () => {
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{plan.name}</td>
+              <td>{plan.caption}</td>
               <td>
                 <button
                   className="btn btn-success btn-sm"
