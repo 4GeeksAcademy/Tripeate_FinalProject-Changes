@@ -16,7 +16,7 @@ export const Modal = (props) => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Are you sure?</h5>
+                <h5 className="modal-title">¿Estás seguro?</h5>
                 <button
                   type="button"
                   className="btn-close"
@@ -26,7 +26,7 @@ export const Modal = (props) => {
               </div>
               <div className="modal-body">
                 <p>
-                  If you delete this thing, the entire universe will go down!
+                  Si confirmas esta acción se eliminará de la base de datos.
                 </p>
               </div>
               <div className="modal-footer">
@@ -36,14 +36,14 @@ export const Modal = (props) => {
                   className="btn btn-primary"
                   onClick={props.handlerClose}
                 >
-                  Oh no!
+                  Cancelar
                 </button>
                 <button
                   type="button"
                   className="btn btn-secondary"
                   onClick={props.handlerDelete}
                 >
-                  Yes baby!
+                  Borrar
                 </button>
               </div>
             </div>

@@ -23,7 +23,7 @@ class User(db.Model):
     plans = db.relationship('Plan', backref='user', lazy=True)
 
     def __repr__(self):
-        return f'<User {self.email}>'
+        return f'<User {self.email, self.is_admin}>'
 
     def serialize(self):
         return {
@@ -31,6 +31,7 @@ class User(db.Model):
             "name": self.name,
             "last_name": self.last_name,
             "email": self.email,
+            "is_admin": self.is_admin,
             "roles": [role.name for role in self.roles],
             "plans": [{"id": plan.id, "name": plan.name}  for plan in self.plans]
         }
@@ -130,7 +131,8 @@ class Plan(db.Model):
             "caption": self.caption,
             "image": self.image,
             "type": self.type.value,  # Serializar el tipo
-            "available_slots": self.available_slots # Serializar la cantidad de cupos disponibles 
+            "available_slots": self.available_slots,
+            "status": self.status.value # Serializar la cantidad de cupos disponibles 
         }
 
 class Category(db.Model):

@@ -1,12 +1,15 @@
 const backendURL = process.env.BACKEND_URL
 
 const getState = ({ getStore, getActions, setStore }) => {
+	const storedUser = localStorage.getItem("currentUser")
 	return {
 		store: {
 			userEmail: "",
 			user: null,
+			currentUser: storedUser ? JSON.parse(storedUser) : null,
 			users: [],
-			plans: []
+			plans: [], 
+			itemType: null
 
 		},
 		actions: {
@@ -46,6 +49,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
+							"Authorization": `Bearer ${localStorage.getItem("token")}`
 						},
 						body: JSON.stringify({ email, password }),
 					});
@@ -53,9 +57,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (response.ok) {
 						const data = await response.json();
 						console.log("Inicio de sesión exitoso:", data);
-						console.log("Email del usuario:", data.email);
+						console.log({ "Email del usuario": data.user.email });
+						setStore({ currentUser: data.user, token: data.token })
+						localStorage.setItem("currentUser", JSON.stringify(data.user));
 						// Devuelve los datos recibidos, como el token y el ID de usuario
-						return { success: true, token: data.token, userId: data.Id };
+						return { success: true, token: data.token, userId: data.Id, is_admin: data.is_admin };
 					} else {
 						const errorData = await response.json();
 						console.error("Error en el inicio de sesión:", errorData.msg);
@@ -67,43 +73,82 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-
 			getUsersList: async () => {
 				let resp = await fetch(backendURL + "/users", {
 					method: "GET",
 					headers: {
-						"Content-Type": "aplication/json",
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${localStorage.getItem("token")}`
 					}
 				});
 				if (resp.ok) {
 					let dataUsers = await resp.json();
-					console.log({ dataUsers })
 					setStore({ users: dataUsers.users })
+					console.log({ dataUsers })
 				}
 			},
 
 			getPlansList: async () => {
-				let resp = await fetch(backendURL + "/plans", {
-					method: "GET",
-					headers: {
-						"Content-Type": "aplication/json",
+				try {
+					let resp = await fetch(backendURL + "/plans", {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							// "Authorization": `Bearer ${localStorage.getItem("token")}`
+						}
+					});
+					if (resp.ok) {
+						const dataPlans = await resp.json();
+						setStore({ plans: dataPlans.plans })
+						console.log("Planes en el store:", getStore().plans);
+						return dataPlans.plans
+
+					} else {
+						// Manejo de errores si la respuesta no es exitosa
+						const errorData = await resp.json();
+						console.error("Error al obtener planes:", errorData);
+						setStore({ plans: [] });
 					}
-				});
-				if (resp.ok) {
-					let dataPlans = await resp.json();
-					console.log({ dataPlans })
-					setStore({ plans: dataPlans.plans })
+				} catch (error) {
+					console.error("Error en la llamada a la API:", error);
+					setStore({ plans: [] });
 				}
 			},
-			deleteUser: async (id) => {
+			managePlan: async (planId, action) => {
+				try {
+
+					console.log({planId, action})
+					const bodyRequest = { "action": action }
+					const headers = {
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${localStorage.getItem("token")}`
+					}
+					console.log(headers)
+					let resp = await fetch(`${backendURL}/manage_plan/${planId}`, {
+						method: "POST",
+						body: JSON.stringify(bodyRequest),
+						headers
+					})
+					if (!resp.ok) {
+						console.error(resp.statusText)
+						return false
+					}
+					return true
+				} catch (error) {
+					console.log(error)
+				}
+			},
+			deleteUser: async (id, type) => {
 				let resp = await fetch(`${backendURL}/delete_user/${id}`, {
 					method: "DELETE",
 					headers: {
 						"Content-Type": "application/json",
+						"Authorization": `Bearer ${localStorage.getItem("token")}`
 					}
 				});
 				if (resp.status === 404) {
-					console.log("No se puede eliminar el usuario")
+					console.log("No se puede eliminar el usuario");
+					console.log(`No se puede eliminar el ${type}`);
 				}
 				if (resp.status === 200) {
 					let data = await resp.json();
@@ -111,22 +156,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ users: data });
 				}
 			},
-			deletePlan: async (id) => {
+			deletePlan: async (id, type) => {
 				let resp = await fetch(`${backendURL}/delete_plan/${id}`, {
 					method: "DELETE",
 					headers: {
 						"Content-Type": "application/json",
+						"Authorization": `Bearer ${localStorage.getItem("token")}`
 					}
 				});
 				if (resp.status === 404) {
-					console.log("No se puede eliminar el Plan")
+					console.log("No se puede eliminar el Plan");
+					console.log(`No se puede eliminar el ${type}`);
 				}
 				if (resp.status === 200) {
-					let data = await resp.json();
-					console.log({ data });
-					setStore({ plans: data });
+					let dataPlans = await resp.json();
+					console.log({ dataPlans });
+					setStore({ plans: dataPlans });
 				}
-			}
+			},
+			/*logoutUser: async = () => {
+				/*let store = getStore()
+				setStore({ token: null, currentUser: null });
+				localStorage.removeItem("currentUser"); // Elimina el usuario de localStorage
+			},*/
 		}
 	};
 };
