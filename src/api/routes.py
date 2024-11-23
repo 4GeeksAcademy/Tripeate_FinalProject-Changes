@@ -35,6 +35,11 @@ def signup_user():
     # Se valida que se esta ingresando un usuario y contraseña
     if body['password'] is None:
         return jsonify({"msg":"Por favor especifique su contraseña"}),400
+    
+    existing_user = User.query.filter_by(email=body['email']).first()
+    if existing_user:
+        return jsonify({"msg": "El correo electrónico ya está registrado"}), 400
+
     # Se encripta la contraseña
     body['password']=bcrypt.generate_password_hash(body['password']).decode('utf-8')
     # Se guarda en la base de datos 
@@ -42,6 +47,8 @@ def signup_user():
     db.session.add(user)
     db.session.commit()
     return jsonify({"msg":"Usuario creado con exito", "user": user.serialize()})
+
+
     
 # Ruta para formulario de inicio de sesión
 @api.route('/login', methods=['POST'])

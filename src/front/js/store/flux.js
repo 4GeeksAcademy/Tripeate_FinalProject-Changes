@@ -3,7 +3,7 @@ const backendURL = process.env.BACKEND_URL
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			userEmail: "",
+
 			user: null,
 			users: [],
 			plans: []
@@ -40,6 +40,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			logoutUser: async () => {
+				const store = getStore();
+				
+				try {
+					// Llamada a la API para cerrar sesión
+					const response = await fetch(backendURL + "/logout", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${store.token}` // Pasar el token del usuario
+						}
+					});
+			
+					if (response.ok) {
+						const data = await response.json();
+						console.log(data.msg); // Mensaje de confirmación
+						setStore({ token: null, user: null }); // Eliminar token y usuario del estado
+						return true; // Éxito
+					} else {
+						console.error("Error al cerrar sesión");
+						return false;
+					}
+				} catch (error) {
+					console.error("Error de red:", error);
+					return false;
+				}
+			},
+			
+			
+
 			loginUser: async (email, password) => {
 				try {
 					const response = await fetch(backendURL + "/login", {
@@ -47,13 +77,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 						headers: {
 							"Content-Type": "application/json",
 						},
-						body: JSON.stringify({ email, password }),
+						body: JSON.stringify({ 
+							email, 
+							password, 
+						}),
 					});
 
 					if (response.ok) {
 						const data = await response.json();
 						console.log("Inicio de sesión exitoso:", data);
-						console.log("Email del usuario:", data.email);
+						setStore({ token: data.token, user: data.user });
 						// Devuelve los datos recibidos, como el token y el ID de usuario
 						return { success: true, token: data.token, userId: data.Id };
 					} else {
