@@ -4,7 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	const storedUser = localStorage.getItem("currentUser")
 	return {
 		store: {
-			userEmail: "",
+
 			user: null,
 			currentUser: storedUser ? JSON.parse(storedUser) : null,
 			users: [],
@@ -43,6 +43,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			logoutUser: async () => {
+				const store = getStore();
+				
+				try {
+					// Llamada a la API para cerrar sesión
+					const response = await fetch(backendURL + "/logout", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${store.token}` // Pasar el token del usuario
+						}
+					});
+			
+					if (response.ok) {
+						const data = await response.json();
+						console.log(data.msg); // Mensaje de confirmación
+						setStore({ token: null, user: null }); // Eliminar token y usuario del estado
+						return true; // Éxito
+					} else {
+						console.error("Error al cerrar sesión");
+						return false;
+					}
+				} catch (error) {
+					console.error("Error de red:", error);
+					return false;
+				}
+			},
+			
+			
+
 			loginUser: async (email, password) => {
 				try {
 					const response = await fetch(backendURL + "/login", {
@@ -51,7 +81,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 							"Content-Type": "application/json",
 							"Authorization": `Bearer ${localStorage.getItem("token")}`
 						},
-						body: JSON.stringify({ email, password }),
+						body: JSON.stringify({ 
+							email, 
+							password, 
+						}),
 					});
 
 					if (response.ok) {
