@@ -90,7 +90,7 @@ export const PerfilAdmin = () => {
     <h2>Bienvenido, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h2>
 
     {/* Sección de Usuarios */}
-    <h3>Usuarios</h3>
+    <h3>Usuarios registrados en la plataforma</h3>
     {store.users.length > 0 ? (
       <table className="table">
         <thead>
@@ -98,6 +98,7 @@ export const PerfilAdmin = () => {
             <th scope="col">#</th>
             <th scope="col">Nombre y Apellido</th>
             <th scope="col">Email</th>
+            <th scope="col">ID del usuario</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
@@ -107,6 +108,7 @@ export const PerfilAdmin = () => {
               <th scope="row">{index + 1}</th>
               <td>{user.name} {user.last_name}</td>
               <td>{user.email}</td>
+              <td>{user.id}</td>
               <td>
                 <button
                   className="btn btn-danger btn-sm"
@@ -132,6 +134,8 @@ export const PerfilAdmin = () => {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
+            <th scope="col">ID Usuario Vendedor</th>
+            <th scope="col">Categoría</th>
             <th scope="col">Descripción</th>
             <th scope="col">Acciones</th>
           </tr>
@@ -141,6 +145,8 @@ export const PerfilAdmin = () => {
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{plan.name}</td>
+              <td>{plan.user_id}</td>
+              <td>{plan.type}</td>
               <td>{plan.caption}</td>
               <td>
                 <button
@@ -166,6 +172,8 @@ export const PerfilAdmin = () => {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
+            <th scope="col">ID Usuario Vendedor</th>
+            <th scope="col">Categoría</th>
             <th scope="col">Descripción</th>
             <th scope="col">Acciones</th>
           </tr>
@@ -175,6 +183,8 @@ export const PerfilAdmin = () => {
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{plan.name}</td>
+              <td>{plan.user_id}</td>
+              <td>{plan.type}</td>
               <td>{plan.caption}</td>
               <td>
                 <button
@@ -200,6 +210,8 @@ export const PerfilAdmin = () => {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
+            <th scope="col">ID Usuario Vendedor</th>
+            <th scope="col">Categoría</th>
             <th scope="col">Descripción</th>
             <th scope="col">Acciones</th>
           </tr>
@@ -209,6 +221,8 @@ export const PerfilAdmin = () => {
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{plan.name}</td>
+              <td>{plan.user_id}</td>
+              <td>{plan.type}</td>
               <td>{plan.caption}</td>
               <td>
                 <button
