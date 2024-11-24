@@ -16,6 +16,7 @@ export const PerfilAdmin = () => {
   const [acceptedPlans, setAcceptedPlans] = useState([]);
   const [rejectedPlans, setRejectedPlans] = useState([]);
   const [pendingPlans, setPendingPlans] = useState([])
+  const [userEmails, setUserEmails] = useState([])
 
   // Obtener usuarios y planes
   useEffect(() => {
@@ -49,41 +50,59 @@ export const PerfilAdmin = () => {
   const handlerDelete = async () => {
     if (!itemId || !itemType) return;
     try {
-        if (itemType === 'user') {
-            await actions.deleteUser(itemId);
-        } else if (itemType === 'plan') {
-            await actions.deletePlan(itemId);
-            // Actualiza el estado local eliminando el plan
-            setAcceptedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-            setRejectedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-            setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-        }
-        closeModal();
-        await fetchData();
+      if (itemType === 'user') {
+        await actions.deleteUser(itemId);
+      } else if (itemType === 'plan') {
+        await actions.deletePlan(itemId);
+        // Actualiza el estado local eliminando el plan
+        setAcceptedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
+        setRejectedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
+        setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
+      }
+      closeModal();
+      await fetchData();
     } catch (error) {
-        console.error("Error al eliminar:", error);
+      console.error("Error al eliminar:", error);
     }
   };
 
   const managePlan = async (planId, action) => {
-      const response = await actions.managePlan(planId, action);
-      console.log(response);
-      try {
-          if (response.success) {
-              // Actualiza el estado local según la acción
-              if (action === 'accept') {
-                  setAcceptedPlans(prevPlans => [...prevPlans, response.plan]);
-                  setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
-              } else if (action === 'rejected') {
-                  setRejectedPlans(prevPlans => [...prevPlans, response.plan]);
-                  setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
-              }
-          }
-      } catch (error) {
-          console.error(response.statusText);
+    const response = await actions.managePlan(planId, action);
+    console.log(response);
+    try {
+      if (response.success) {
+        // Actualiza el estado local según la acción
+        if (action === 'accept') {
+          setAcceptedPlans(prevPlans => [...prevPlans, response.plan]);
+          setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
+        } else if (action === 'rejected') {
+          setRejectedPlans(prevPlans => [...prevPlans, response.plan]);
+          setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== planId));
+        }
       }
-      await fetchData();
+    } catch (error) {
+      console.error(response.statusText);
+    }
+    await fetchData();
   };
+
+
+  useEffect(() => {
+    const fetchUserEmails = async () => {
+      const emails = {};
+      const allPlans = [...acceptedPlans, ...rejectedPlans, ...pendingPlans]
+      for (const plan of allPlans) {
+        const email = await actions.getUserEmailPlan(plan.id);
+        emails[plan.id] = email
+        console.log("Email del usuario:", email)
+      }
+      setUserEmails(emails)
+    }
+    if (acceptedPlans.length > 0 || rejectedPlans.length > 0 || pendingPlans.length > 0) {
+      fetchUserEmails();
+    }
+  }, [acceptedPlans, rejectedPlans, pendingPlans])
+
 
   return (<div className="container">
     <h1 className="text-center">Administrador</h1>
@@ -133,8 +152,8 @@ export const PerfilAdmin = () => {
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">ID Usuario Vendedor</th>
+            <th scope="col">Destino</th>
+            <th scope="col">Usuario Vendedor</th>
             <th scope="col">Categoría</th>
             <th scope="col">Descripción</th>
             <th scope="col">Acciones</th>
@@ -145,7 +164,7 @@ export const PerfilAdmin = () => {
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{plan.name}</td>
-              <td>{plan.user_id}</td>
+              <td>{userEmails[plan.id]}</td>
               <td>{plan.type}</td>
               <td>{plan.caption}</td>
               <td>
@@ -171,8 +190,8 @@ export const PerfilAdmin = () => {
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">ID Usuario Vendedor</th>
+            <th scope="col">Destino</th>
+            <th scope="col">Usuario Vendedor</th>
             <th scope="col">Categoría</th>
             <th scope="col">Descripción</th>
             <th scope="col">Acciones</th>
@@ -183,7 +202,7 @@ export const PerfilAdmin = () => {
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{plan.name}</td>
-              <td>{plan.user_id}</td>
+              <td>{userEmails[plan.id]}</td>
               <td>{plan.type}</td>
               <td>{plan.caption}</td>
               <td>
@@ -209,8 +228,8 @@ export const PerfilAdmin = () => {
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">ID Usuario Vendedor</th>
+            <th scope="col">Destino</th>
+            <th scope="col">Usuario Vendedor</th>
             <th scope="col">Categoría</th>
             <th scope="col">Descripción</th>
             <th scope="col">Acciones</th>
@@ -221,7 +240,7 @@ export const PerfilAdmin = () => {
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{plan.name}</td>
-              <td>{plan.user_id}</td>
+              <td>{userEmails[plan.id]}</td>
               <td>{plan.type}</td>
               <td>{plan.caption}</td>
               <td>

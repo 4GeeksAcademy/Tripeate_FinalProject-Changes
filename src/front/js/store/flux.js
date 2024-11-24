@@ -114,12 +114,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ plans: [] });
 				}
 			},
-			/*getUserEmailPlan: async (planId) => {
+			getUserEmailPlan: async (planId) => {
 				try {
 					const response = await fetch(`${backendURL}/plans/${planId}/user_email`, {
-						method = "GET",
-						headers = {
+						method: "GET",
+						headers: {
 							"Content-Type": "application/json",
+							"Authorization": `Bearer ${localStorage.getItem("token")}`
 						}
 					});
 					if (!response.ok) {
@@ -131,7 +132,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error(error);
 					return null;
 				}
-			},*/
+			},
 
 			managePlan: async (planId, action) => {
 				try {
