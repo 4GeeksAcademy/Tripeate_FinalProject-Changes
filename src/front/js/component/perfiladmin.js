@@ -106,7 +106,7 @@ export const PerfilAdmin = () => {
 
   return (<div className="container">
     <h1 className="text-center">Administrador</h1>
-    <h2>Bienvenido, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h2>
+    <h1>Bienvenido, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h1>
 
     {/* Sección de Usuarios */}
     <h3>Usuarios registrados en la plataforma</h3>
