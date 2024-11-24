@@ -136,7 +136,24 @@ def get_plans():
     plan_data = [plan.serialize() for plan in plans]  # Serialize plan data
     return jsonify({"plans": plan_data}), 200
 
-
+#Ruta para traer el usuario creador del plan
+@api.route('/plans/<int:plan_id>/user_email', methods=['GET'])
+@jwt_required()
+def get_user_email(plan_id):
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    if not current_user or not current_user.is_admin:
+        return jsonify({"error": "Acceso denegado. Se requiere ser administrador."}), 403 
+    plan = Plan.query.get(plan_id)
+    if plan is None:
+        return jsonify({"error": "Plan no encontrado"}), 404 
+    user_email = plan.get_user_email()
+    if user_email is None: 
+        return jsonify({"error": "Usuario no asociado al plan"}), 404
+    return jsonify({"user_email": user_email}), 200
+    
+    
+# Ruta para listar manejar los planes existentes
 @api.route('/manage_plan/<int:plan_id>', methods=['POST'])
 @jwt_required()
 def manage_plan(plan_id):
@@ -164,6 +181,7 @@ def manage_plan(plan_id):
     except Exception as e:
             db.session.rollback()
             return jsonify({"error": f"Error al actualizar el plan: {str(e)}"}), 500
+
 
 
 # Ruta para eliminar un usuario

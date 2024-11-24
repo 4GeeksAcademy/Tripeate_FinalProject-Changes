@@ -123,6 +123,9 @@ class Plan(db.Model):
 
     def __repr__(self):
         return f'<Plan {self.name}>'
+    
+    def get_user_email(self):
+        return self.user.email if self.user else None
 
     def serialize(self):
         return {
@@ -130,9 +133,11 @@ class Plan(db.Model):
             "name": self.name,
             "caption": self.caption,
             "image": self.image,
+            "user_id": self.user_id,
             "type": self.type.value,  # Serializar el tipo
             "available_slots": self.available_slots,
-            "status": self.status.value # Serializar la cantidad de cupos disponibles 
+            "status": self.status.value, # Serializar la cantidad de cupos disponibles 
+            "user_email": self.get_user_email()
         }
 
 class Category(db.Model):

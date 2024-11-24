@@ -114,9 +114,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ plans: [] });
 				}
 			},
+			getUserEmailPlan: async (planId) => {
+				try {
+					const response = await fetch(`${backendURL}/plans/${planId}/user_email`, {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${localStorage.getItem("token")}`
+						}
+					});
+					if (!response.ok) {
+						throw new Error ('Error al obtener el correo electrónico del usuario');
+					}
+					const data = await response.json();
+					return data.user_email;
+				} catch (error) {
+					console.error(error);
+					return null;
+				}
+			},
+
 			managePlan: async (planId, action) => {
 				try {
-
 					console.log({planId, action})
 					const bodyRequest = { "action": action }
 					const headers = {
@@ -173,12 +192,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log({ dataPlans });
 					setStore({ plans: dataPlans });
 				}
-			},
-			/*logoutUser: async = () => {
-				/*let store = getStore()
-				setStore({ token: null, currentUser: null });
-				localStorage.removeItem("currentUser"); // Elimina el usuario de localStorage
-			},*/
+			}
 		}
 	};
 };
