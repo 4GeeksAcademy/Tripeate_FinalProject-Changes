@@ -13,12 +13,8 @@ export const PerfilUser = () => {
     }
 
     return (
-        <div>
-            <div className="container mt-5">
-                <h1 className="mt-0">Hola, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h1>
-                <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
-            </div>
-            <nav className={`navbar bg-body-tertiary fixed-top ${collapsed ? 'collapsed' : ''}`} style={{ height: "100vh", width: "250px", right: "0", transition: "transform 0.3s ease", transform: collapsed ? "translateX(100%)" : "translateX(0)" }}>
+        <div style={{ display: "flex" }}>
+            <nav className={`navbar bg-body-tertiary fixed-left ${collapsed ? 'collapsed' : ''}`} style={{ height: "100vh", width: "250px", transition: "transform 0.3s ease", transform: collapsed ? "translateX(-100%)" : "translateX(0)", position: "fixed", left: "0", top: "0" }}>
                 <div className="container-fluid flex-column">
                     <button className="btn btn-primary" onClick={toggleNavbar} style={{ marginBottom: "20px" }}>
                         {collapsed ? 'Expandir' : 'Colapsar'}
@@ -50,14 +46,18 @@ export const PerfilUser = () => {
                                     </ul>
                                 </li>
                             </ul>
-                            <form className="d-flex mt-3" role="search">
+                            {/*<form className="d-flex mt-3" role="search">
                                 <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                                 <button className="btn btn-outline-success" type="submit">Search</button>
-                            </form>
+                            </form>*/}
                         </>
                     )}
                 </div>
             </nav>
+            <div className="container mt-5" style={{ marginLeft: "250px" }}>
+                <h1 className="mt-0">Hola, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h1>
+                <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
+            </div>
         </div>
     )
 };
