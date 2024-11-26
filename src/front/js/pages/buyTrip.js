@@ -83,4 +83,3 @@ export const BuyTrip = () => {
 
     )
 }
-{/* <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTy6U8APLewA6Lae1YGyu1dY8Vwe7BFt1ZbJA&s" className="card-img" alt="..." /> */ }
