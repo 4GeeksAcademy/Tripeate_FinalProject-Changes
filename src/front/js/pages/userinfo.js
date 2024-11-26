@@ -2,22 +2,25 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
-import "../../styles/navuser.css";
+// import "../../styles/navuser.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+
 
 export const PerfilUser = () => {
     const { store, actions } = useContext(Context);
-    const [collapsed, setCollapsed] = useState(false); // Estado para controlar el colapso
+    const [collapsed, setCollapsed] = useState(false); 
 
     const toggleNavbar = () => {
         setCollapsed(!collapsed); // Alternar el estado de colapso
     }
 
     return (
-        <div style={{ display: "flex" }}>
-            <nav className={`navbar bg-body-tertiary fixed-left ${collapsed ? 'collapsed' : ''}`} style={{ height: "100vh", width: "250px", transition: "transform 0.3s ease", transform: collapsed ? "translateX(-100%)" : "translateX(0)", position: "fixed", left: "0", top: "0" }}>
+        <div style={{ display: "flex", height: "100vh" }}>
+            <nav className={`navbar bg-body-tertiary fixed-left ${collapsed ? 'collapsed' : ''}`} style={{ backgroundColor: "white", height: "100vh", width: "180px", transition: "transform 0.3s ease", transform: collapsed ? "translateX(-25%)" : "translateX(0)", left: "0", top: "0" }}>
                 <div className="container-fluid flex-column">
-                    <button className="btn btn-primary" onClick={toggleNavbar} style={{ marginBottom: "20px" }}>
-                        {collapsed ? 'Expandir' : 'Colapsar'}
+                    <button className="btn btn-primary" onClick={toggleNavbar} style={{ marginBottom: "20px", marginBlockEnd: "5px" }}>
+                        {collapsed ? <FontAwesomeIcon icon={faBars} /> : <FontAwesomeIcon icon={faBars} />}
                     </button>
                     {!collapsed && (
                         <>
@@ -54,7 +57,7 @@ export const PerfilUser = () => {
                     )}
                 </div>
             </nav>
-            <div className="container mt-5" style={{ marginLeft: "250px" }}>
+            <div className="container mt-5" style={{ marginLeft: "250px", position: "fixed" }}>
                 <h1 className="mt-0">Hola, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h1>
                 <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
             </div>
