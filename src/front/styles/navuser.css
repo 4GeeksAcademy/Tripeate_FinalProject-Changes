@@ -1,0 +1,16 @@
+.fixed-left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px; /* Ajusta el ancho según sea necesario */
+    z-index: 1030; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.offcanvas {
+    width: 250px; /* Ancho del offcanvas */
+}
+
+.offcanvas.show {
+    left: 0; /* Muestra el offcanvas al hacer clic */
+}
