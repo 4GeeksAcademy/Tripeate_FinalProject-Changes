@@ -1,10 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { useNavigate } from 'react-router-dom';
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
-// import "../../styles/navuser.css";
+import "../../styles/navuser.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+//import { Modal } from "../component/modal";
+
 
 
 export const PerfilUser = () => {
@@ -15,16 +18,66 @@ export const PerfilUser = () => {
         setCollapsed(!collapsed); // Alternar el estado de colapso
     }
 
+    // useEffect(() => {
+    //     actions.getPlansList().then(plans => {
+    //       // Clasificar los planes en listas separadas
+    //       setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'));
+    //       setRejectedPlans(plans.filter(plan => plan.status === 'Rechazado'));
+    //       setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
+    //     });
+    //   }, []);
+
+    //   const openModal = (id, type) => {
+    //     setItemId(id);
+    //     setItemType(type);
+    //     setShowModal(true);
+    //   };
+    
+    //   const closeModal = () => {
+    //     setShowModal(false);
+    //   };
+    
+    //   const fetchData = async () => {
+    //     await actions.getUsersList();
+    //     const plans = await actions.getPlansList();
+    //     setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'));
+    //     setRejectedPlans(plans.filter(plan => plan.status === 'Rechazado'));
+    //     setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
+    //   };
+    
+    //   const handlerDelete = async () => {
+    //     if (!itemId || !itemType) return;
+    //     try {
+    //       if (itemType === 'user') {
+    //         await actions.deleteUser(itemId);
+    //       } else if (itemType === 'plan') {
+    //         await actions.deletePlan(itemId);
+    //         // Actualiza el estado local eliminando el plan
+    //         setAcceptedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
+    //         setRejectedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
+    //         setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
+    //       }
+    //       closeModal();
+    //       await fetchData();
+    //     } catch (error) {
+    //       console.error("Error al eliminar:", error);
+    //     }
+    //   };
+
     return (
-        <div style={{ display: "flex", height: "100vh" }}>
-            <nav className={`navbar bg-body-tertiary fixed-left ${collapsed ? 'collapsed' : ''}`} style={{ backgroundColor: "white", height: "100vh", width: "180px", transition: "transform 0.3s ease", transform: collapsed ? "translateX(-25%)" : "translateX(0)", left: "0", top: "0" }}>
-                <div className="container-fluid flex-column">
-                    <button className="btn btn-primary" onClick={toggleNavbar} style={{ marginBottom: "20px", marginBlockEnd: "5px" }}>
-                        {collapsed ? <FontAwesomeIcon icon={faBars} /> : <FontAwesomeIcon icon={faBars} />}
+        <div style={{ display: "flex", marginTop: "0", paddingTop: "0" }}>
+            <nav className={`navbar bg-body-tertiary fixed-left ${collapsed ? 'collapsed' : ''} d-block ps-2 pt-5 text-end pe-4 nav-user mt-5`} 
+            style={{ backgroundColor: "white", borderBlockEnd: "rgb(165, 68, 65)", height: "100vh", width: "150px", transition: "transform 0.3s ease", margin: "0", 
+                transform: collapsed ? "translateX(-60%)" : "translateX(0)", left: "0", top: "0", position: "relative", color: "rgb(165, 68, 65)" }}>
+                
+                    <div>
+                      <button className="btn" onClick={toggleNavbar} style={{ boxShadow: "none",color: "rgb(165, 68, 65)", width: "", marginBottom: "10px", paddingLeft: "" }}>
+                        {collapsed ? <FontAwesomeIcon icon={faBars} className="fa-2x"/> : <><FontAwesomeIcon icon={faBars}/><br></br></>}
                     </button>
+                    </div>
                     {!collapsed && (
-                        <>
-                            <a className="navbar-brand" href="#">Navbar Vertical</a>
+                        <div>
+                            <p>Mi Cuenta</p>
                             <ul className="navbar-nav flex-column">
                                 <li className="nav-item">
                                     <a className="nav-link active" aria-current="page" href="#">Home</a>
@@ -53,14 +106,16 @@ export const PerfilUser = () => {
                                 <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                                 <button className="btn btn-outline-success" type="submit">Search</button>
                             </form>*/}
-                        </>
+                        </div>
                     )}
-                </div>
+                
             </nav>
-            <div className="container mt-5" style={{ marginLeft: "250px", position: "fixed" }}>
+             <div className="container mt-5" style={{ marginLeft: "50px" }}>
                 <h1 className="mt-0">Hola, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h1>
                 <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
             </div>
-        </div>
+            
+            </div>
     )
 };
+           
