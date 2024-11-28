@@ -18,14 +18,15 @@ export const PerfilUser = () => {
         setCollapsed(!collapsed); // Alternar el estado de colapso
     }
 
-    // useEffect(() => {
-    //     actions.getPlansList().then(plans => {
-    //       // Clasificar los planes en listas separadas
-    //       setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'));
-    //       setRejectedPlans(plans.filter(plan => plan.status === 'Rechazado'));
-    //       setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
-    //     });
-    //   }, []);
+    useEffect(() => {
+        actions.getPlansList()
+        // .then(plans => {
+        //   // Clasificar los planes en listas separadas
+        //   setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'));
+        //   setRejectedPlans(plans.filter(plan => plan.status === 'Rechazado'));
+        //   setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
+        // });
+      }, []);
 
     //   const openModal = (id, type) => {
     //     setItemId(id);
@@ -114,7 +115,7 @@ export const PerfilUser = () => {
                     )}
                 
             </nav>
-             <div className="container mt-5" style={{ marginLeft: "70px" }}>
+             <div className="container mt-5" style={{ marginLeft: "200px", position: "absolute"}}>
                 <h1 className="mt-0">Hola, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h1>
                 <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
             </div>
