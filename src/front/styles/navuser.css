@@ -2,4 +2,13 @@
     border-top-right-radius: 13px;
     border-bottom-right-radius: 13px;
     box-shadow: 8px 12px 11px -6px rgba(0,0,0,0.41);
+    color: black;
+}
+
+.nav-link {
+    color: black;
+}
+.nav-link:hover {
+    color: rgb(136, 52, 49);
+    text-decoration: none;
 }

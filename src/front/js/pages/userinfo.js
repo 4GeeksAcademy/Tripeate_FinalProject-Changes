@@ -71,24 +71,28 @@ export const PerfilUser = () => {
                 transform: collapsed ? "translateX(-60%)" : "translateX(0)", left: "0", top: "0", position: "relative", color: "rgb(165, 68, 65)" }}>
                 
                     <div>
-                      <button className="btn" onClick={toggleNavbar} style={{ boxShadow: "none",color: "rgb(165, 68, 65)", width: "", marginBottom: "10px", paddingLeft: "" }}>
+                      <button className="btn" onClick={toggleNavbar} style={{ boxShadow: "none",color: "rgb(165, 68, 65)", width: "", marginBottom: "", paddingLeft: "" }}>
                         {collapsed ? <FontAwesomeIcon icon={faBars} className="fa-2x"/> : <><FontAwesomeIcon icon={faBars}/><br></br></>}
                     </button>
                     </div>
                     {!collapsed && (
                         <div>
-                            <p>Mi Cuenta</p>
+                            
                             <ul className="navbar-nav flex-column">
                                 <li className="nav-item">
-                                    <a className="nav-link active" aria-current="page" href="#">Home</a>
+                                    <a className="nav-link active" aria-current="page" href="#"><p><strong>Mi Perfil</strong></p></a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Features</a>
+                                    <a className="nav-link" href="#">Compras</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Pricing</a>
+                                    <a className="nav-link" href="#">Favoritos</a>
                                 </li>
-                                <li className="nav-item dropdown">
+                                <hr className="dropdown-divider border border-dark" style={{width: "135px"}}   />
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Ventas</a>
+                                </li>
+                                {/*<li className="nav-item dropdown">
                                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Dropdown
                                     </a>
@@ -100,7 +104,7 @@ export const PerfilUser = () => {
                                         </li>
                                         <li><a className="dropdown-item" href="#">Something else here</a></li>
                                     </ul>
-                                </li>
+                                </li>*/}
                             </ul>
                             {/*<form className="d-flex mt-3" role="search">
                                 <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
@@ -110,7 +114,7 @@ export const PerfilUser = () => {
                     )}
                 
             </nav>
-             <div className="container mt-5" style={{ marginLeft: "50px" }}>
+             <div className="container mt-5" style={{ marginLeft: "70px" }}>
                 <h1 className="mt-0">Hola, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h1>
                 <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
             </div>
