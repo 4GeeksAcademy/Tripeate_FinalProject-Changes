@@ -115,9 +115,13 @@ export const PerfilUser = () => {
                     )}
                 
             </nav>
-             <div className="container mt-5" style={{ marginLeft: "200px", position: "absolute"}}>
-                <h1 className="mt-0">Hola, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h1>
+             <div className="container mt-5" style={{ marginLeft: "90px", position: "absolute"}}>
+                <div className="text-center">
+
+                <img src="https://picsum.photos/300/200" width="100" height="100" style={{borderRadius: "50%"}}/>
+                <h1 className="mt-0">¡Hola, {store.currentUser ? `${store.currentUser.name}!` : 'Invitado!'}</h1>
                 <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
+                </div>
             </div>
             
             </div>
