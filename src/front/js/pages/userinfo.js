@@ -5,7 +5,7 @@ import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/navuser.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faPlus } from '@fortawesome/free-solid-svg-icons';
 //import { Modal } from "../component/modal";
 
 
@@ -68,7 +68,7 @@ export const PerfilUser = () => {
     return (
         <div style={{ display: "flex", marginTop: "0", paddingTop: "0" }}>
             <nav className={`navbar bg-body-tertiary fixed-left ${collapsed ? 'collapsed' : ''} d-block ps-2 pt-5 text-end pe-4 nav-user mt-5`} 
-            style={{ backgroundColor: "white", borderBlockEnd: "rgb(165, 68, 65)", height: "100vh", width: "150px", transition: "transform 0.3s ease", margin: "0", 
+            style={{ backgroundColor: "white", borderBlockEnd: "rgb(165, 68, 65)", height: "100vh", width: "170px", transition: "transform 0.3s ease", margin: "0", 
                 transform: collapsed ? "translateX(-60%)" : "translateX(0)", left: "0", top: "0", position: "relative", color: "rgb(165, 68, 65)" }}>
                 
                     <div>
@@ -93,6 +93,9 @@ export const PerfilUser = () => {
                                 <li className="nav-item">
                                     <a className="nav-link" href="#">Ventas</a>
                                 </li>
+                                <li className="nav-item">
+                                    <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
+                                </li>
                                 {/*<li className="nav-item dropdown">
                                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Dropdown
@@ -115,10 +118,9 @@ export const PerfilUser = () => {
                     )}
                 
             </nav>
-             <div className="container mt-5" style={{ marginLeft: "90px", position: "absolute"}}>
-                <div className="text-center">
-
-                <img src="https://picsum.photos/300/200" width="100" height="100" style={{borderRadius: "50%"}}/>
+             <div className="container mt-5 text-center" >
+                <div style={{ marginLeft: "-170px", position: "adsolute"}}>
+                <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%"}}/>
                 <h1 className="mt-0">¡Hola, {store.currentUser ? `${store.currentUser.name}!` : 'Invitado!'}</h1>
                 <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
                 </div>

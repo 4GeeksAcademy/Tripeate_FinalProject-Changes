@@ -12,3 +12,18 @@
     color: rgb(136, 52, 49);
     text-decoration: none;
 }
+.btn-new {
+    background-color: rgb(165, 68, 65);
+    color: white;
+    border-radius: 20px;
+}
+
+.btn-new:hover {
+    background-color: rgb(136, 52, 49);
+    color: white;
+}
+
+.btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 87, 51, 0.5); /* Cambia el color y la opacidad */
+    
+}
