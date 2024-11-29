@@ -19,6 +19,7 @@ class User(db.Model):
     password = db.Column(db.String(80), nullable=False)
     is_active = db.Column(db.Boolean(), default=True)
     is_admin = db.Column(db.Boolean(), default=False)
+    profile_image = db.Column(db.String(255), nullable=True)
     roles = db.relationship('Role', secondary=user_roles, backref=db.backref('users', lazy='dynamic'))
     plans = db.relationship('Plan', backref='user', lazy=True)
 
@@ -32,6 +33,7 @@ class User(db.Model):
             "last_name": self.last_name,
             "email": self.email,
             "is_admin": self.is_admin,
+            "profile_image": self.profile_image,
             "roles": [role.name for role in self.roles],
             "plans": [{"id": plan.id, "name": plan.name}  for plan in self.plans]
         }
