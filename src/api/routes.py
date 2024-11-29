@@ -48,6 +48,42 @@ def signup_user():
     db.session.commit()
     return jsonify({"msg":"Usuario creado con exito", "user": user.serialize()})
 
+#Ruta para editar el usuario
+@api.route('/update_user/<int:user_id>', methods=['PUT'])
+@jwt_required()
+def update_user(user_id):
+    body=request.get_json()
+    if body['name'] is None:
+        return jsonify({"msg":"El campo nombre y apellido es obligatorio"})
+    if body['email'] is None:
+        return jsonify({"msg":"Debe especificar un correo electrónico"}), 400
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg":"Usuario no encontrado"}), 404
+    #Validaciones de los datos que se quieren actualizar
+    if 'name' in body and body['name'] is None:
+        return jsonify({"msg":"El campo nombre es obligatorio"}), 400
+    if 'email' in body and body['email'] is None:
+        return jsonify({"msg":"Debe especificar un correo electrónico"}), 400
+    #Si se proporciona un nuevo correo se valida que no esté ya registrado
+    if 'email' in body and body['email'] != user.email:
+        existing_user = User.query.filter_by(email=body['email']).first()
+        if existing_user:
+            return jsonify({"msg":"El correo electrónico ya está registrado"}), 400
+    #Actualización de datos
+    if 'name' in body:
+        user.name = body['name']
+    if 'last_name' in body:
+        user.last_name = body['last_name']
+    if 'email' in body:
+        user.email = body['email']
+    if 'password' in body and body['password'] is not None:
+        user.password = bcrypt.generate_password_hash(body['password']).decode('utf-8')
+    if 'profile_image' in body:
+        user.profile_image = body['profile_image']
+    db.session.commit()
+    return jsonify({"msg":"Usuario actualizado con éxito", "user": user.serialize()})
+    
 
     
 # Ruta para formulario de inicio de sesión

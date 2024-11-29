@@ -125,6 +125,9 @@ export const PerfilUser = () => {
                 <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
                 </div>
             </div>
+            <div>
+                
+            </div>
             
             </div>
     )
