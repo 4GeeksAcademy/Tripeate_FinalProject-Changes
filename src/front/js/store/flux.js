@@ -43,36 +43,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			logoutUser: async () => {
-				const store = getStore();
-				
-				try {
-					// Llamada a la API para cerrar sesión
-					const response = await fetch(backendURL + "/logout", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `Bearer ${store.token}` // Pasar el token del usuario
-						}
-					});
-			
-					if (response.ok) {
-						const data = await response.json();
-						console.log(data.msg); // Mensaje de confirmación
-						setStore({ token: null, user: null }); // Eliminar token y usuario del estado
-						return true; // Éxito
-					} else {
-						console.error("Error al cerrar sesión");
-						return false;
-					}
-				} catch (error) {
-					console.error("Error de red:", error);
-					return false;
-				}
-			},
-			
-			
-
 			loginUser: async (email, password) => {
 				try {
 					const response = await fetch(backendURL + "/login", {
@@ -103,6 +73,65 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error("Error en la solicitud de inicio de sesión:", error);
 					return { error: true, msg: "Error en la solicitud" }; // Indica un error de red u otro tipo de error
+				}
+			},
+
+			logoutUser: async () => {
+				const store = getStore();
+				
+				try {
+					// Llamada a la API para cerrar sesión
+					const response = await fetch(backendURL + "/logout", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${store.token}` // Pasar el token del usuario
+						}
+					});
+			
+					if (response.ok) {
+						const data = await response.json();
+						console.log(data.msg); // Mensaje de confirmación
+						setStore({ token: null, user: null }); // Eliminar token y usuario del estado
+						return true; // Éxito
+					} else {
+						console.error("Error al cerrar sesión");
+						return false;
+					}
+				} catch (error) {
+					console.error("Error de red:", error);
+					return false;
+				}
+			},
+
+			updateUser: async (user_id, name, last_name, email, password, profile_image) => {
+				try {
+					const response = await fetch(`${backendURL}/update_user/${user_id}`, {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							name: name,
+							last_name: last_name,
+							email: email,
+							password: password,
+							profile_image: profile_image,
+						}),
+					});
+			
+					if (response.ok) {
+						const data = await response.json();
+						console.log("Usuario actualizado:", data.user);
+						return data;
+					} else {
+						const errorData = await response.json();
+						console.error("Error en la actualización:", errorData.msg);
+						return { error: true, msg: errorData.msg };
+					}
+				} catch (error) {
+					console.error("Error en la actualización:", error);
+					return { error: true, msg: "Error en la solicitud" }; 
 				}
 			},
 
@@ -147,6 +176,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ plans: [] });
 				}
 			},
+
 			getUserEmailPlan: async (planId) => {
 				try {
 					const response = await fetch(`${backendURL}/plans/${planId}/user_email`, {
@@ -190,6 +220,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log(error)
 				}
 			},
+
 			deleteUser: async (id, type) => {
 				let resp = await fetch(`${backendURL}/delete_user/${id}`, {
 					method: "DELETE",
@@ -208,6 +239,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ users: data });
 				}
 			},
+
 			deletePlan: async (id, type) => {
 				let resp = await fetch(`${backendURL}/delete_plan/${id}`, {
 					method: "DELETE",
