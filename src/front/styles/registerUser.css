@@ -1,6 +1,6 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: rgb(243, 234, 214);
   width: 100%; /* Asegúrate de que el body ocupe todo el ancho */
   margin: auto; /* Eliminar margen para que ocupe el ancho completo */
 }
