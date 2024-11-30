@@ -48,6 +48,42 @@ def signup_user():
     db.session.commit()
     return jsonify({"msg":"Usuario creado con exito", "user": user.serialize()})
 
+#Ruta para editar el usuario
+@api.route('/update_user/<int:user_id>', methods=['PUT'])
+@jwt_required()
+def update_user(user_id):
+    body=request.get_json()
+    if body['name'] is None:
+        return jsonify({"msg":"El campo nombre y apellido es obligatorio"})
+    if body['email'] is None:
+        return jsonify({"msg":"Debe especificar un correo electrónico"}), 400
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg":"Usuario no encontrado"}), 404
+    #Validaciones de los datos que se quieren actualizar
+    if 'name' in body and body['name'] is None:
+        return jsonify({"msg":"El campo nombre es obligatorio"}), 400
+    if 'email' in body and body['email'] is None:
+        return jsonify({"msg":"Debe especificar un correo electrónico"}), 400
+    #Si se proporciona un nuevo correo se valida que no esté ya registrado
+    if 'email' in body and body['email'] != user.email:
+        existing_user = User.query.filter_by(email=body['email']).first()
+        if existing_user:
+            return jsonify({"msg":"El correo electrónico ya está registrado"}), 400
+    #Actualización de datos
+    if 'name' in body:
+        user.name = body['name']
+    if 'last_name' in body:
+        user.last_name = body['last_name']
+    if 'email' in body:
+        user.email = body['email']
+    if 'password' in body and body['password'] is not None:
+        user.password = bcrypt.generate_password_hash(body['password']).decode('utf-8')
+    if 'profile_image' in body:
+        user.profile_image = body['profile_image']
+    db.session.commit()
+    return jsonify({"msg":"Usuario actualizado con éxito", "user": user.serialize()})
+    
 
     
 # Ruta para formulario de inicio de sesión
@@ -143,7 +179,24 @@ def get_plans():
     plan_data = [plan.serialize() for plan in plans]  # Serialize plan data
     return jsonify({"plans": plan_data}), 200
 
-
+#Ruta para traer el usuario creador del plan
+@api.route('/plans/<int:plan_id>/user_email', methods=['GET'])
+@jwt_required()
+def get_user_email(plan_id):
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
+    if not current_user or not current_user.is_admin:
+        return jsonify({"error": "Acceso denegado. Se requiere ser administrador."}), 403 
+    plan = Plan.query.get(plan_id)
+    if plan is None:
+        return jsonify({"error": "Plan no encontrado"}), 404 
+    user_email = plan.get_user_email()
+    if user_email is None: 
+        return jsonify({"error": "Usuario no asociado al plan"}), 404
+    return jsonify({"user_email": user_email}), 200
+    
+    
+# Ruta para listar manejar los planes existentes
 @api.route('/manage_plan/<int:plan_id>', methods=['POST'])
 @jwt_required()
 def manage_plan(plan_id):
@@ -171,6 +224,7 @@ def manage_plan(plan_id):
     except Exception as e:
             db.session.rollback()
             return jsonify({"error": f"Error al actualizar el plan: {str(e)}"}), 500
+
 
 
 # Ruta para eliminar un usuario
