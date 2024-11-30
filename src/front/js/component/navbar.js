@@ -1,9 +1,20 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 export const Navbar = () => {
-  const { store } = useContext(Context);
+  const { store, actions } = useContext(Context);
+  const navigate = useNavigate();
+
+  const handleLogOut = async () => {
+    const result = await actions.logoutUser();
+    if (result) {
+      navigate("/loginuser");
+    } else {
+      alert("Hubo un problema al cerrar sesión. Intenta nuevamente.");
+    }
+  };
 
   return (
     <div className="container-fluid" style={{ background: "#4b3331" }}>
@@ -23,11 +34,20 @@ export const Navbar = () => {
             </div>
           </Link>
           <div className="ml-auto">
-            <Link to="/loginuser">
-              <button className="btn btn-light" style={{ fontWeight: "bold" }}>
-                Iniciar Sesión
+            {store.token ? ( // Si hay token, mostrar "Cerrar Sesión"
+              <button
+                className="btn btn-outline-danger ml-2"
+                onClick={handleLogOut}
+              >
+                Cerrar Sesión
               </button>
-            </Link>
+            ) : ( // Si no hay token, mostrar "Iniciar Sesión"
+              <Link to="/loginuser">
+                <button className="btn btn-light" style={{ fontWeight: "bold" }}>
+                  Iniciar Sesión
+                </button>
+              </Link>
+            )}
           </div>
         </nav>
       </div>
