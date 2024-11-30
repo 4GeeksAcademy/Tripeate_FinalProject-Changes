@@ -1,0 +1,135 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: rgb(243, 234, 214);
+  width: 100%; /* Asegúrate de que el body ocupe todo el ancho */
+  margin: auto; /* Eliminar margen para que ocupe el ancho completo */
+}
+
+.form {
+  background-color: #ffffff; /* Fondo blanco para el formulario */
+  padding: 2rem;
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  width: 25rem;
+  margin: auto; /* Ancho fijo del formulario */
+  margin-top: 2px;
+}
+
+.form-title {
+  text-align: center;
+  color: #2c3e50; /* Azul oscuro */
+  margin-bottom: 1.5rem; /* Espacio entre el título y el resto */
+}
+
+.form-group {
+  margin-bottom: 1.5rem; /* Espacio entre los campos */
+}
+
+label {
+  display: block;
+  color: #34495e; /* Gris oscuro */
+  margin-bottom: 0.5rem; /* Espacio entre etiqueta y campo */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%; /* Ocupa el 100% del contenedor */
+  padding: 0.2rem; /* Espaciado interno */
+  border-right: 0;
+  border-left: 0;
+  border-top: 1px;
+  border-end-start-radius: 5px;
+  font-size: 1rem; /* Tamaño de fuente */
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #3498db; /* Color azul al enfocar */
+  outline: none; /* Sin contorno al enfocar */
+}
+
+.form-check {
+  margin-bottom: 1.5rem; /* Espacio entre la casilla de verificación y el botón */
+}
+
+.submit-button {
+  width: 100%; /* Ocupa el 100% del contenedor */
+  padding: 0.5rem; /* Espaciado interno */
+  background-color: #3498db; /* Color azul del botón */
+  color: #ffffff; /* Texto blanco */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  font-size: 1rem; /* Tamaño de fuente */
+  cursor: pointer; /* Cursor de mano */
+  transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
+}
+
+.submit-button:hover {
+  background-color: #2980b9; /* Color azul más oscuro al pasar el ratón */
+}
+
+.modal-content {
+  border-radius: 0.5rem; /* Bordes redondeados */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  background-color: #ffffff; /* Fondo blanco */
+}
+
+.modal-header {
+  border-bottom: none; /* Eliminar borde inferior */
+  background-color: #f8f9fa; /* Color de fondo suave */
+}
+
+.modal-title {
+  font-size: 1.5rem; /* Tamaño de fuente más grande */
+  font-weight: bold; /* Negrita */
+}
+
+.modal-body {
+  padding: 2rem; /* Espaciado interior más amplio */
+  color: #333; /* Color de texto oscuro */
+}
+
+.modal-footer {
+  border-top: none; /* Eliminar borde superior */
+  justify-content: space-between; /* Espacio entre elementos */
+}
+
+.form-check {
+  align-items: center; /* Centrar verticalmente */
+}
+
+.btn-close {
+  background: none; /* Sin fondo */
+  border: none; /* Sin borde */
+  font-size: 1.25rem; /* Tamaño de fuente del botón */
+}
+
+.btn-close:hover {
+  color: #dc3545; /* Color al pasar el mouse */
+}
+
+a {
+  color: #007bff; /* Color del enlace */
+  text-decoration: none; /* Sin subrayado */
+}
+
+a:hover {
+  text-decoration: underline; /* Subrayar al pasar el mouse */
+}
+
+.terms-label {
+  margin-top: 5px; /* Espacio superior */
+}
+
+.modal-backdrop {
+  backdrop-filter: blur(5px); /* Efecto de desenfoque */
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo negro semitransparente */
+  transition: opacity 0.3s ease; /* Suaviza la transición */
+  opacity: 0; /* Oculto por defecto */
+}
+
+.modal-backdrop.show {
+  opacity: 1; /* Visible cuando se agrega la clase */
+}
