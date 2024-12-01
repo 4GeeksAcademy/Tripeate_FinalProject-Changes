@@ -15,7 +15,7 @@ export const LoginUser = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         // Llamamos a loginUser desde Flux
         const response = await actions.loginUser(email, password);
         console.log(response)
@@ -24,16 +24,27 @@ export const LoginUser = () => {
         }
 
         if (response.success) {
-                if (response.is_admin) {
-                    navigate("/perfiladmin");
-                } else {
-                    navigate("/userinfo");
-                }
+            if (response.is_admin) {
+                navigate("/perfiladmin");
             } else {
-                setError(response.msg);
-                setIsModalOpen(true);
+                navigate("/userinfo");
+            }
+        } else {
+            setError(response.msg);
+            setIsModalOpen(true);
         }
     };
+
+    const handleForgotPassword = async () => {
+        const response = await actions.forgotPassword(email);
+        if (response.success) {
+            alert('Te hemos enviado un enlace de recuperación a tu correo');
+        } else {
+            setError(response.msg);
+            setIsModalOpen(true);
+        }
+    };
+
     return (
         <>
             <div className="container d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "#f0f2f5" }}>
@@ -45,7 +56,7 @@ export const LoginUser = () => {
                             <input type="email" className="form-control"
                                 id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Ingresa tu correo"
                                 required
-                                style={{borderRadius: "10px", border: "1px solid #ddd", padding: "12px", boxShadow: "none", outline: "none", fontSize: "1.1rem" }}
+                                style={{ borderRadius: "10px", border: "1px solid #ddd", padding: "12px", boxShadow: "none", outline: "none", fontSize: "1.1rem" }}
                             />
                         </div>
                         <div className="form-group mb-4">
@@ -53,21 +64,26 @@ export const LoginUser = () => {
                             <input type="password" className="form-control" id="password" value={password}
                                 onChange={(e) => setPassword(e.target.value)} placeholder="Ingresa tu contraseña"
                                 required
-                                style={{borderRadius: "10px", border: "1px solid #ddd", padding: "12px", boxShadow: "none", outline: "none", fontSize: "1.1rem"}}
+                                style={{ borderRadius: "10px", border: "1px solid #ddd", padding: "12px", boxShadow: "none", outline: "none", fontSize: "1.1rem" }}
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary w-100" 
-                        style={{backgroundColor: "#007bff",border: "none", borderRadius: "10px", padding: "14px", fontSize: "1.2rem", fontWeight: "600"}}>
+                        <button type="submit" className="btn btn-primary w-100"
+                            style={{ backgroundColor: "#007bff", border: "none", borderRadius: "10px", padding: "14px", fontSize: "1.2rem", fontWeight: "600" }}>
                             Iniciar Sesión
                         </button>
                     </form>
                     <p className="text-center mt-4" style={{ color: "#777", fontSize: "1rem" }}>
                         ¿No tienes una cuenta? <Link to="/register"><button className="text-primary border-0" style={{ fontWeight: "500", background: "transparent", }}>Regístrate</button></Link>
                     </p>
-                    <ErrorModal 
-                    isOpen={isModalOpen}
-                    onRequestClose={() => setIsModalOpen(false)}
-                    errorMessage={error}></ErrorModal>
+                    <p className="text-center mt-2">
+                        <button onClick={handleForgotPassword} style={{ fontSize: "1rem", color: "#007BFF", background: "transparent", border: "none", fontWeight: "500" }}>
+                            ¿Olvidaste tu contraseña?
+                        </button>
+                    </p>
+                    <ErrorModal
+                        isOpen={isModalOpen}
+                        onRequestClose={() => setIsModalOpen(false)}
+                        errorMessage={error}></ErrorModal>
                 </div>
             </div>
 
