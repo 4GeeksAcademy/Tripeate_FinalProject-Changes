@@ -16,11 +16,6 @@ from api.commands import setup_commands
 from datetime import timedelta
 
 
-
-#from flask_login import current_user, LoginManager
-
-
-
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -31,12 +26,19 @@ app.url_map.strict_slashes = False
 
 
 app.config["JWT_SECRET_KEY"] = os.getenv("TOKEN_SECRET")  
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes = 5)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes = 10)
 jwt = JWTManager(app)
 @jwt.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
-    token_blocked = TokenBlockedList.query.filter_by(jti = jwt_payload["jti"]).first()
-    return token_blocked is not None
+    # Se verifica si el token es de tipo password 
+    is_password = jwt_payload["type"]=="password" and request.path!="/api/changepassword"
+    if is_password:
+        return True
+    # Se verifica que el token no ha sido bloquedo
+    jti = jwt_payload["jti"]
+    token = TokenBlockedList.query.filter_by(jti=jti).first()
+    is_blocked = token is not None
+    return is_blocked
     
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
