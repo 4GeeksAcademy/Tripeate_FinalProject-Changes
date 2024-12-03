@@ -6,7 +6,16 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_j
 from flask_bcrypt import Bcrypt
 from api.models import db, User, Plan, PlanStatus, TokenBlockedList
 from api.utils import generate_sitemap, APIException
+from os import getenv
+from itsdangerous import URLSafeTimedSerializer as Serializer
+# from flask_mail import Message
+# from app import app, db, mail
 from flask_cors import CORS
+import os 
+import requests
+import json
+
+
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -16,12 +25,30 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
+@api.before_request
+def verify_role():
+    print("Checking role")
+
+
+
 @api.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
     response_body = {
         "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
     }
     return jsonify(response_body), 200
+
+# Configuración del serializador para los tokens
+# def generate_reset_token(user):
+#     s = Serializer(app.config['SECRET_KEY'], expires_in=3600)  # Token que expira en 1 hora
+#     return s.dumps({'user_id': user.id}).decode('utf-8')
+
+# def send_reset_email(user, token):
+#     reset_url = f"http://localhost:3000/reset-password?token={token}"  # URL donde el usuario puede cambiar su contraseña
+#     msg = Message("Recuperación de contraseña", recipients=[user.email])
+#     msg.body = f"Haz clic en el siguiente enlace para recuperar tu contraseña: {reset_url}"
+#     mail.send(msg)
+
 
 # Ruta para formulario de registro de usuario
 @api.route('/signup', methods=['POST'])
@@ -84,7 +111,6 @@ def update_user(user_id):
     db.session.commit()
     return jsonify({"msg":"Usuario actualizado con éxito", "user": user.serialize()})
     
-
     
 # Ruta para formulario de inicio de sesión
 @api.route('/login', methods=['POST'])
@@ -124,6 +150,89 @@ def user_logout():
     db.session.add(token_blocked)
     db.session.commit()
     return jsonify({"msg":"Sesión cerrada"}), 200
+
+
+#Ruta para recuperación de contraseña
+@api.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    body = request.get_json()
+    if body.get("email") is None:
+        return jsonify({"msg": "Debe especificar un correo electrónico"}), 400
+    
+    # Verificamos si el usuario existe
+    user = User.query.filter_by(email=body["email"]).first()
+    if user is None:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+    
+    # Generamos el token de recuperación
+    token = generate_reset_token(user)
+
+    # Enviamos el correo de recuperación
+    try:
+        send_reset_email(user, token)
+        return jsonify({"msg": "Te hemos enviado un correo para recuperar tu contraseña."}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({"msg": "Error al enviar el correo de recuperación"}), 500
+
+
+# Ruta para enviar email al correo 
+@api.route('requestpasswordrecovery', methods=['POST'])
+def request_password_recovery():
+    email = request.get_json()['email']
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+    password_token = create_access_token(
+        identity = user.id, additional_claims = {"type": "password"})
+    frontend_url = getenv("FRONTEND_URL")
+    
+    url = frontend_url + '/resetpassword?token=' + password_token
+    print(url)
+    # Envío de correo 
+    send_mail_url = getenv("MAIL_SEND_URL")
+    private_key = getenv("MAIL_PRIVATE_KEY")
+    service_id = getenv("MAIL_SERVICE_ID")
+    template_id = getenv("MAIL_TEMPLATE_ID")
+    # User ID del servicio de correo 
+    user_id = getenv("MAIL_USER_ID")
+    data = {
+        "service_id": service_id,
+        "template_id": template_id,
+        "user_id": user_id,
+        "accessToken": private_key,
+        "template_params": {
+            "url": url
+        }
+    }
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(
+        send_mail_url, headers=headers, data=json.dumps(data))
+    
+    print(response.text)
+    if response.status_code == 200:
+        return jsonify({"msg":"Revise su correo para el cambio de clave"})
+    else:
+        return jsonify({"msg":"Ocurrio un error con el envio de correo "})
+    
+@api.route('changepassword', methods=['PATCH'])
+@jwt_required()
+def user_change_password():
+    user = User.query.get(get_jwt_identity())
+    if user is None:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+    new_password = request.get_json()['new_password']
+    user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    db.session.add(user)
+    
+    token_data = get_jwt()
+    if token_data["type"]=="password":
+        token_blocked = TokenBlockedList(jti=token_data["jti"])
+        db.session.add(token_blocked)
+        
+    db.session.commit()
+        
+    return jsonify({"msg":"Password update"})
 
 
 # Ruta para listar todos los usuarios existentes
