@@ -8,8 +8,6 @@ from api.models import db, User, Plan, PlanStatus, TokenBlockedList
 from api.utils import generate_sitemap, APIException
 from os import getenv
 from itsdangerous import URLSafeTimedSerializer as Serializer
-# from flask_mail import Message
-# from app import app, db, mail
 from flask_cors import CORS
 import os 
 import requests
@@ -37,18 +35,6 @@ def handle_hello():
         "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
     }
     return jsonify(response_body), 200
-
-# Configuración del serializador para los tokens
-# def generate_reset_token(user):
-#     s = Serializer(app.config['SECRET_KEY'], expires_in=3600)  # Token que expira en 1 hora
-#     return s.dumps({'user_id': user.id}).decode('utf-8')
-
-# def send_reset_email(user, token):
-#     reset_url = f"http://localhost:3000/reset-password?token={token}"  # URL donde el usuario puede cambiar su contraseña
-#     msg = Message("Recuperación de contraseña", recipients=[user.email])
-#     msg.body = f"Haz clic en el siguiente enlace para recuperar tu contraseña: {reset_url}"
-#     mail.send(msg)
-
 
 # Ruta para formulario de registro de usuario
 @api.route('/signup', methods=['POST'])
