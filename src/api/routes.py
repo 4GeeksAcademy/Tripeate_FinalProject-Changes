@@ -138,31 +138,7 @@ def user_logout():
     return jsonify({"msg":"Sesión cerrada"}), 200
 
 
-#Ruta para recuperación de contraseña
-@api.route('/forgot-password', methods=['POST'])
-def forgot_password():
-    body = request.get_json()
-    if body.get("email") is None:
-        return jsonify({"msg": "Debe especificar un correo electrónico"}), 400
-    
-    # Verificamos si el usuario existe
-    user = User.query.filter_by(email=body["email"]).first()
-    if user is None:
-        return jsonify({"msg": "Usuario no encontrado"}), 404
-    
-    # Generamos el token de recuperación
-    token = generate_reset_token(user)
-
-    # Enviamos el correo de recuperación
-    try:
-        send_reset_email(user, token)
-        return jsonify({"msg": "Te hemos enviado un correo para recuperar tu contraseña."}), 200
-    except Exception as e:
-        print(e)
-        return jsonify({"msg": "Error al enviar el correo de recuperación"}), 500
-
-
-# Ruta para enviar email al correo 
+# Ruta para enviar email al correo para recuperar contraseña
 @api.route('requestpasswordrecovery', methods=['POST'])
 def request_password_recovery():
     email = request.get_json()['email']
