@@ -139,7 +139,7 @@ def user_logout():
 
 
 # Ruta para enviar email al correo para recuperar contraseña
-@api.route('requestpasswordrecovery', methods=['POST'])
+@api.route('/requestpasswordrecovery', methods=['POST'])
 def request_password_recovery():
     email = request.get_json()['email']
     user = User.query.filter_by(email=email).first()

@@ -103,10 +103,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false;
 				}
 			},
-			forgotPassword: async (email) => {
+			resetPassword: async (email) => {
 				try {
 					// Realizamos una solicitud POST al servidor para iniciar el proceso de recuperación de la contraseña
-					const response = await fetch(backendURL + "/forgot-password", {
+					const response = await fetch(backendURL + "/requestpasswordrecovery", {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
