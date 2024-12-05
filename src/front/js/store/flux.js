@@ -135,10 +135,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 			changePassword: async (newPassword, token) => {
 				try {
 					const response = await fetch(backendURL+ "/changepassword", {
-						method: "PUT",
+						method: "PATCH",
 						headers: {
 							"Content-Type": "application/json",
-							"Authorization": `Bearer ${localStorage.getItem("token")}`, 
+							"Authorization": `Bearer ${token}`, 
 							
 						},
 						body: JSON.stringify({ "new_password": newPassword }),

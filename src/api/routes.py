@@ -113,7 +113,7 @@ def user_login():
     if not valid_password:
         return jsonify({"msg": "Contraseña incorrecta"}), 401
     # Se crea y se retorna el token de la sesión
-    token = create_access_token(identity=user.id, additional_claims={"is_admin": user.is_admin})
+    token = create_access_token(identity=str(user.id), additional_claims={"is_admin": user.is_admin})
     return jsonify({"msg": "Login exitoso", "token": token, "Id": user.id, "user": user.serialize(), "is_admin": user.is_admin })
 
 # Ruta para perfil del usuario
@@ -122,7 +122,7 @@ def user_login():
 @jwt_required()
 # Accede a la identidad del usuario actual con get_jwt_identity
 def protected():
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     user = User.query.get(current_user_id)
     return jsonify({"msg":"Perfil del usuario"}, user.serialize()), 200
 
@@ -146,7 +146,7 @@ def request_password_recovery():
     if user is None:
         return jsonify({"msg": "Usuario no encontrado"}), 404
     password_token = create_access_token(
-        identity = user.id, additional_claims = {"type": "password"})
+        identity = str(user.id), additional_claims = {"type": "password"})
     frontend_url = getenv("FRONTEND_URL")
     
     url = frontend_url + 'changepassword?token=' + password_token
@@ -177,33 +177,24 @@ def request_password_recovery():
     else:
         return jsonify({"msg":"Ocurrio un error con el envio de correo "})
     
-@api.route('/changepassword', methods=['PUT'])
+@api.route('changepassword', methods=['PATCH'])
 @jwt_required()
 def user_change_password():
-    # user_email = request.json.get("email")
-    #     new_password = request.get_json()['new_password']
-
-    user_email = request.get_json().get("email")
-    print("MS user_email: ", user_email)
-    user = User.query.filter_by(email=user_email).first()
-    print("MS user: ", user)
+    user = User.query.get(int(get_jwt_identity()))
     if user is None:
         return jsonify({"msg": "Usuario no encontrado"}), 404
-    new_password = request.json.get('new_password')
-    print("MS New password: ", new_password)
+    new_password = request.get_json()['new_password']
     user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-    print("MS user.password: ", user.password)
     db.session.add(user)
-    
-    #token_data = get_jwt()
-    #if token_data["type"]=="password":
-     #   token_blocked = TokenBlockedList(jti=token_data["jti"])
-       # db.session.add(token_blocked)
-        
-    db.session.commit()
-        
-    return jsonify({"msg":"Password update"})
 
+    token_data = get_jwt()
+    if token_data["type"]=="password":
+        token_blocked = TokenBlockedList(jti=token_data["jti"])
+        db.session.add(token_blocked)
+
+    db.session.commit()
+
+    return jsonify({"msg":"Password update"})
 
 # Ruta para listar todos los usuarios existentes
 @api.route('/users', methods=['GET'])
