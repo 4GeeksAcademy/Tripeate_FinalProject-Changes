@@ -6,7 +6,14 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt, get_j
 from flask_bcrypt import Bcrypt
 from api.models import db, User, Plan, PlanStatus, TokenBlockedList
 from api.utils import generate_sitemap, APIException
+from os import getenv
+from itsdangerous import URLSafeTimedSerializer as Serializer
 from flask_cors import CORS
+import os 
+import requests
+import json
+
+
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -14,6 +21,12 @@ api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
 CORS(api)
+
+
+@api.before_request
+def verify_role():
+    print("Checking role")
+
 
 
 @api.route('/hello', methods=['POST', 'GET'])
@@ -84,7 +97,6 @@ def update_user(user_id):
     db.session.commit()
     return jsonify({"msg":"Usuario actualizado con éxito", "user": user.serialize()})
     
-
     
 # Ruta para formulario de inicio de sesión
 @api.route('/login', methods=['POST'])
@@ -101,7 +113,7 @@ def user_login():
     if not valid_password:
         return jsonify({"msg": "Contraseña incorrecta"}), 401
     # Se crea y se retorna el token de la sesión
-    token = create_access_token(identity=user.id, additional_claims={"is_admin": user.is_admin})
+    token = create_access_token(identity=str(user.id), additional_claims={"is_admin": user.is_admin})
     return jsonify({"msg": "Login exitoso", "token": token, "Id": user.id, "user": user.serialize(), "is_admin": user.is_admin })
 
 # Ruta para perfil del usuario
@@ -110,7 +122,7 @@ def user_login():
 @jwt_required()
 # Accede a la identidad del usuario actual con get_jwt_identity
 def protected():
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     user = User.query.get(current_user_id)
     return jsonify({"msg":"Perfil del usuario"}, user.serialize()), 200
 
@@ -125,6 +137,64 @@ def user_logout():
     db.session.commit()
     return jsonify({"msg":"Sesión cerrada"}), 200
 
+
+# Ruta para enviar email al correo para recuperar contraseña
+@api.route('/requestpasswordrecovery', methods=['POST'])
+def request_password_recovery():
+    email = request.get_json()['email']
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+    password_token = create_access_token(
+        identity = str(user.id), additional_claims = {"type": "password"})
+    frontend_url = getenv("FRONTEND_URL")
+    
+    url = frontend_url + 'changepassword?token=' + password_token
+    print(url)
+    # Envío de correo 
+    send_mail_url = getenv("MAIL_SEND_URL")
+    private_key = getenv("MAIL_PRIVATE_KEY")
+    service_id = getenv("MAIL_SERVICE_ID")
+    template_id = getenv("MAIL_TEMPLATE_ID")
+    # User ID del servicio de correo 
+    user_id = getenv("MAIL_USER_ID")
+    data = {
+        "service_id": service_id,
+        "template_id": template_id,
+        "user_id": user_id,
+        "accessToken": private_key,
+        "template_params": {
+            "url": url
+        }
+    }
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(
+        send_mail_url, headers=headers, data=json.dumps(data))
+    
+    print(response.text)
+    if response.status_code == 200:
+        return jsonify({"msg":"Revise su correo para el cambio de clave"})
+    else:
+        return jsonify({"msg":"Ocurrio un error con el envio de correo "})
+    
+@api.route('changepassword', methods=['PATCH'])
+@jwt_required()
+def user_change_password():
+    user = User.query.get(int(get_jwt_identity()))
+    if user is None:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+    new_password = request.get_json()['new_password']
+    user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    db.session.add(user)
+
+    token_data = get_jwt()
+    if token_data["type"]=="password":
+        token_blocked = TokenBlockedList(jti=token_data["jti"])
+        db.session.add(token_blocked)
+
+    db.session.commit()
+
+    return jsonify({"msg":"Password update"})
 
 # Ruta para listar todos los usuarios existentes
 @api.route('/users', methods=['GET'])

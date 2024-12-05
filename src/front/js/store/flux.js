@@ -103,6 +103,60 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false;
 				}
 			},
+			requestPasswordRecovery: async (email) => {
+				try {
+					// Realizamos una solicitud POST al servidor para iniciar el proceso de recuperación de la contraseña
+					const response = await fetch(backendURL + "/requestpasswordrecovery", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ email }),
+					});
+			
+					// Si la respuesta es exitosa
+					if (response.ok) {
+						const data = await response.json();
+						console.log("Solicitud de recuperación de contraseña enviada:", data);
+						return { success: true };  // Retornamos éxito si la respuesta es positiva
+					} else {
+						// Si hay un error, obtenemos el mensaje de error del servidor
+						const errorData = await response.json();
+						console.error("Error en la solicitud de recuperación de contraseña:", errorData.msg);
+						return { success: false, msg: errorData.msg };  // Devolvemos el mensaje de error
+					}
+				} catch (error) {
+					// Si ocurre un error en la red o un problema de servidor
+					console.error("Error en la solicitud de recuperación de contraseña:", error);
+					return { success: false, msg: "Hubo un error al procesar tu solicitud. Intenta nuevamente." }; // Mensaje genérico de error
+				}
+			},		
+			
+			changePassword: async (newPassword, token) => {
+				try {
+					const response = await fetch(backendURL+ "/changepassword", {
+						method: "PATCH",
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${token}`, 
+							
+						},
+						body: JSON.stringify({ "new_password": newPassword }),
+					});
+			
+					const data = await response.json();
+			
+					if (!response.ok) {
+						throw new Error(data.msg || "Error al cambiar la contraseña");
+					}
+			
+					return { success: true, msg: data.msg };
+				} catch (error) {
+					console.error("Error en changePassword:", error)
+					return { success: false, msg: error.message };
+				}
+			},
+			
 
 			updateUser: async (user_id, name, last_name, email, password, profile_image) => {
 				try {
