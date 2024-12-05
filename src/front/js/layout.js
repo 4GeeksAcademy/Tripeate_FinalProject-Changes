@@ -17,6 +17,7 @@ import { Footer } from "./component/footer";
 
 import { PerfilAdmin } from "./component/perfiladmin";
 import { PerfilUser } from "./pages/userinfo";
+import { ChangePassword } from "./pages/changepassword";
 
 //create your first component
 const Layout = () => {
@@ -41,6 +42,7 @@ const Layout = () => {
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<PerfilAdmin />} path="/perfiladmin" />
                         <Route element={<PerfilUser />} path="/userinfo" />
+                        <Route element={<ChangePassword />} path="/changepassword" />
 
                     </Routes>
                     <Footer />

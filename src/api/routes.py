@@ -149,7 +149,7 @@ def request_password_recovery():
         identity = user.id, additional_claims = {"type": "password"})
     frontend_url = getenv("FRONTEND_URL")
     
-    url = frontend_url + '/resetpassword?token=' + password_token
+    url = frontend_url + 'changepassword?token=' + password_token
     print(url)
     # Envío de correo 
     send_mail_url = getenv("MAIL_SEND_URL")
@@ -177,20 +177,28 @@ def request_password_recovery():
     else:
         return jsonify({"msg":"Ocurrio un error con el envio de correo "})
     
-@api.route('changepassword', methods=['PATCH'])
+@api.route('/changepassword', methods=['PUT'])
 @jwt_required()
 def user_change_password():
-    user = User.query.get(get_jwt_identity())
+    # user_email = request.json.get("email")
+    #     new_password = request.get_json()['new_password']
+
+    user_email = request.get_json().get("email")
+    print("MS user_email: ", user_email)
+    user = User.query.filter_by(email=user_email).first()
+    print("MS user: ", user)
     if user is None:
         return jsonify({"msg": "Usuario no encontrado"}), 404
-    new_password = request.get_json()['new_password']
+    new_password = request.json.get('new_password')
+    print("MS New password: ", new_password)
     user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    print("MS user.password: ", user.password)
     db.session.add(user)
     
-    token_data = get_jwt()
-    if token_data["type"]=="password":
-        token_blocked = TokenBlockedList(jti=token_data["jti"])
-        db.session.add(token_blocked)
+    #token_data = get_jwt()
+    #if token_data["type"]=="password":
+     #   token_blocked = TokenBlockedList(jti=token_data["jti"])
+       # db.session.add(token_blocked)
         
     db.session.commit()
         

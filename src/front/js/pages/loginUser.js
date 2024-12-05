@@ -11,6 +11,8 @@ export const LoginUser = () => {
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isRecoveryModalOpen, setIsRecoveryModalOpen] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [isEmailSent, sentisEmailSent] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -23,20 +25,25 @@ export const LoginUser = () => {
             navigate(response.is_admin ? "/perfiladmin" : "/userinfo");
         } else {
             setError(response.msg);
+            setEmail("");
             setIsModalOpen(true);
         }
     };
 
     const handleForgotPassword = () => {
         setIsRecoveryModalOpen(true);
+        setSuccessMessage("");
     };
 
     const handleRecoverySubmit = async (recoveryEmail) => {
-        const response = await actions.resetPassword(recoveryEmail);
+        const response = await actions.requestPasswordRecovery(recoveryEmail);
         if (response.success) {
-            setIsRecoveryModalOpen(false);
+            setSuccessMessage("Revise su correo para el cambio de clave");
+            sentisEmailSent(true);
+            setEmail("");
         } else {
             setError(response.msg);
+            setEmail("");
             setIsModalOpen(true);
         }
     };
@@ -72,19 +79,37 @@ export const LoginUser = () => {
                     <div className="m-auto">
                         {isRecoveryModalOpen && (
                             <div className="modal show" style={{ display: 'block', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1050 }}>
-                                <div className="modal-content" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '500px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)' }} >
+                                <div className="modal-content" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '10000px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)' }} >
                                     <div className="modal-header" >
                                         <h3>Recuperar Contraseña</h3>
+                                        <button onClick={() => setIsRecoveryModalOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', color: '#aaa', cursor: 'pointer' }}>
+                                            &times;
+                                        </button>
                                     </div>
                                     <form onSubmit={(e) => { e.preventDefault(); handleRecoverySubmit(email); }}>
                                         <div className="modal-body">
-                                            <label htmlFor="recoveryEmail">Correo Electrónico</label>
-                                            <input type="email" className="form-control" id="recoveryEmail" value={email} placeholder="Ingresa tu correo" onChange={(e) => setEmail(e.target.value)} required />
+                                            {!isEmailSent ? (
+                                            <>
+                                                <label htmlFor="recoveryEmail">Correo Electrónico</label>
+                                                <input type="email" className="form-control" id="recoveryEmail" value={email} placeholder="Ingresa tu correo" onChange={(e) => setEmail(e.target.value)} required />
+                                            </>
+                                            ) : (
+                                                <div className="alert alert-success mt-3">{successMessage}</div>
+                                            )}
                                         </div>
                                         <div className="d-flex justify-content-between">
-                                            <button className="btn btn-primary" onClick={() => setIsRecoveryModalOpen(false)}>Cancelar</button>
-                                            <button type="submit" className="btn btn-primary">Obtener enlace de recuperación de contraseña</button>
+                                            {isEmailSent ? (
+                                                <div className="m-auto">
+                                                <button className="btn btn-primary" onClick={() => setIsRecoveryModalOpen(false)}>Cerrar</button>
+                                                </div>
+                                            ) : (
+                                                <div className="m-auto">
+                                                    <button className="btn btn-primary" type="submit">Obtener enlace de recuperación de contraseña</button>
+                                                </div>
+                                            )}
+                                            
                                         </div>
+                                        
                                     </form>
                                 </div>
                             </div>
