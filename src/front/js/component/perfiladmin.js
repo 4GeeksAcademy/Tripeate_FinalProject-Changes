@@ -13,6 +13,7 @@ export const PerfilAdmin = () => {
   const [showModal, setShowModal] = useState(false);
   const [itemId, setItemId] = useState(null);
   const [itemType, setItemType] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [acceptedPlans, setAcceptedPlans] = useState([]);
   const [rejectedPlans, setRejectedPlans] = useState([]);
   const [pendingPlans, setPendingPlans] = useState([]);
@@ -29,6 +30,26 @@ export const PerfilAdmin = () => {
       setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
     });
   }, []);
+
+
+  // Filtrar usuarios y planes según el término de búsqueda
+  const filteredUsers = store.users.filter(user =>
+    `${user.name} ${user.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredAcceptedPlans = acceptedPlans.filter(plan =>
+    plan.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredRejectedPlans = rejectedPlans.filter(plan =>
+    plan.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredPendingPlans = pendingPlans.filter(plan =>
+    plan.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+
 
   const openModal = (id, type) => {
     setItemId(id);
@@ -99,14 +120,12 @@ export const PerfilAdmin = () => {
       for (const plan of allPlans) {
         const email = await actions.getUserEmailPlan(plan.id);
         emails[plan.id] = email
-        console.log("Email del usuario:", email)
       }
       setUserEmails(emails)
     }
     if (acceptedPlans.length > 0 || rejectedPlans.length > 0 || pendingPlans.length > 0) {
       fetchUserEmails();
-    }
-  }, [acceptedPlans, rejectedPlans, pendingPlans])
+    }}, [acceptedPlans, rejectedPlans, pendingPlans])
 
 
   return (
@@ -144,16 +163,30 @@ export const PerfilAdmin = () => {
             </ul>
           </div>
         )}
-        
+
       </nav>
 
       <div className="container mt-5" >
         <h1 className="text-center">Administrador</h1>
         <h1>Bienvenido, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h1>
 
+
+        {/* Campo de búsqueda */}
+        <input
+          type="text"
+          placeholder="Buscar..."
+          value={searchTerm}
+          onChange={(e) => {setSearchTerm(e.target.value);
+          console.log("Término de búsqueda:", e.target.value);
+          }}
+          className="form-control mb-3"
+        />
+
+
+
         {/* Sección de Usuarios */}
         <h3>Usuarios registrados en la plataforma</h3>
-        {store.users.length > 0 ? (
+        {filteredUsers.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
@@ -165,7 +198,7 @@ export const PerfilAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {store.users.map((user, index) => (
+              {filteredUsers.map((user, index) => (
                 <tr key={index}>
                   <th scope="row">{index + 1}</th>
                   <td>{user.name} {user.last_name}</td>
@@ -190,7 +223,7 @@ export const PerfilAdmin = () => {
         {/* Sección de Planes */}
         {/* Sección de Planes Aceptados */}
         <h3>Planes Aceptados</h3>
-        {acceptedPlans.length > 0 ? (
+        {filteredAcceptedPlans.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
@@ -203,7 +236,7 @@ export const PerfilAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {acceptedPlans.map((plan, index) => (
+              {filteredAcceptedPlans.map((plan, index) => (
                 <tr key={index}>
                   <th scope="row">{index + 1}</th>
                   <td>{plan.name}</td>
@@ -215,7 +248,7 @@ export const PerfilAdmin = () => {
                       className="btn btn-danger btn-sm"
                       onClick={() => openModal(plan.id, 'plan')}
                     >
-                      Eliminar
+                      <FontAwesomeIcon icon={faTrashAlt} />
                     </button>
                   </td>
                 </tr>
@@ -228,7 +261,7 @@ export const PerfilAdmin = () => {
 
         {/* Sección de Planes Rechazados */}
         <h3>Planes Rechazados</h3>
-        {rejectedPlans.length > 0 ? (
+        {filteredRejectedPlans.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
@@ -241,7 +274,7 @@ export const PerfilAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {rejectedPlans.map((plan, index) => (
+              {filteredRejectedPlans.map((plan, index) => (
                 <tr key={index}>
                   <th scope="row">{index + 1}</th>
                   <td>{plan.name}</td>
@@ -253,7 +286,7 @@ export const PerfilAdmin = () => {
                       className="btn btn-danger btn-sm"
                       onClick={() => openModal(plan.id, 'plan')}
                     >
-                      Eliminar
+                      <FontAwesomeIcon icon={faTrashAlt} />
                     </button>
                   </td>
                 </tr>
@@ -266,7 +299,7 @@ export const PerfilAdmin = () => {
 
         {/* Sección de Planes Pendientes */}
         <h3>Planes Pendientes</h3>
-        {pendingPlans.length > 0 ? (
+        {filteredPendingPlans.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
@@ -279,7 +312,7 @@ export const PerfilAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {pendingPlans.map((plan, index) => (
+              {filteredPendingPlans.map((plan, index) => (
                 <tr key={index}>
                   <th scope="row">{index + 1}</th>
                   <td>{plan.name}</td>
@@ -320,6 +353,6 @@ export const PerfilAdmin = () => {
           handlerDelete={handlerDelete}
         />
       </div>
-      </div>
-      )
+    </div>
+  )
 };
