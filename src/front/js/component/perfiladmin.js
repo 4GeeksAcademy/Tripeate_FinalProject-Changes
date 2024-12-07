@@ -1,11 +1,12 @@
 import PropTypes from "prop-types";
 import React, { useContext, useState, useEffect } from "react";
-import "../../styles/home.css";
+import "../../styles/nav-admin.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faBars, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faBars, faPlus, faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { Context } from "../store/appContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "./modal";
+import ErrorModal from "./modalError";
 
 
 export const PerfilAdmin = () => {
@@ -13,11 +14,14 @@ export const PerfilAdmin = () => {
   const [showModal, setShowModal] = useState(false);
   const [itemId, setItemId] = useState(null);
   const [itemType, setItemType] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [acceptedPlans, setAcceptedPlans] = useState([]);
   const [rejectedPlans, setRejectedPlans] = useState([]);
   const [pendingPlans, setPendingPlans] = useState([]);
   const [userEmails, setUserEmails] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
+  const [activeSection, setActiveSection] = useState('users');
+  const navigate = useNavigate();
 
   // Obtener usuarios y planes
   useEffect(() => {
@@ -29,6 +33,24 @@ export const PerfilAdmin = () => {
       setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
     });
   }, []);
+
+
+  // Filtrar usuarios y planes según el término de búsqueda
+  const filteredUsers = store.users.filter(user =>
+    `${user.name} ${user.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredAcceptedPlans = acceptedPlans.filter(plan =>
+    plan.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredRejectedPlans = rejectedPlans.filter(plan =>
+    plan.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredPendingPlans = pendingPlans.filter(plan =>
+    plan.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const openModal = (id, type) => {
     setItemId(id);
@@ -91,29 +113,37 @@ export const PerfilAdmin = () => {
     setCollapsed(!collapsed); // Alternar el estado de colapso
   };
 
-
-  useEffect(() => {
-    const fetchUserEmails = async () => {
-      const emails = {};
-      const allPlans = [...acceptedPlans, ...rejectedPlans, ...pendingPlans]
-      for (const plan of allPlans) {
-        const email = await actions.getUserEmailPlan(plan.id);
-        emails[plan.id] = email
-        console.log("Email del usuario:", email)
-      }
-      setUserEmails(emails)
+  const fetchUserEmails = async () => {
+    const emails = {};
+    const allPlans = [...acceptedPlans, ...rejectedPlans, ...pendingPlans]
+    for (const plan of allPlans) {
+      const email = await actions.getUserEmailPlan(plan.id);
+      emails[plan.id] = email
     }
+    setUserEmails(emails)
+  }
+  useEffect(() => {
     if (acceptedPlans.length > 0 || rejectedPlans.length > 0 || pendingPlans.length > 0) {
       fetchUserEmails();
-    }
-  }, [acceptedPlans, rejectedPlans, pendingPlans])
+      console.log(activeSection)
+    }}, [ acceptedPlans, rejectedPlans, pendingPlans]);
+
+
+  const handleLogOut = async () => {
+    const result = await actions.logoutUser();
+      if (result) {
+        navigate("/loginuser");
+      } else {
+        <ErrorModal />
+      }
+  };
 
 
   return (
     <div style={{ display: "flex", marginTop: "0", paddingTop: "0" }}>
       <nav className={`navbar bg-body-tertiary fixed-left ${collapsed ? 'collapsed' : ''} d-block ps-2 pt-5 text-end pe-4 nav-user mt-5`}
         style={{
-          backgroundColor: "white", borderBlockEnd: "rgb(165, 68, 65)", height: "100vh", width: "170px", transition: "transform 0.3s ease", margin: "0",
+          backgroundColor: "white", borderBlockEnd: "rgb(165, 68, 65)", height: "100vh", width: "180px", transition: "transform 0.3s ease", margin: "0",
           transform: collapsed ? "translateX(-60%)" : "translateX(0)", left: "0", top: "0", position: "relative", color: "rgb(165, 68, 65)"
         }}>
 
@@ -124,36 +154,64 @@ export const PerfilAdmin = () => {
         </div>
         {!collapsed && (
           <div>
-            <ul className="navbar-nav flex-column">
-              <li className="nav-item">
+            <ul className="navbar-nav flex-column ">
+              {/* <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#"><p><strong>Mi Perfil</strong></p></a>
+              </li> */}
+              <li className="nav-item">
+              </li>
+                <button className="btn text-end navbutton" onClick={() => setActiveSection('users')}>Usuarios</button>
+              <li className="nav-item">
+                <button className="btn text-end navbutton" onClick={() => setActiveSection('accepted')}>Planes Aceptados</button>
+              </li> 
+              <li className="nav-item">
+                <button className="btn text-end navbutton" onClick={() => setActiveSection('rejected')}>Planes Rechazados</button>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Compras</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">Favoritos</a>
+                <button className="btn text-end navbutton" onClick={() => setActiveSection('pending')}>Planes Pendientes</button>
               </li>
               <hr className="dropdown-divider border border-dark" style={{ width: "135px" }} />
               <li className="nav-item">
-                <a className="nav-link" href="#">Ventas</a>
-              </li>
-              <li className="nav-item">
                 <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
+              </li>
+              <hr className="dropdown-divider border border-dark" style={{ width: "135px" }} />
+              <li className="nav-item">
+                <button className="btn btn-new" onClick={handleLogOut} type="submit" style={{marginTop: "225px"}}>
+                  Cerrar sesión
+                </button>
               </li>
             </ul>
           </div>
+          
+
         )}
-        
+
       </nav>
 
       <div className="container mt-5" >
         <h1 className="text-center">Administrador</h1>
         <h1>Bienvenido, {store.currentUser ? `${store.currentUser.name} ${store.currentUser.last_name}` : 'Invitado'}</h1>
 
+
+        {/* Campo de búsqueda */}
+        <input
+          type="text"
+          placeholder="Buscar usuarios y destinos..."
+          value={searchTerm}
+          onChange={(e) => {setSearchTerm(e.target.value);
+          console.log("Término de búsqueda:", e.target.value);
+          }}
+          className="form-control mb-3 ps-4"
+          style={{ maxWidth: "300px", borderRadius: "20px", padding: "5px", borderBlockEnd: "rgb(165, 68, 65)"}}
+        />
+
+          
+
+        {activeSection === 'users' && (
+        <>
         {/* Sección de Usuarios */}
         <h3>Usuarios registrados en la plataforma</h3>
-        {store.users.length > 0 ? (
+        {filteredUsers.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
@@ -165,7 +223,7 @@ export const PerfilAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {store.users.map((user, index) => (
+              {filteredUsers.map((user, index) => (
                 <tr key={index}>
                   <th scope="row">{index + 1}</th>
                   <td>{user.name} {user.last_name}</td>
@@ -186,11 +244,15 @@ export const PerfilAdmin = () => {
         ) : (
           <p>No hay usuarios disponibles.</p>
         )}
+        </>
+        )}
 
+        {activeSection === 'accepted' && (
+        <>
         {/* Sección de Planes */}
         {/* Sección de Planes Aceptados */}
         <h3>Planes Aceptados</h3>
-        {acceptedPlans.length > 0 ? (
+        {filteredAcceptedPlans.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
@@ -203,7 +265,7 @@ export const PerfilAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {acceptedPlans.map((plan, index) => (
+              {filteredAcceptedPlans.map((plan, index) => (
                 <tr key={index}>
                   <th scope="row">{index + 1}</th>
                   <td>{plan.name}</td>
@@ -215,7 +277,7 @@ export const PerfilAdmin = () => {
                       className="btn btn-danger btn-sm"
                       onClick={() => openModal(plan.id, 'plan')}
                     >
-                      Eliminar
+                      <FontAwesomeIcon icon={faTrashAlt} />
                     </button>
                   </td>
                 </tr>
@@ -225,10 +287,14 @@ export const PerfilAdmin = () => {
         ) : (
           <p>No hay planes aceptados.</p>
         )}
+        </>
+        )}
 
+        { activeSection === 'rejected' && (
+        <>
         {/* Sección de Planes Rechazados */}
         <h3>Planes Rechazados</h3>
-        {rejectedPlans.length > 0 ? (
+        {filteredRejectedPlans.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
@@ -241,7 +307,7 @@ export const PerfilAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {rejectedPlans.map((plan, index) => (
+              {filteredRejectedPlans.map((plan, index) => (
                 <tr key={index}>
                   <th scope="row">{index + 1}</th>
                   <td>{plan.name}</td>
@@ -253,7 +319,7 @@ export const PerfilAdmin = () => {
                       className="btn btn-danger btn-sm"
                       onClick={() => openModal(plan.id, 'plan')}
                     >
-                      Eliminar
+                      <FontAwesomeIcon icon={faTrashAlt} />
                     </button>
                   </td>
                 </tr>
@@ -263,10 +329,14 @@ export const PerfilAdmin = () => {
         ) : (
           <p>No hay planes rechazados.</p>
         )}
-
+        </>
+        )}
+        
+        { activeSection === 'pending' && (  
+        <>
         {/* Sección de Planes Pendientes */}
         <h3>Planes Pendientes</h3>
-        {pendingPlans.length > 0 ? (
+        {filteredPendingPlans.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
@@ -279,7 +349,7 @@ export const PerfilAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {pendingPlans.map((plan, index) => (
+              {filteredPendingPlans.map((plan, index) => (
                 <tr key={index}>
                   <th scope="row">{index + 1}</th>
                   <td>{plan.name}</td>
@@ -313,6 +383,9 @@ export const PerfilAdmin = () => {
         ) : (
           <p>No hay planes pendientes.</p>
         )}
+        </>
+        )}
+
 
         <Modal
           showModal={showModal}
@@ -320,6 +393,6 @@ export const PerfilAdmin = () => {
           handlerDelete={handlerDelete}
         />
       </div>
-      </div>
-      )
+    </div>
+  )
 };

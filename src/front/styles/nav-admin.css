@@ -1,0 +1,29 @@
+.texto-fotos {
+    color: white;
+    z-index: 2;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, black, white);
+    mix-blend-mode: multiply;
+    z-index: 1; 
+}
+
+.arteTrip{
+    z-index: -2;
+    position: relative;
+    margin-top: 1rem;
+}
+
+li{
+    padding-left: .8em;
+}
+
+.navbutton:hover {
+    color: rgb(165, 68, 65);
+}
