@@ -13,20 +13,22 @@ import { faBars, faPlus } from '@fortawesome/free-solid-svg-icons';
 export const PerfilUser = () => {
     const { store, actions } = useContext(Context);
     const [collapsed, setCollapsed] = useState(false); 
+    const [ userPlans, setUserPlans] = useState([]);
 
     const toggleNavbar = () => {
-        setCollapsed(!collapsed); // Alternar el estado de colapso
+        setCollapsed(!collapsed); 
     }
 
     useEffect(() => {
-        actions.getPlansList()
-        // .then(plans => {
-        //   // Clasificar los planes en listas separadas
-        //   setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'));
-        //   setRejectedPlans(plans.filter(plan => plan.status === 'Rechazado'));
-        //   setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
-        // });
-      }, []);
+        const fetchUserPlans = async () => {
+            if (store.currentUser) { 
+                const plans = await actions.getPlansList();
+                const filteredPlans = plans.filter(plan => plan.user_id === store.currentUser.id); // Filtrar por el ID del usuario
+                setUserPlans(filteredPlans);
+            }
+        };
+        fetchUserPlans();
+    }, [store.currentUser]);
 
     //   const openModal = (id, type) => {
     //     setItemId(id);
@@ -36,14 +38,6 @@ export const PerfilUser = () => {
     
     //   const closeModal = () => {
     //     setShowModal(false);
-    //   };
-    
-    //   const fetchData = async () => {
-    //     await actions.getUsersList();
-    //     const plans = await actions.getPlansList();
-    //     setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'));
-    //     setRejectedPlans(plans.filter(plan => plan.status === 'Rechazado'));
-    //     setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
     //   };
     
     //   const handlerDelete = async () => {
@@ -96,19 +90,6 @@ export const PerfilUser = () => {
                                 <li className="nav-item">
                                     <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
                                 </li>
-                                {/*<li className="nav-item dropdown">
-                                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Dropdown
-                                    </a>
-                                    <ul className="dropdown-menu">
-                                        <li><a className="dropdown-item" href="#">Action</a></li>
-                                        <li><a className="dropdown-item" href="#">Another action</a></li>
-                                        <li>
-                                            <hr className="dropdown-divider" />
-                                        </li>
-                                        <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                    </ul>
-                                </li>*/}
                             </ul>
                             {/*<form className="d-flex mt-3" role="search">
                                 <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
@@ -118,17 +99,32 @@ export const PerfilUser = () => {
                     )}
                 
             </nav>
-             <div className="container mt-5 text-center" >
-                <div style={{ marginLeft: "-170px", position: "adsolute"}}>
-                <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%"}}/>
-                <h1 className="mt-0">¡Hola, {store.currentUser ? `${store.currentUser.name}!` : 'Invitado!'}</h1>
-                <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
-                </div>
-            </div>
-            <div>
-                
-            </div>
-            
+                <div className="container">
+                    <div className="container mt-5 text-center" >
+                        <div style={{ marginLeft: "-170px", position: "adsolute"}}>
+                        <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%"}}/>
+                        <h1 className="mt-0">¡Hola, {store.currentUser ? `${store.currentUser.name}!` : 'Invitado!'}</h1>
+                        <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
+                        </div>
+                    </div>
+                    <div>
+                    
+                    <h2>Mis Planes</h2>
+                        <ul>
+                        {userPlans.length > 0 ? (
+                                userPlans.map(plan => 
+                                    <li key={plan.id}>{plan.name} - {plan.status}</li>
+                            )
+                        ) : (
+                        <li>No tienes planes disponibles</li>
+
+                    )}
+                        </ul>
+                    <div className="text-center mt-5">
+                        <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>                       
+                    </div>
+                    </div>
+                    </div>
             </div>
     )
 };
