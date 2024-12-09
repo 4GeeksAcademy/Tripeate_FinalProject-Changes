@@ -5,7 +5,7 @@ import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/navuser.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 //import { Modal } from "../component/modal";
 
 
@@ -30,34 +30,34 @@ export const PerfilUser = () => {
         fetchUserPlans();
     }, [store.currentUser]);
 
-    //   const openModal = (id, type) => {
-    //     setItemId(id);
-    //     setItemType(type);
-    //     setShowModal(true);
-    //   };
+      const openModal = (id, type) => {
+        setItemId(id);
+        setItemType(type);
+        setShowModal(true);
+      };
     
-    //   const closeModal = () => {
-    //     setShowModal(false);
-    //   };
+      const closeModal = () => {
+        setShowModal(false);
+      };
     
-    //   const handlerDelete = async () => {
-    //     if (!itemId || !itemType) return;
-    //     try {
-    //       if (itemType === 'user') {
-    //         await actions.deleteUser(itemId);
-    //       } else if (itemType === 'plan') {
-    //         await actions.deletePlan(itemId);
-    //         // Actualiza el estado local eliminando el plan
-    //         setAcceptedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-    //         setRejectedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-    //         setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-    //       }
-    //       closeModal();
-    //       await fetchData();
-    //     } catch (error) {
-    //       console.error("Error al eliminar:", error);
-    //     }
-    //   };
+      const handlerDelete = async () => {
+        if (!itemId || !itemType) return;
+        try {
+          if (itemType === 'user') {
+            await actions.deleteUser(itemId);
+          } else if (itemType === 'plan') {
+            await actions.deletePlan(itemId);
+            // Actualiza el estado local eliminando el plan
+            setAcceptedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
+            setRejectedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
+            setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
+          }
+          closeModal();
+          await fetchData();
+        } catch (error) {
+          console.error("Error al eliminar:", error);
+        }
+      };
 
     return (
         <div style={{ display: "flex", marginTop: "0", paddingTop: "0" }}>
@@ -91,35 +91,51 @@ export const PerfilUser = () => {
                                     <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
                                 </li>
                             </ul>
-                            {/*<form className="d-flex mt-3" role="search">
-                                <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                                <button className="btn btn-outline-success" type="submit">Search</button>
-                            </form>*/}
                         </div>
                     )}
                 
             </nav>
                 <div className="container">
                     <div className="container mt-5 text-center" >
-                        <div style={{ marginLeft: "-170px", position: "adsolute"}}>
+                        <div style={{ marginLeft: "-10px", position: "adsolute"}}>
                         <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%"}}/>
                         <h1 className="mt-0">¡Hola, {store.currentUser ? `${store.currentUser.name}!` : 'Invitado!'}</h1>
                         <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
                         </div>
                     </div>
-                    <div>
-                    
-                    <h2>Mis Planes</h2>
-                        <ul>
-                        {userPlans.length > 0 ? (
-                                userPlans.map(plan => 
-                                    <li key={plan.id}>{plan.name} - {plan.status}</li>
-                            )
-                        ) : (
-                        <li>No tienes planes disponibles</li>
-
-                    )}
-                        </ul>
+                    <div className="container mt-5">
+                    <h1 className="text-center">Mis Planes</h1>
+                    <table className="table" style={{backgroundColor: "white", borderRadius: "10px", maxWidth: ""}}>
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre del Plan</th>
+                                <th scope="col">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userPlans.length > 0 ? (
+                                userPlans.map((plan, index) => (
+                                    <tr key={plan.id}>
+                                        <th scope="row">{index + 1}</th>
+                                        <td>{plan.name}</td>
+                                        <td>{plan.status}</td>
+                                        <td>
+                                        <button
+                                            className="btn btn-danger btn-sm"
+                                            onClick={() => openModal(plan.id, 'plan')}>
+                                                <FontAwesomeIcon icon={faTrashAlt} />
+                                        </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="2">No tienes planes disponibles</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                     <div className="text-center mt-5">
                         <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>                       
                     </div>
