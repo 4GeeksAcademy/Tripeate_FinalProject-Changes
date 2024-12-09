@@ -6,12 +6,15 @@ import { Link } from "react-router-dom";
 import "../../styles/navuser.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-//import { Modal } from "../component/modal";
+import { Modal } from "../component/modal";
 
 
 
 export const PerfilUser = () => {
     const { store, actions } = useContext(Context);
+    const [showModal, setShowModal] = useState(false);
+    const [itemId, setItemId] = useState(null);
+    const [itemType, setItemType] = useState(null);
     const [collapsed, setCollapsed] = useState(false); 
     const [ userPlans, setUserPlans] = useState([]);
 
@@ -43,17 +46,13 @@ export const PerfilUser = () => {
       const handlerDelete = async () => {
         if (!itemId || !itemType) return;
         try {
-          if (itemType === 'user') {
-            await actions.deleteUser(itemId);
-          } else if (itemType === 'plan') {
+          if (itemType === 'plan') {
             await actions.deletePlan(itemId);
-            // Actualiza el estado local eliminando el plan
-            setAcceptedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-            setRejectedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-            setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
           }
           closeModal();
-          await fetchData();
+          const plans = await actions.getPlansList();
+          const filteredPlans = plans.filter(plan => plan.user_id === store.currentUser.id);
+          setUserPlans(filteredPlans);
         } catch (error) {
           console.error("Error al eliminar:", error);
         }
@@ -104,12 +103,12 @@ export const PerfilUser = () => {
                         </div>
                     </div>
                     <div className="container mt-5">
-                    <h1 className="text-center">Mis Planes</h1>
+                    <h1 className="text-center">Mis Trips</h1>
                     <table className="table" style={{backgroundColor: "white", borderRadius: "10px", maxWidth: ""}}>
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Nombre del Plan</th>
+                                <th scope="col">Nombre del Trip</th>
                                 <th scope="col">Estado</th>
                             </tr>
                         </thead>
@@ -123,7 +122,8 @@ export const PerfilUser = () => {
                                         <td>
                                         <button
                                             className="btn btn-danger btn-sm"
-                                            onClick={() => openModal(plan.id, 'plan')}>
+                                            onClick={() => openModal(plan.id, 'plan')}
+                                            >
                                                 <FontAwesomeIcon icon={faTrashAlt} />
                                         </button>
                                         </td>
@@ -141,6 +141,11 @@ export const PerfilUser = () => {
                     </div>
                     </div>
                     </div>
+                    <Modal
+                        showModal={showModal}
+                        handlerClose={closeModal}
+                        handlerDelete={handlerDelete}
+                    />
             </div>
     )
 };
