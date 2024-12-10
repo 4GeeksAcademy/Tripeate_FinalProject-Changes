@@ -146,7 +146,7 @@ export const PerfilUser = () => {
                     </div>
                     <div className="container mt-5">
                     <h1 className="text-center">Mis Trips</h1>
-                    <table className="table" style={{backgroundColor: "white", borderRadius: "10px", maxWidth: ""}}>
+                    <table className="table" style={{backgroundColor: "white", borderRadius: "10px"}}>
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -182,23 +182,23 @@ export const PerfilUser = () => {
                         <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>                       
                     </div>
                     </div>
-                    
-                    <div>
+                    <div className="container mt-5 p-4" style={{backgroundColor: "white", maxWidth: "800px", borderRadius: "10px"}}>
                         <form onSubmit={handleSubmit}>
-                            <div>
-                                <label>Nombre:</label>
+                            <div className="pt-2">
+                                <label style={{color:"rgb(165, 68, 65)"}}><strong>Nombre:</strong></label>
                                 <input type="text" name="name" value={userData.name} onChange={handleChange} required />
                             </div>
-                            <div>
-                                <label>Apellido:</label>
+                            <div className="pt-2">
+                            <label style={{color:"rgb(165, 68, 65)"}}><strong>Apellido:</strong></label>
                                 <input type="text" name="last_name" value={userData.last_name} onChange={handleChange} />
                             </div>
-                            <div>
-                                <label>Email:</label>
+                            <div className="pt-2">
+                            <label style={{color:"rgb(165, 68, 65)"}}><strong>Correo electrónico:</strong></label>
                                 <input type="email" name="email" value={userData.email} onChange={handleChange} required />
                             </div>
-                            
-                            <button type="submit">Actualizar Información</button>
+                            <div className="text-center mt-5">
+                            <button className="btn btn-new" type="submit">Actualizar Información</button>
+                            </div>
                         </form>
                     </div>
                     <Modal
