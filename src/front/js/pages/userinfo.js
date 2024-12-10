@@ -35,8 +35,6 @@ export const PerfilUser = () => {
             name: store.currentUser.name || '',
             last_name: store.currentUser.last_name || '',
             email: store.currentUser.email || '',
-            
-            
         });
     }
     }, [store.currentUser]);
@@ -48,21 +46,25 @@ export const PerfilUser = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Datos a enviar:", userData); 
+        console.log("Datos a enviar:", userData);
         const token = localStorage.getItem("token");
         try {
-            await actions.updateUser(store.currentUser.id,  
-                userData.name,
-                userData.last_name,
-                userData.email,
-                
-                token);
-            alert("Información actualizada con éxito");
+          await actions.updateUser(store.currentUser.id,
+            userData.name,
+            userData.last_name,
+            userData.email,
+            token);
+          setUserData({
+            name: userData.name,
+            last_name: userData.last_name,
+            email: userData.email
+          });
+          alert("Información actualizada con éxito");
         } catch (error) {
-            console.error("Error al actualizar:", error);
-            alert("Error al actualizar la información");
+          console.error("Error al actualizar:", error);
+          alert("Error al actualizar la información");
         }
-    }
+      };
     
     const toggleNavbar = () => {
         setCollapsed(!collapsed); 
@@ -144,8 +146,8 @@ export const PerfilUser = () => {
                     <div className="container mt-5 text-center" >
                         <div style={{ marginLeft: "-10px", position: "adsolute"}}>
                         <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%"}}/>
-                        <h1 className="mt-0">¡Hola, {store.currentUser ? `${store.currentUser.name}!` : 'Invitado!'}</h1>
-                        <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
+                        <h1 className="mt-0">¡Hola, {userData.name ? `${userData.name}!` : 'Invitado!'}</h1>
+                        <h5>{store.currentUser ? `${userData.email}` : 'email'}</h5>
                         </div>
                     </div>
                     {activeSection === 'ventas' && (
