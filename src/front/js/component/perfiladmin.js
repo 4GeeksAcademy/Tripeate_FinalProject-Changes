@@ -21,7 +21,51 @@ export const PerfilAdmin = () => {
   const [userEmails, setUserEmails] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
   const [activeSection, setActiveSection] = useState('users');
+  const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
+
+  const [userData, setUserData] = useState({
+    name: '', 
+    last_name: '',
+    email: ''
+});
+
+useEffect(() => {
+    if (store.currentUser){
+    setUserData({
+        name: store.currentUser.name || '',
+        last_name: store.currentUser.last_name || '',
+        email: store.currentUser.email || '',
+    });
+}
+}, [store.currentUser]);
+
+const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value});
+};
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Datos a enviar:", userData); 
+    const token = localStorage.getItem("token");
+    try {
+        await actions.updateUser(store.currentUser.id,  
+            userData.name,
+            userData.last_name,
+            userData.email,
+            
+            token);
+        alert("Información actualizada con éxito");
+    } catch (error) {
+        console.error("Error al actualizar:", error);
+        alert("Error al actualizar la información");
+    }
+};
+
+const toggleForm = () => {
+  setShowForm(!showForm); 
+};
 
   // Obtener usuarios y planes
   useEffect(() => {
@@ -155,9 +199,9 @@ export const PerfilAdmin = () => {
         {!collapsed && (
           <div>
             <ul className="navbar-nav flex-column ">
-              {/* <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#"><p><strong>Mi Perfil</strong></p></a>
-              </li> */}
+              <li className="nav-item">
+                <button className=" btn text-end navbutton" onClick={toggleForm} href="#"><p><strong>Mi Perfil</strong></p></button>
+              </li>
               <li className="nav-item">
               </li>
                 <button className="btn text-end navbutton" onClick={() => setActiveSection('users')}>Usuarios</button>
@@ -194,6 +238,7 @@ export const PerfilAdmin = () => {
 
 
         {/* Campo de búsqueda */}
+        {!showForm && (
         <input
           type="text"
           placeholder="Buscar usuarios y destinos..."
@@ -204,10 +249,9 @@ export const PerfilAdmin = () => {
           className="form-control mb-3 ps-4"
           style={{ maxWidth: "300px", borderRadius: "20px", padding: "5px", borderBlockEnd: "rgb(165, 68, 65)"}}
         />
+      )}
 
-          
-
-        {activeSection === 'users' && (
+        {activeSection === 'users' && !showForm && (
         <>
         {/* Sección de Usuarios */}
         <h3>Usuarios registrados en la plataforma</h3>
@@ -385,8 +429,27 @@ export const PerfilAdmin = () => {
         )}
         </>
         )}
-
-
+        {showForm && (
+          <div className="container mt-5 p-4" style={{ backgroundColor: "white", maxWidth: "800px", borderRadius: "10px" }}>
+            <form onSubmit={handleSubmit}>
+          <div className="pt-2">
+                <label style={{ color: "rgb(165, 68, 65)" }}><strong>Nombre:</strong></label>
+                <input type="text" name="name" value={userData.name} onChange={handleChange} required />
+          </div>
+          <div className="pt-2">
+              <label style={{ color: "rgb(165, 68, 65)" }}><strong>Apellido:</strong></label>
+              <input type="text" name="last_name" value={userData.last_name} onChange={handleChange} />
+          </div>
+          <div className="pt-2">
+              <label style={{ color: "rgb(165, 68, 65)" }}><strong>Correo electrónico:</strong></label>
+              <input type="email" name="email" value={userData.email} onChange={handleChange} required />
+          </div>
+          <div className="text-center mt-5">
+              <button className="btn btn-new" type="submit">Actualizar Información</button>
+          </div>
+            </form>
+          </div> 
+        )}  
         <Modal
           showModal={showModal}
           handlerClose={closeModal}
