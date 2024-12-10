@@ -17,7 +17,11 @@ export const PerfilUser = () => {
     const [itemType, setItemType] = useState(null);
     const [collapsed, setCollapsed] = useState(false); 
     const [userPlans, setUserPlans] = useState([]);
-    // const [activeSection, setActiveSection] = useState('Perfil')
+    const [activeSection, setActiveSection] = useState(null)
+
+    const handleSectionChange = (section) => {
+        setActiveSection(section);
+    };
     
     const [userData, setUserData] = useState({
         name: '', 
@@ -31,8 +35,6 @@ export const PerfilUser = () => {
             name: store.currentUser.name || '',
             last_name: store.currentUser.last_name || '',
             email: store.currentUser.email || '',
-            
-            
         });
     }
     }, [store.currentUser]);
@@ -44,21 +46,25 @@ export const PerfilUser = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Datos a enviar:", userData); 
+        console.log("Datos a enviar:", userData);
         const token = localStorage.getItem("token");
         try {
-            await actions.updateUser(store.currentUser.id,  
-                userData.name,
-                userData.last_name,
-                userData.email,
-                
-                token);
-            alert("Información actualizada con éxito");
+          await actions.updateUser(store.currentUser.id,
+            userData.name,
+            userData.last_name,
+            userData.email,
+            token);
+          setUserData({
+            name: userData.name,
+            last_name: userData.last_name,
+            email: userData.email
+          });
+          alert("Información actualizada con éxito");
         } catch (error) {
-            console.error("Error al actualizar:", error);
-            alert("Error al actualizar la información");
+          console.error("Error al actualizar:", error);
+          alert("Error al actualizar la información");
         }
-    }
+      };
     
     const toggleNavbar = () => {
         setCollapsed(!collapsed); 
@@ -116,7 +122,7 @@ export const PerfilUser = () => {
                             
                             <ul className="navbar-nav flex-column">
                                 <li className="nav-item">
-                                    <a className="nav-link active" aria-current="page" href="#"><p><strong>Mi Perfil</strong></p></a>
+                                    <a className="nav-link active" aria-current="page" href="#" onClick={() => handleSectionChange('perfil')}><p><strong>Mi Perfil</strong></p></a>
                                 </li>
                                 <li className="nav-item">
                                     <a className="nav-link" href="#">Compras</a>
@@ -126,7 +132,7 @@ export const PerfilUser = () => {
                                 </li>
                                 <hr className="dropdown-divider border border-dark" style={{width: "135px"}}   />
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Ventas</a>
+                                    <a className="nav-link" href="#" onClick={() => handleSectionChange('ventas')}>Ventas</a>
                                 </li>
                                 <li className="nav-item">
                                     <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
@@ -140,10 +146,11 @@ export const PerfilUser = () => {
                     <div className="container mt-5 text-center" >
                         <div style={{ marginLeft: "-10px", position: "adsolute"}}>
                         <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%"}}/>
-                        <h1 className="mt-0">¡Hola, {store.currentUser ? `${store.currentUser.name}!` : 'Invitado!'}</h1>
-                        <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
+                        <h1 className="mt-0">¡Hola, {userData.name ? `${userData.name}!` : 'Invitado!'}</h1>
+                        <h5>{store.currentUser ? `${userData.email}` : 'email'}</h5>
                         </div>
                     </div>
+                    {activeSection === 'ventas' && (
                     <div className="container mt-5">
                     <h1 className="text-center">Mis Trips</h1>
                     <table className="table" style={{backgroundColor: "white", borderRadius: "10px"}}>
@@ -182,6 +189,8 @@ export const PerfilUser = () => {
                         <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>                       
                     </div>
                     </div>
+                    )}
+                    {activeSection === 'perfil' && (
                     <div className="container mt-5 p-4" style={{backgroundColor: "white", maxWidth: "800px", borderRadius: "10px"}}>
                         <form onSubmit={handleSubmit}>
                             <div className="pt-2">
@@ -201,6 +210,7 @@ export const PerfilUser = () => {
                             </div>
                         </form>
                     </div>
+                    )}
                     <Modal
                         showModal={showModal}
                         handlerClose={closeModal}
