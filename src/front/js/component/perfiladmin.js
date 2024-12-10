@@ -291,7 +291,7 @@ const toggleForm = () => {
         </>
         )}
 
-        {activeSection === 'accepted' && (
+        {activeSection === 'accepted'&& !showForm && (
         <>
         {/* Sección de Planes */}
         {/* Sección de Planes Aceptados */}
@@ -334,7 +334,7 @@ const toggleForm = () => {
         </>
         )}
 
-        { activeSection === 'rejected' && (
+        { activeSection === 'rejected'&& !showForm && (
         <>
         {/* Sección de Planes Rechazados */}
         <h3>Planes Rechazados</h3>
@@ -376,7 +376,7 @@ const toggleForm = () => {
         </>
         )}
         
-        { activeSection === 'pending' && (  
+        { activeSection === 'pending' && !showForm && (  
         <>
         {/* Sección de Planes Pendientes */}
         <h3>Planes Pendientes</h3>
