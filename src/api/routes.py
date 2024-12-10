@@ -326,8 +326,6 @@ def delete_plan(plan_id):
     if not plan:
         return jsonify({"error": "Plan no encontrado"}), 404 
     is_owner =  plan.user_id == int(current_user_id)
-    print(is_owner)
-    print
     if current_user.is_admin or is_owner:
         db.session.delete(plan)
         db.session.commit()
