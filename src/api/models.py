@@ -55,15 +55,15 @@ class User(db.Model):
                     plan.status = PlanStatus.Rejected
                 db.session.commit()
 
-    # El usuario admin puede eliminar planes
+    # El usuario admin o dueño del plan puede eliminar planes
     def delete_plan(self, plan_id):
-        if self.is_admin:
-            plan_to_delete = Plan.query.get(plan_id)
-            if plan_to_delete:
+        plan_to_delete = Plan.query.get(plan_id)
+        if not plan_to_delete:
+            return False, "Plan no encontrado."
+        if self.is_admin or plan_to_delete.user_id == self.id:
                 db.session.delete(plan_to_delete)
                 db.session.commit()
                 return True, "Plan eliminado exitosamente."
-            return False, "Plan no encontrado."
         return False, "No tienes permiso para eliminar planes."
 
     # El usuario puede comprar un plan
