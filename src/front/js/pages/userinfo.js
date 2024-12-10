@@ -16,8 +16,50 @@ export const PerfilUser = () => {
     const [itemId, setItemId] = useState(null);
     const [itemType, setItemType] = useState(null);
     const [collapsed, setCollapsed] = useState(false); 
-    const [ userPlans, setUserPlans] = useState([]);
+    const [userPlans, setUserPlans] = useState([]);
+    // const [activeSection, setActiveSection] = useState('Perfil')
+    
+    const [userData, setUserData] = useState({
+        name: '', 
+        last_name: '',
+        email: ''
+    });
 
+    useEffect(() => {
+        if (store.currentUser){
+        setUserData({
+            name: store.currentUser.name || '',
+            last_name: store.currentUser.last_name || '',
+            email: store.currentUser.email || '',
+            
+            
+        });
+    }
+    }, [store.currentUser]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUserData({ ...userData, [name]: value});
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("Datos a enviar:", userData); 
+        const token = localStorage.getItem("token");
+        try {
+            await actions.updateUser(store.currentUser.id,  
+                userData.name,
+                userData.last_name,
+                userData.email,
+                
+                token);
+            alert("Información actualizada con éxito");
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+            alert("Error al actualizar la información");
+        }
+    }
+    
     const toggleNavbar = () => {
         setCollapsed(!collapsed); 
     }
@@ -140,12 +182,31 @@ export const PerfilUser = () => {
                         <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>                       
                     </div>
                     </div>
+                    
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <div>
+                                <label>Nombre:</label>
+                                <input type="text" name="name" value={userData.name} onChange={handleChange} required />
+                            </div>
+                            <div>
+                                <label>Apellido:</label>
+                                <input type="text" name="last_name" value={userData.last_name} onChange={handleChange} />
+                            </div>
+                            <div>
+                                <label>Email:</label>
+                                <input type="email" name="email" value={userData.email} onChange={handleChange} required />
+                            </div>
+                            
+                            <button type="submit">Actualizar Información</button>
+                        </form>
                     </div>
                     <Modal
                         showModal={showModal}
                         handlerClose={closeModal}
                         handlerDelete={handlerDelete}
                     />
+            </div>
             </div>
     )
 };
