@@ -5,65 +5,106 @@ import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/navuser.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faPlus } from '@fortawesome/free-solid-svg-icons';
-//import { Modal } from "../component/modal";
+import { faBars, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Modal } from "../component/modal";
 
 
 
 export const PerfilUser = () => {
     const { store, actions } = useContext(Context);
+    const [showModal, setShowModal] = useState(false);
+    const [itemId, setItemId] = useState(null);
+    const [itemType, setItemType] = useState(null);
     const [collapsed, setCollapsed] = useState(false); 
+    const [userPlans, setUserPlans] = useState([]);
+    const [activeSection, setActiveSection] = useState(null)
 
+    const handleSectionChange = (section) => {
+        setActiveSection(section);
+    };
+    
+    const [userData, setUserData] = useState({
+        name: '', 
+        last_name: '',
+        email: ''
+    });
+
+    useEffect(() => {
+        if (store.currentUser){
+        setUserData({
+            name: store.currentUser.name || '',
+            last_name: store.currentUser.last_name || '',
+            email: store.currentUser.email || '',
+        });
+    }
+    }, [store.currentUser]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUserData({ ...userData, [name]: value});
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("Datos a enviar:", userData);
+        const token = localStorage.getItem("token");
+        try {
+          await actions.updateUser(store.currentUser.id,
+            userData.name,
+            userData.last_name,
+            userData.email,
+            token);
+          setUserData({
+            name: userData.name,
+            last_name: userData.last_name,
+            email: userData.email
+          });
+          alert("Información actualizada con éxito");
+        } catch (error) {
+          console.error("Error al actualizar:", error);
+          alert("Error al actualizar la información");
+        }
+      };
+    
     const toggleNavbar = () => {
-        setCollapsed(!collapsed); // Alternar el estado de colapso
+        setCollapsed(!collapsed); 
     }
 
     useEffect(() => {
-        actions.getPlansList()
-        // .then(plans => {
-        //   // Clasificar los planes en listas separadas
-        //   setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'));
-        //   setRejectedPlans(plans.filter(plan => plan.status === 'Rechazado'));
-        //   setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
-        // });
-      }, []);
+        const fetchUserPlans = async () => {
+            if (store.currentUser) { 
+                const plans = await actions.getPlansList();
+                const filteredPlans = plans.filter(plan => plan.user_id === store.currentUser.id); // Filtrar por el ID del usuario
+                setUserPlans(filteredPlans);
+            }
+        };
+        fetchUserPlans();
+    }, [store.currentUser]);
 
-    //   const openModal = (id, type) => {
-    //     setItemId(id);
-    //     setItemType(type);
-    //     setShowModal(true);
-    //   };
+      const openModal = (id, type) => {
+        setItemId(id);
+        setItemType(type);
+        setShowModal(true);
+      };
     
-    //   const closeModal = () => {
-    //     setShowModal(false);
-    //   };
+      const closeModal = () => {
+        setShowModal(false);
+      };
     
-    //   const fetchData = async () => {
-    //     await actions.getUsersList();
-    //     const plans = await actions.getPlansList();
-    //     setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'));
-    //     setRejectedPlans(plans.filter(plan => plan.status === 'Rechazado'));
-    //     setPendingPlans(plans.filter(plan => plan.status === 'Pendiente'));
-    //   };
-    
-    //   const handlerDelete = async () => {
-    //     if (!itemId || !itemType) return;
-    //     try {
-    //       if (itemType === 'user') {
-    //         await actions.deleteUser(itemId);
-    //       } else if (itemType === 'plan') {
-    //         await actions.deletePlan(itemId);
-    //         // Actualiza el estado local eliminando el plan
-    //         setAcceptedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-    //         setRejectedPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-    //         setPendingPlans(prevPlans => prevPlans.filter(plan => plan.id !== itemId));
-    //       }
-    //       closeModal();
-    //       await fetchData();
-    //     } catch (error) {
-    //       console.error("Error al eliminar:", error);
-    //     }
-    //   };
+      const handlerDelete = async () => {
+        if (!itemId || !itemType) return;
+        try {
+          if (itemType === 'plan') {
+            await actions.deletePlan(itemId);
+          }
+          closeModal();
+          const plans = await actions.getPlansList();
+          const filteredPlans = plans.filter(plan => plan.user_id === store.currentUser.id);
+          setUserPlans(filteredPlans);
+        } catch (error) {
+          console.error("Error al eliminar:", error);
+        }
+      };
 
     return (
         <div style={{ display: "flex", marginTop: "0", paddingTop: "0" }}>
@@ -81,7 +122,7 @@ export const PerfilUser = () => {
                             
                             <ul className="navbar-nav flex-column">
                                 <li className="nav-item">
-                                    <a className="nav-link active" aria-current="page" href="#"><p><strong>Mi Perfil</strong></p></a>
+                                    <a className="nav-link active" aria-current="page" href="#" onClick={() => handleSectionChange('perfil')}><p><strong>Mi Perfil</strong></p></a>
                                 </li>
                                 <li className="nav-item">
                                     <a className="nav-link" href="#">Compras</a>
@@ -91,44 +132,91 @@ export const PerfilUser = () => {
                                 </li>
                                 <hr className="dropdown-divider border border-dark" style={{width: "135px"}}   />
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Ventas</a>
+                                    <a className="nav-link" href="#" onClick={() => handleSectionChange('ventas')}>Ventas</a>
                                 </li>
                                 <li className="nav-item">
                                     <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
                                 </li>
-                                {/*<li className="nav-item dropdown">
-                                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Dropdown
-                                    </a>
-                                    <ul className="dropdown-menu">
-                                        <li><a className="dropdown-item" href="#">Action</a></li>
-                                        <li><a className="dropdown-item" href="#">Another action</a></li>
-                                        <li>
-                                            <hr className="dropdown-divider" />
-                                        </li>
-                                        <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                    </ul>
-                                </li>*/}
                             </ul>
-                            {/*<form className="d-flex mt-3" role="search">
-                                <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                                <button className="btn btn-outline-success" type="submit">Search</button>
-                            </form>*/}
                         </div>
                     )}
                 
             </nav>
-             <div className="container mt-5 text-center" >
-                <div style={{ marginLeft: "-170px", position: "adsolute"}}>
-                <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%"}}/>
-                <h1 className="mt-0">¡Hola, {store.currentUser ? `${store.currentUser.name}!` : 'Invitado!'}</h1>
-                <h5>{store.currentUser ? `${store.currentUser.email}` : 'email'}</h5>
-                </div>
+                <div className="container">
+                    <div className="container mt-5 text-center" >
+                        <div style={{ marginLeft: "-10px", position: "adsolute"}}>
+                        <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%"}}/>
+                        <h1 className="mt-0">¡Hola, {userData.name ? `${userData.name}!` : 'Invitado!'}</h1>
+                        <h5>{store.currentUser ? `${userData.email}` : 'email'}</h5>
+                        </div>
+                    </div>
+                    {activeSection === 'ventas' && (
+                    <div className="container mt-5">
+                    <h1 className="text-center">Mis Trips</h1>
+                    <table className="table" style={{backgroundColor: "white", borderRadius: "10px"}}>
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre del Trip</th>
+                                <th scope="col">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userPlans.length > 0 ? (
+                                userPlans.map((plan, index) => (
+                                    <tr key={plan.id}>
+                                        <th scope="row">{index + 1}</th>
+                                        <td>{plan.name}</td>
+                                        <td>{plan.status}</td>
+                                        <td>
+                                        <button
+                                            className="btn btn-danger btn-sm"
+                                            onClick={() => openModal(plan.id, 'plan')}
+                                            >
+                                                <FontAwesomeIcon icon={faTrashAlt} />
+                                        </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="2">No tienes planes disponibles</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                    <div className="text-center mt-5">
+                        <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>                       
+                    </div>
+                    </div>
+                    )}
+                    {activeSection === 'perfil' && (
+                    <div className="container mt-5 p-4" style={{backgroundColor: "white", maxWidth: "800px", borderRadius: "10px"}}>
+                        <form onSubmit={handleSubmit}>
+                            <div className="pt-2">
+                                <label style={{color:"rgb(165, 68, 65)"}}><strong>Nombre:</strong></label>
+                                <input type="text" name="name" value={userData.name} onChange={handleChange} required />
+                            </div>
+                            <div className="pt-2">
+                            <label style={{color:"rgb(165, 68, 65)"}}><strong>Apellido:</strong></label>
+                                <input type="text" name="last_name" value={userData.last_name} onChange={handleChange} />
+                            </div>
+                            <div className="pt-2">
+                            <label style={{color:"rgb(165, 68, 65)"}}><strong>Correo electrónico:</strong></label>
+                                <input type="email" name="email" value={userData.email} onChange={handleChange} required />
+                            </div>
+                            <div className="text-center mt-5">
+                            <button className="btn btn-new" type="submit">Actualizar Información</button>
+                            </div>
+                        </form>
+                    </div>
+                    )}
+                    <Modal
+                        showModal={showModal}
+                        handlerClose={closeModal}
+                        handlerDelete={handlerDelete}
+                    />
             </div>
-            <div>
-                
-            </div>
-            
             </div>
     )
 };

@@ -159,19 +159,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			
 
-			updateUser: async (user_id, name, last_name, email, password, profile_image) => {
+			updateUser: async (user_id, name, last_name, email, token) => {
 				try {
+					console.log("Datos a enviar:", { user_id, name, last_name, email});
 					const response = await fetch(`${backendURL}/update_user/${user_id}`, {
 						method: "PUT",
 						headers: {
 							"Content-Type": "application/json",
+							"Authorization": `Bearer ${token}`, 
 						},
 						body: JSON.stringify({
 							name: name,
 							last_name: last_name,
 							email: email,
-							password: password,
-							profile_image: profile_image,
 						}),
 					});
 			
