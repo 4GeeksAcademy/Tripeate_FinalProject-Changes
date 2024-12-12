@@ -6,10 +6,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 
 			user: null,
-			currentUser: storedUser ? JSON.parse(storedUser) : null,
+			token: localStorage.getItem("token")??null,
+			currentUser: JSON.parse(localStorage.getItem("currentUser")) ?? null,
 			users: [],
 			plans: [], 
-			itemType: null
+			itemType: null,
 
 		},
 		actions: {
@@ -53,7 +54,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify({ 
 							email, 
-							password, 
+							password,
 						}),
 					});
 
