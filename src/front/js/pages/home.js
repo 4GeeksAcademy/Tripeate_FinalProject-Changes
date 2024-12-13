@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
 import { TripCards } from "../component/tripCards";
@@ -6,10 +6,19 @@ import tripArte from "../../img/arteTrips.png";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
+	const [acceptedPlans, setAcceptedPlans] = useState([]);
+	
 
 	useEffect(() => {
-		actions.getPlansList();
-	}, [])
+		actions.getPlansList().then(plans => {
+			setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'))
+		});
+	}, []);
+
+	const filteredAcceptedPlans = acceptedPlans.filter(plan =>
+		plan.name.toLowerCase()
+	  );
+
 
 	return (
 		<div className="container-fluid text-center mt-3">
@@ -85,8 +94,8 @@ export const Home = () => {
 
 			<div className="container allCards">
 				<div className="row ">
-					{store.plans.length > 0 ? (
-						store.plans.map((plan) => (
+					{filteredAcceptedPlans.length > 0 ? (
+						filteredAcceptedPlans.map((plan) => (
 							<div className="col-md-4" key={plan.id}>
 								<TripCards
 									name={plan.name}
