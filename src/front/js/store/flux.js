@@ -96,7 +96,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						setStore({ token: null, user: null }); // Eliminar token y usuario del estado
 						return true; // Éxito
 					} else {
-						console.error("Error al cerrar sesión");
+						console.error("Error al cerrar sesión", error);
 						return false;
 					}
 				} catch (error) {

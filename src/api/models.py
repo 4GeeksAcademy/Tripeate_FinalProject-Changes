@@ -125,7 +125,7 @@ class Plan(db.Model):
             "caption": self.caption,
             "image": self.image,
             "user_id": self.user_id,
-            "type": self.type.value,  # Serializar el tipo
+            #"type": self.type.value,  # Serializar el tipo
             "available_slots": self.available_slots,
             "status": self.status.value, # Serializar la cantidad de cupos disponibles 
             "user_email": self.get_user_email()

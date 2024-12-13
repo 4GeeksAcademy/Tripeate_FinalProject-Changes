@@ -223,7 +223,7 @@ def create_plan():
     name = body.get('name')
     caption = body.get('caption')
     image = body.get('image')
-    type = body.get('type')
+    #type = body.get('type')
     available_slots = body.get('available_slots')
     status = body.get('status', PlanStatus.Pending)
     
@@ -232,7 +232,7 @@ def create_plan():
         name=name,
         caption=caption,
         image=image,
-        type=type,
+        #type=type,
         user_id=current_user_id,
         available_slots=available_slots,
         status=status
