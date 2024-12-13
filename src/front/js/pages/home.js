@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
 import { TripCards } from "../component/tripCards";
@@ -6,6 +6,10 @@ import tripArte from "../../img/arteTrips.png";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
+
+	useEffect(() => {
+		actions.getPlansList();
+	}, [])
 
 	return (
 		<div className="container-fluid text-center mt-3">
@@ -81,25 +85,21 @@ export const Home = () => {
 
 			<div className="container allCards">
 				<div className="row ">
-					<div className="col-md-12 ">
-						<TripCards />
-						<TripCards />
-						<TripCards />
-					</div>
+					{store.plans.length > 0 ? (
+						store.plans.map((plan) => (
+							<div className="col-md-4" key={plan.id}>
+								<TripCards
+									name={plan.name}
+									image={plan.image}
+									caption={plan.caption} />
+							</div>
+						))
+					) : (
+						<p>No hay planes disponibles.</p>
+					)}
+					
 				</div>
-				<div className="row ">
-					<div className="col-md-12 ">
-						<TripCards />
-						<TripCards />
-						<TripCards />
-					</div>
-				</div>
-
-
-
 			</div>
-
-
 		</div>
 	);
 };

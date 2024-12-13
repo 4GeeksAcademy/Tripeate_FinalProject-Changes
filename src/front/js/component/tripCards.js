@@ -1,18 +1,16 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link, useParams } from "react-router-dom";
 import"../../styles/tripCards.css";
 
 
-export const TripCards = () => {
-
-
+export const TripCards = ({name, image, caption }) => {
     return (
-
         <div className="card tripsCard d-inline-flex mx-3">
-					<img src="https://fastly.picsum.photos/id/13/350/192.jpg?hmac=WL2y535NoIb9gWNgdcEs71DBlZXfkdfN6Lt7jypz_v4" className="card-img-top" alt="..."/>
+					<img src={image || "https://fastly.picsum.photos/id/13/350/192.jpg?hmac=WL2y535NoIb9gWNgdcEs71DBlZXfkdfN6Lt7jypz_v4"} className="card-img-top" alt={name}/>
 						<div className="card-body">
-							<h5 className="card-title">Card title</h5>
-							<p className="card-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcor</p>
+							<h5 className="card-title">{name}</h5>
+							<p className="card-text">{caption}</p>
 						<Link to="/detailTrip">						
 								<p>Tripea más</p>
 						</Link>	
@@ -20,4 +18,9 @@ export const TripCards = () => {
 				</div>
 
     )
-}
+};
+TripCards.propTypes = {
+	name: PropTypes.string.isRequired,
+	image: PropTypes.string,
+	caption: PropTypes.string
+};
