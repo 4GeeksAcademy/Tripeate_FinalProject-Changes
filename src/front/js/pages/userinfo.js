@@ -17,7 +17,8 @@ export const PerfilUser = () => {
     const [itemType, setItemType] = useState(null);
     const [collapsed, setCollapsed] = useState(false); 
     const [userPlans, setUserPlans] = useState([]);
-    const [activeSection, setActiveSection] = useState(null)
+    const [activeSection, setActiveSection] = useState(null);
+    const [userFavorites, setUserFavorites] = useState([]);
 
     const handleSectionChange = (section) => {
         setActiveSection(section);
@@ -69,6 +70,16 @@ export const PerfilUser = () => {
     const toggleNavbar = () => {
         setCollapsed(!collapsed); 
     }
+
+    useEffect(() => {
+        const fetchUserFavorites = async () => {
+            if (store.currentUser) {
+                const favorites = await actions.getFavorites(); 
+                setUserFavorites(favorites);
+            }
+        };
+        fetchUserFavorites();
+    }, [store.currentUser]);
 
     useEffect(() => {
         const fetchUserPlans = async () => {
@@ -128,7 +139,7 @@ export const PerfilUser = () => {
                                     <a className="nav-link" href="#">Compras</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Favoritos</a>
+                                    <a className="nav-link" href="#" onClick={() => handleSectionChange('favoritos')}>Favoritos</a>
                                 </li>
                                 <hr className="dropdown-divider border border-dark" style={{width: "135px"}}   />
                                 <li className="nav-item">
@@ -150,6 +161,56 @@ export const PerfilUser = () => {
                         <h5>{store.currentUser ? `${userData.email}` : 'email'}</h5>
                         </div>
                     </div>
+                    {activeSection === 'perfil' && (
+                    <div className="container mt-5 p-4" style={{backgroundColor: "white", maxWidth: "800px", borderRadius: "10px"}}>
+                        <form onSubmit={handleSubmit}>
+                            <div className="pt-2">
+                                <label style={{color:"rgb(165, 68, 65)"}}><strong>Nombre:</strong></label>
+                                <input type="text" name="name" value={userData.name} onChange={handleChange} required />
+                            </div>
+                            <div className="pt-2">
+                            <label style={{color:"rgb(165, 68, 65)"}}><strong>Apellido:</strong></label>
+                                <input type="text" name="last_name" value={userData.last_name} onChange={handleChange} />
+                            </div>
+                            <div className="pt-2">
+                            <label style={{color:"rgb(165, 68, 65)"}}><strong>Correo electrónico:</strong></label>
+                                <input type="email" name="email" value={userData.email} onChange={handleChange} required />
+                            </div>
+                            <div className="text-center mt-5">
+                            <button className="btn btn-new" type="submit">Actualizar Información</button>
+                            </div>
+                        </form>
+                    </div>
+                    )}
+                    {activeSection === 'favoritos' && (
+                        <div className="container mt-5">
+                            <h1 className="text-center">Mis Favoritos</h1>
+                            <table className="table" style={{backgroundColor: "white", borderRadius: "10px"}}>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nombre del Trip</th>
+                                        <th scope="col">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {userFavorites.length > 0 ? (
+                                        userFavorites.map((favorite, index) => (
+                                            <tr key={favorite.id}>
+                                                <th scope="row">{index + 1}</th>
+                                                <td>{favorite.name}</td>
+                                                <td>{favorite.status}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="3">No tienes favoritos disponibles</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                     {activeSection === 'ventas' && (
                     <div className="container mt-5">
                     <h1 className="text-center">Mis Trips</h1>
@@ -190,27 +251,7 @@ export const PerfilUser = () => {
                     </div>
                     </div>
                     )}
-                    {activeSection === 'perfil' && (
-                    <div className="container mt-5 p-4" style={{backgroundColor: "white", maxWidth: "800px", borderRadius: "10px"}}>
-                        <form onSubmit={handleSubmit}>
-                            <div className="pt-2">
-                                <label style={{color:"rgb(165, 68, 65)"}}><strong>Nombre:</strong></label>
-                                <input type="text" name="name" value={userData.name} onChange={handleChange} required />
-                            </div>
-                            <div className="pt-2">
-                            <label style={{color:"rgb(165, 68, 65)"}}><strong>Apellido:</strong></label>
-                                <input type="text" name="last_name" value={userData.last_name} onChange={handleChange} />
-                            </div>
-                            <div className="pt-2">
-                            <label style={{color:"rgb(165, 68, 65)"}}><strong>Correo electrónico:</strong></label>
-                                <input type="email" name="email" value={userData.email} onChange={handleChange} required />
-                            </div>
-                            <div className="text-center mt-5">
-                            <button className="btn btn-new" type="submit">Actualizar Información</button>
-                            </div>
-                        </form>
-                    </div>
-                    )}
+                    
                     <Modal
                         showModal={showModal}
                         handlerClose={closeModal}

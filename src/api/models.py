@@ -5,6 +5,12 @@ from enum import Enum
 db = SQLAlchemy()
 
 
+# Tabla de asociación para la relación muchos a muchos entre usuarios y planes favoritos
+favorites = db.Table('favorites',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('plan_id', db.Integer, db.ForeignKey('plans.id'), primary_key=True)
+)
+
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -17,6 +23,7 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean(), default=False)
     profile_image = db.Column(db.String(255), nullable=True)
     plans = db.relationship('Plan', backref='user', lazy=True)
+    favorite_plans = db.relationship('Plan', secondary=favorites, lazy='subquery', backref=db.backref('favorited_by', lazy=True))
 
     def __repr__(self):
         return f'<User {self.email, self.is_admin}>'
