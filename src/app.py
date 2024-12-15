@@ -27,7 +27,7 @@ app.url_map.strict_slashes = False
 
 
 app.config["JWT_SECRET_KEY"] = os.getenv("TOKEN_SECRET")  
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes = 10)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes = 120)
 jwt = JWTManager(app)
 @jwt.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
