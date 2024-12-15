@@ -1,11 +1,46 @@
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useParams } from "react-router-dom";
 import "../../styles/detailTrip.css";
 import TripArte2 from "../../img/arte-detailTrip.png";
+import { Context } from "../store/appContext";
 
 export const DetailTrip = () => {
+    const { planId } = useParams(); // Obtener el ID del plan de la URL
+    const { store, actions } = useContext(Context);
+    const [plan, setPlan] = useState(null);
+    
 
 
+    useEffect(() => {
+        {/*const foundPlan = store.plans.find(plan => plan.id === id);
+        if (foundPlan) {
+            setPlan(foundPlan);
+        } else {
+            actions.getPlan();
+        }
+        }, [id, store.plans, actions]);*/}
+        
+        
+        if (planId) {
+            const fetchPlan = async () => {
+                const response = await actions.getPlan(planId);
+                console.log("Respuesta del plan:", response)
+                if (response) {
+                    setPlan(response);
+                }
+            };
+            fetchPlan();
+        } else {
+            console.error("planId es undefined");
+        }
+    }, [planId, actions]);
+
+
+    if (!plan) {
+        return <div className="spinner-border text-warning" role="status">
+            <span className="visually-hidden">Cargando...</span>
+        </div>;
+    };
 
     return (
 
@@ -14,36 +49,30 @@ export const DetailTrip = () => {
             {/* Carrusel */}
             <div id="carouselExampleFade" className="carousel slide carousel-fade mt-5" data-bs-ride="carousel">
                 <div className="carousel-inner">
-                    <div className="carousel-item active">
-                        <img src="https://fastly.picsum.photos/id/13/1000/582.jpg?hmac=Kw-aT9zpQOU2V8LIgXHgdex9cp8m9YISBpljSCiTDRw" className="d-block w-100" alt="..." />
-                    </div>
-                    <div className="carousel-item">
-                        <img src="https://fastly.picsum.photos/id/27/1000/582.jpg?hmac=rtEWz-S_4aHi8XAT9M6bPdkzjiYHoz59vTEH1Ros4JU" className="d-block w-100" alt="..." />
-                    </div>
-                    <div className="carousel-item">
-                        <img src="https://fastly.picsum.photos/id/12/1000/582.jpg?hmac=1t5iIB2aCmRWbj92W9KdMeAN7kUgRrjszZUc10pGvWk" className="d-block w-100" alt="..." />
-                    </div>
+
+                        <div className={`carousel-item ${plan.id === 0 ? 'active' : ''}`} key={plan.id}>
+                            <img src={plan.image} className="d-block w-100" alt="..." />
+                        </div>
+
                 </div>
                 <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
                     <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Previous</span>
+                    <span className="visually-hidden">Anterior</span>
                 </button>
                 <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
                     <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Next</span>
+                    <span className="visually-hidden">Siguiente</span>
                 </button>
             </div>
-
-
 
             {/* Info de lugar */}
             <div className="card border-0 rounded-0 infoCard">
                 <div className="card-body">
-                    <h3 className="card-title">Cayo Sombrero</h3>
+                    <h3 className="card-title">{plan.name}</h3>
                     <span className="card-subtitle mb-2 text-muted">
                         <i className="fa-solid fa-location-dot me-1"></i>
-                        <a href="#" className="card-link">Paque nacional Mochima - Venezuela</a> </span>
-                    <p className="card-text my-3">Es el nombre de una isla del mar Caribe que pertenece al parque nacional Morrocoy está incluida en la parte más oriental del Municipio Monseñor Iturriza del estado Falcón,​ en el oeste de Venezuela.</p>
+                        <a href="#" className="card-link">{plan.caption}</a> </span>
+                    <p className="card-text my-3">{plan.description}</p>
 
                     <div className="container border-bottom my-3 linea"></div>
 
@@ -52,13 +81,13 @@ export const DetailTrip = () => {
                     {/* Info de Empresa */}
                     <div className="card-body d-flex">
                         <div className="me-5 text-center">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTy6U8APLewA6Lae1YGyu1dY8Vwe7BFt1ZbJA&s" className="card-img-top" alt="..." />
-                            <p className="card-text dniSeller">J-65655644894-0</p>
+                            {/*<img src={plan.user.profile_image} className="card-img-top" alt="..." />
+                            <p className="card-text dniSeller">{plan.user.id}</p>*/}
                         </div>
 
                         <div className="card border-0 sellerInfo">
                             <div className="d-flex justify-content-between">
-                                <h4 className="card-title d-inline-flex">Tu Full Day Venezuela</h4>
+                                {/* <h4 className="card-title d-inline-flex">{plan.user.name}</h4> */}
 
                                 <div className="d-flex flex-row  rrSS">
                                     <i className="fa-brands fa-instagram mx-1"></i>
@@ -72,7 +101,7 @@ export const DetailTrip = () => {
 
                                 <div className="card-body text-center mt-4">
                                     <i className="card-img-top fa-solid fa-van-shuttle"></i>
-                                    <p className="card-text">Capacidad/Puestos</p>
+                                    <p className="card-text">{plan.available_slots}</p>
                                     <p>8</p>
                                 </div>
 
@@ -93,13 +122,13 @@ export const DetailTrip = () => {
                                     <p>Capacidad/Puestos</p>
                                     <p>Pza. Venezuela</p>
                                 </div>
-                            </div>  
-                        </div>   
+                            </div>
+                        </div>
                     </div>
                     <img src={TripArte2} className="imgPlanes card-img" />
                 </div>
             </div>
-            
+
 
             {/* Compra de Planes */}
             <div className="card-group text-center">
@@ -123,7 +152,7 @@ export const DetailTrip = () => {
                                 </Link>
                             </ul>
                         </div>
-                    </div> 
+                    </div>
                 </div>
 
                 <div className=" planMedio card">
@@ -142,7 +171,7 @@ export const DetailTrip = () => {
                             </button>
                             <ul className="dropdown-menu">
                                 <li><a className="list-item text-black">$70,00 (USD)</a></li>
-                                <li className=''><hr className="dropdown-divider" /></li> 
+                                <li className=''><hr className="dropdown-divider" /></li>
                                 <Link to="/buyTrip">
                                     <a type="button" className="btn btn-link text-black"><strong>Comprar</strong></a>
                                 </Link>
@@ -152,12 +181,12 @@ export const DetailTrip = () => {
                 </div>
 
                 <div className=" planFull card">
-                    <div className="card-body"> 
+                    <div className="card-body">
                         <h1 className="card-title">Full-Trip</h1>
                         <ul className="list-group list-group-flush">
                             <li className="list-group-item">Transporte</li>
                             <li className="list-group-item">Desayuno</li>
-                            <li className="list-group-item">Agua potable</li> 
+                            <li className="list-group-item">Agua potable</li>
                             <li className="list-group-item">Refrigerios</li>
                             <li className="list-group-item">Bebidas ilimitadas</li>
                             <li className="list-group-item">Almuerzo</li>
@@ -167,7 +196,7 @@ export const DetailTrip = () => {
                             <button type="button" className="btn btn-custom rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 ver precio
                             </button>
-                            <ul className="dropdown-menu">     
+                            <ul className="dropdown-menu">
                                 <li><a className="list-item text-black">$120,00 (USD)</a></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
                                 <Link to="/buyTrip">
