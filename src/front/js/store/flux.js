@@ -11,6 +11,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			users: [],
 			plans: [], 
 			itemType: null,
+			favorites: []
 
 		},
 		actions: {
@@ -337,9 +338,59 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log({ dataPlans });
 					setStore({ plans: dataPlans });
 				}
-			}
+			},
+			getFavorites: async () => {
+				try {
+					const response = await fetch(`${backendURL}/favorites`, {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${localStorage.getItem("token")}`
+						}
+					});
+			
+					if (response.ok) {
+						const data = await response.json();
+						console.log("Planes favoritos:", data.favorites); // Mostrar los planes favoritos
+						return data.favorites; // Retornar la lista de planes favoritos
+					} else {
+						const errorData = await response.json();
+						console.error("Error al obtener favoritos:", errorData.msg);
+						return []; // Retornar un array vacío en caso de error
+					}
+				} catch (error) {
+					console.error("Error en la solicitud:", error);
+					return []; // Retornar un array vacío en caso de error
+				}
+			},
+
+			toggleFavorite: async (planId) => {
+				const token = localStorage.getItem("token"); // Obtener el token del almacenamiento local
+				try {
+					const response = await fetch(`${backendURL}/favorites/${planId}`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${token}` // Incluir el token en la cabecera
+						}
+					});
+		
+					if (response.ok) {
+						const data = await response.json();
+						console.log(data.msg); // Mensaje de éxito
+						return true; // Indica que la operación fue exitosa
+					} else {
+						const errorData = await response.json();
+						console.error("Error al alternar favorito:", errorData.msg);
+						return false; // Indica que hubo un error
+					}
+				} catch (error) {
+					console.error("Error en la solicitud:", error);
+					return false; // Indica que hubo un error en la solicitud
+				}
+			},
 		}
-	};
+		}
 };
 
 export default getState;

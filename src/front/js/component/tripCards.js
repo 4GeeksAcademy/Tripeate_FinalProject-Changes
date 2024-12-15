@@ -4,10 +4,11 @@ import { Link, useParams } from "react-router-dom";
 import "../../styles/tripCards.css";
 import "../../styles/detailTrip.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as SolidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as RegularHeart } from '@fortawesome/free-solid-svg-icons';
 
 
-export const TripCards = ({ name, image, caption, onClick }) => {
+export const TripCards = ({ name, image, caption, onClick, isFavorite, onToggleFavorite }) => {
 
 	function imageError(e) {
 		e.target.src = "https://fastly.picsum.photos/id/13/350/192.jpg?hmac=WL2y535NoIb9gWNgdcEs71DBlZXfkdfN6Lt7jypz_v4"
@@ -24,8 +25,9 @@ export const TripCards = ({ name, image, caption, onClick }) => {
 						Tripea más
 					</Link>
 					<button className="btn btn-danger"
-						onClick={() => handlerClick({})}>
-						<FontAwesomeIcon icon={faHeart} /></button>
+						onClick={onToggleFavorite}>
+                        <FontAwesomeIcon icon={isFavorite ? SolidHeart : RegularHeart} />
+					</button>
 				</div>
 			</div>
 		</div>
@@ -35,5 +37,7 @@ export const TripCards = ({ name, image, caption, onClick }) => {
 TripCards.propTypes = {
 	name: PropTypes.string.isRequired,
 	image: PropTypes.string,
-	caption: PropTypes.string
+	caption: PropTypes.string,
+	isFavorite: PropTypes.bool.isRequired,
+	onToggleFavorite: PropTypes.func.isRequired,
 };

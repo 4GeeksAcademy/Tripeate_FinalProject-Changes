@@ -8,6 +8,7 @@ import tripArte from "../../img/arteTrips.png";
 export const Home = () => {
 	const { store, actions } = useContext(Context);
 	const [acceptedPlans, setAcceptedPlans] = useState([]);
+	const [favoritePlans, setFavoritePlans] = useState([]);
 	const navigate = useNavigate();
 
 
@@ -15,6 +16,9 @@ export const Home = () => {
 		actions.getPlansList().then(plans => {
 			setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'))
 		});
+		actions.getFavorites().then(favorites => {
+            setFavoritePlans(favorites);
+        });
 	}, []);
 
 	const filteredAcceptedPlans = acceptedPlans.filter(plan =>
@@ -25,6 +29,16 @@ export const Home = () => {
 		navigate(`/plans/${id}`);
 	};
 
+	const handleToggleFavorite = async (planId) => {
+        await actions.toggleFavorite(planId);
+        setFavoritePlans(prev => {
+            if (prev.includes(planId)) {
+                return prev.filter(id => id !== planId);
+            } else {
+                return [...prev, planId];
+            }
+        });
+    };
 
 	return (
 		<div className="container-fluid text-center mt-3">
@@ -107,7 +121,9 @@ export const Home = () => {
 									name={plan.name}
 									image={plan.image}
 									caption={plan.caption}
-									onClick={() => handleCardClick(plan.id)} />
+									onClick={() => handleCardClick(plan.id)}
+									isFavorite={favoritePlans.includes(plan.id)}
+                                    onToggleFavorite={() => handleToggleFavorite(plan.id)} />
 							</div>
 						))
 					) : (

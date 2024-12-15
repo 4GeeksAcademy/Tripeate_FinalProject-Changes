@@ -342,5 +342,31 @@ def delete_plan(plan_id):
         return jsonify({"error": "No autorizado"}), print(f"User ID del plan: {plan.user_id}, User ID actual: {current_user_id}")
 
 
+@api.route('/favorites/<int:plan_id>', methods=['POST'])
+@jwt_required()
+def toggle_favorite(plan_id):
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    plan = Plan.query.get(plan_id)
 
+    if not plan:
+        return jsonify({"msg": "Plan no encontrado"}), 404
+
+    if plan in user.favorite_plans:
+        user.favorite_plans.remove(plan)
+        action = "desmarcado"
+    else:
+        user.favorite_plans.append(plan)
+        action = "marcado"
+
+    db.session.commit()
+    return jsonify({"msg": f"Plan {action} como favorito."}), 200
+
+@api.route('/favorites', methods=['GET'])
+@jwt_required()
+def get_favorites():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    favorite_plans = user.favorite_plans
+    return jsonify({"favorites": [plan.serialize() for plan in favorite_plans]}), 200
  
