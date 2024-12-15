@@ -42,6 +42,10 @@ export const DetailTrip = () => {
         </div>;
     };
 
+    function imageError(e) {
+		e.target.src = "https://fastly.picsum.photos/id/13/350/192.jpg?hmac=WL2y535NoIb9gWNgdcEs71DBlZXfkdfN6Lt7jypz_v4"
+	};
+
     return (
 
         <div className="container">
@@ -51,7 +55,7 @@ export const DetailTrip = () => {
                 <div className="carousel-inner">
 
                         <div className={`carousel-item ${plan.id === 0 ? 'active' : ''}`} key={plan.id}>
-                            <img src={plan.image} className="d-block w-100" alt="..." />
+                            <img src={plan.image} onError={imageError} className="d-block w-100" alt="..." />
                         </div>
 
                 </div>
@@ -112,7 +116,7 @@ export const DetailTrip = () => {
                                 </div>
 
                                 <div className="card-body d-block text-center mt-4">
-                                    <i class="fa-solid fa-stopwatch"></i>
+                                    <i className="fa-solid fa-stopwatch"></i>
                                     <p>Salida/Llegada</p>
                                     <p>6:30 AM /<br /> 6:00 PM</p>
                                 </div>
@@ -145,10 +149,10 @@ export const DetailTrip = () => {
                                 ver precio
                             </button>
                             <ul className="dropdown-menu">
-                                <li><a className="list-item text-black">$40,00 (USD)</a></li>
+                                <li><span className="list-item text-black">$40,00 (USD)</span></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
                                 <Link to="/buyTrip">
-                                    <a type="button" className="btn btn-link text-black"><strong>Comprar</strong></a>
+                                    <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
                                 </Link>
                             </ul>
                         </div>
@@ -173,7 +177,7 @@ export const DetailTrip = () => {
                                 <li><a className="list-item text-black">$70,00 (USD)</a></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
                                 <Link to="/buyTrip">
-                                    <a type="button" className="btn btn-link text-black"><strong>Comprar</strong></a>
+                                    <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
                                 </Link>
                             </ul>
                         </div>
@@ -200,7 +204,7 @@ export const DetailTrip = () => {
                                 <li><a className="list-item text-black">$120,00 (USD)</a></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
                                 <Link to="/buyTrip">
-                                    <a type="button" className="btn btn-link text-black"><strong>Comprar</strong></a>
+                                    <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
                                 </Link>
                             </ul>
                         </div>
