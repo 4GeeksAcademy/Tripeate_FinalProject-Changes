@@ -231,6 +231,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ plans: [] });
 				}
 			},
+			
+			getPlan: async (planId) => {
+				try {
+					const response = await fetch(`${backendURL}/plans/${planId}`, {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${localStorage.getItem("token")}`
+						}
+					});
+					if (response.ok) {
+						const data = await response.json();
+						console.log(data)
+						return data.plan; 
+					} else {
+						const errorData = await response.json();
+						console.error("Error al obtener detalles del plan:", errorData);
+						return null; 
+					}
+				} catch (error) {
+					console.error("Error en la llamada a la API:", error);
+					return null; 
+				}
+			},
+
 
 			getUserEmailPlan: async (planId) => {
 				try {

@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
+import { useNavigate } from "react-router-dom";
 import { TripCards } from "../component/tripCards";
 import tripArte from "../../img/arteTrips.png";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
 	const [acceptedPlans, setAcceptedPlans] = useState([]);
-	
+	const navigate = useNavigate();
+
 
 	useEffect(() => {
 		actions.getPlansList().then(plans => {
@@ -17,7 +19,11 @@ export const Home = () => {
 
 	const filteredAcceptedPlans = acceptedPlans.filter(plan =>
 		plan.name.toLowerCase()
-	  );
+	);
+
+	const handleCardClick = (id) => {
+		navigate(`/plans/${id}`);
+	};
 
 
 	return (
@@ -100,13 +106,14 @@ export const Home = () => {
 								<TripCards
 									name={plan.name}
 									image={plan.image}
-									caption={plan.caption} />
+									caption={plan.caption}
+									onClick={() => handleCardClick(plan.id)} />
 							</div>
 						))
 					) : (
 						<p>No hay planes disponibles.</p>
 					)}
-					
+
 				</div>
 			</div>
 		</div>

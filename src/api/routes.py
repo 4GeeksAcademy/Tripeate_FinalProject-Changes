@@ -295,6 +295,14 @@ def manage_plan(plan_id):
             db.session.rollback()
             return jsonify({"error": f"Error al actualizar el plan: {str(e)}"}), 500
 
+# Ruta para obtener detalles de un plan 
+@api.route('/plans/<int:plan_id>', methods=['GET'])
+def get_plan_details(plan_id):
+    plan = Plan.query.get(plan_id)
+    if plan is None:
+        return jsonify({"error": "Plan no encontrado"}), 404
+    
+    return jsonify({"plan": plan.serialize()}), 200
 
 
 # Ruta para eliminar un usuario
