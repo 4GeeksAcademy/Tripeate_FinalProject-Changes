@@ -12,15 +12,6 @@ export const DetailTrip = () => {
 
 
     useEffect(() => {
-        {/*const foundPlan = store.plans.find(plan => plan.id === id);
-        if (foundPlan) {
-            setPlan(foundPlan);
-        } else {
-            actions.getPlan();
-        }
-        }, [id, store.plans, actions]);*/}
-        
-        
         if (planId) {
             const fetchPlan = async () => {
                 const response = await actions.getPlan(planId);
@@ -151,7 +142,7 @@ export const DetailTrip = () => {
                             <ul className="dropdown-menu">
                                 <li><span className="list-item text-black">$40,00 (USD)</span></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
-                                <Link to="/buyTrip">
+                                <Link to={`/buyTrip/${plan.id}`}>
                                     <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
                                 </Link>
                             </ul>
@@ -176,7 +167,7 @@ export const DetailTrip = () => {
                             <ul className="dropdown-menu">
                                 <li><a className="list-item text-black">$70,00 (USD)</a></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
-                                <Link to="/buyTrip">
+                                <Link to={`/buyTrip/${plan.id}`}>
                                     <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
                                 </Link>
                             </ul>
@@ -203,7 +194,7 @@ export const DetailTrip = () => {
                             <ul className="dropdown-menu">
                                 <li><a className="list-item text-black">$120,00 (USD)</a></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
-                                <Link to="/buyTrip">
+                                <Link to={`/buyTrip/${plan.id}`}>
                                     <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
                                 </Link>
                             </ul>
@@ -213,5 +204,5 @@ export const DetailTrip = () => {
             </div>
         </div>
     )
-}
+};
 
