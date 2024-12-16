@@ -206,6 +206,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			createPlan: async (name, caption, image, available_slots, token) => {
+				try {
+					const response = await fetch(`${backendURL}/create_plan`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${token}`,
+						},
+						body: JSON.stringify({
+							name,
+							caption,
+							image,
+							available_slots,
+						}),
+					});
+			
+					if (response.ok) {
+						const data = await response.json();
+						console.log("Plan creado:", data);
+						return data; // Devuelve los datos si la creación fue exitosa
+					} else {
+						const errorData = await response.json();
+						console.error("Error al crear el plan:", errorData.msg);
+						return { error: true, msg: errorData.msg }; // Devuelve un mensaje de error si falló
+					}
+				} catch (error) {
+					console.error("Error en la creación del plan:", error);
+					return { error: true, msg: "Error en la solicitud" }; // Indica un error de red u otro tipo de error
+				}
+			},
+
 			getPlansList: async () => {
 				try {
 					let resp = await fetch(backendURL + "/plans", {
