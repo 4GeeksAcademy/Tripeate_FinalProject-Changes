@@ -382,42 +382,65 @@ const getState = ({ getStore, getActions, setStore }) => {
 			
 					if (response.ok) {
 						const data = await response.json();
-						console.log("Planes favoritos:", data.favorites); // Mostrar los planes favoritos
-						return data.favorites; // Retornar la lista de planes favoritos
+						console.log("Planes favoritos:", data.favorites); 
+						return data.favorites; 
 					} else {
 						const errorData = await response.json();
 						console.error("Error al obtener favoritos:", errorData.msg);
-						return []; // Retornar un array vacío en caso de error
+						return [];
 					}
 				} catch (error) {
 					console.error("Error en la solicitud:", error);
-					return []; // Retornar un array vacío en caso de error
+					return []; 
 				}
 			},
 
 			toggleFavorite: async (planId) => {
-				const token = localStorage.getItem("token"); // Obtener el token del almacenamiento local
+				const token = localStorage.getItem("token"); 
 				try {
 					const response = await fetch(`${backendURL}/favorites/${planId}`, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-							"Authorization": `Bearer ${token}` // Incluir el token en la cabecera
+							"Authorization": `Bearer ${token}` 
 						}
 					});
 		
 					if (response.ok) {
 						const data = await response.json();
-						console.log(data.msg); // Mensaje de éxito
-						return true; // Indica que la operación fue exitosa
+						console.log(data.msg);
+						return true; 
 					} else {
 						const errorData = await response.json();
 						console.error("Error al alternar favorito:", errorData.msg);
-						return false; // Indica que hubo un error
+						return false; 
 					}
 				} catch (error) {
 					console.error("Error en la solicitud:", error);
-					return false; // Indica que hubo un error en la solicitud
+					return false; 
+				}
+			},
+			removeFavorite: async (planId) => {
+				const token = localStorage.getItem("token");
+				try {
+					const response = await fetch(`${backendURL}/favorites/${planId}`, {
+						method: "DELETE",
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${token}`
+						}
+					});
+			
+					if (response.ok) {
+						console.log("Favorito eliminado exitosamente");
+					} else {
+						const errorData = await response.json();
+						console.error("Error al eliminar favorito:", errorData.msg);
+						alert("Error al eliminar favorito");
+					}
+				} catch (error) {
+					console.error("Error en la solicitud:", error);
+					alert("Error en la solicitud");
 				}
 			},
 		}
