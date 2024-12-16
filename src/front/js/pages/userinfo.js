@@ -19,9 +19,11 @@ export const PerfilUser = () => {
     const [userPlans, setUserPlans] = useState([]);
     const [activeSection, setActiveSection] = useState(null);
     const [userFavorites, setUserFavorites] = useState([]);
+    const [showNewTripForm, setShowNewTripForm] = useState(false); 
 
     const handleSectionChange = (section) => {
         setActiveSection(section);
+        setShowNewTripForm(false);
     };
     
     const [userData, setUserData] = useState({
@@ -29,6 +31,34 @@ export const PerfilUser = () => {
         last_name: '',
         email: ''
     });
+
+    const [newPlanData, setNewPlanData] = useState({
+        name: '',
+        caption: '',
+        image: '',
+        available_slots: 0,
+    });
+
+    const handleNewPlanChange = (e) => {
+        const { name, value } = e.target;
+        setNewPlanData({ ...newPlanData, [name]: value });
+    };
+    
+    const handleNewPlanSubmit = async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        try {
+            await actions.createPlan(newPlanData.name, newPlanData.caption, newPlanData.image, newPlanData.available_slots, token);
+            alert("Nuevo trip creado exitosamente");
+            setShowNewTripForm(false);
+            const plans = await actions.getPlansList();
+                const filteredPlans = plans.filter(plan => plan.user_id === store.currentUser.id);
+                setUserPlans(filteredPlans);
+        } catch (error) {
+            console.error("Error al crear el trip:", error);
+            alert("Error al crear el trip");
+        }
+    };
 
     useEffect(() => {
         if (store.currentUser){
@@ -146,7 +176,7 @@ export const PerfilUser = () => {
                                     <a className="nav-link" href="#" onClick={() => handleSectionChange('ventas')}>Ventas</a>
                                 </li>
                                 <li className="nav-item">
-                                    <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
+                                    <button className="btn btn-new" onClick={() => setShowNewTripForm(!showNewTripForm)}><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
                                 </li>
                             </ul>
                         </div>
@@ -247,11 +277,31 @@ export const PerfilUser = () => {
                         </tbody>
                     </table>
                     <div className="text-center mt-5">
-                        <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>                       
+                        <button className="btn btn-new" onClick={() => setShowNewTripForm(!showNewTripForm)}><FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>                       
                     </div>
                     </div>
                     )}
-                    
+                    {showNewTripForm && (
+                        <form onSubmit={handleNewPlanSubmit}>
+                            <div>
+                                <label>Nombre del Trip:</label>
+                                <input type="text" name="name" value={newPlanData.name} onChange={handleNewPlanChange} required />
+                            </div>
+                            <div>
+                                <label>Descripción:</label>
+                                <input type="text" name="caption" value={newPlanData.caption} onChange={handleNewPlanChange} required />
+                            </div>
+                            <div>
+                                <label>Imagen URL:</label>
+                                <input type="text" name="image" value={newPlanData.image} onChange={handleNewPlanChange} required />
+                            </div>
+                            <div>
+                                <label>Cupos Disponibles:</label>
+                                <input type="number" name="available_slots" value={newPlanData.available_slots} onChange={handleNewPlanChange} required />
+                            </div>
+                            <button type="submit">Crear Nuevo Trip</button>
+                        </form>
+                    )}
                     <Modal
                         showModal={showModal}
                         handlerClose={closeModal}
