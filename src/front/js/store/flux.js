@@ -395,31 +395,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			toggleFavorite: async (planId) => {
-				const token = localStorage.getItem("token"); 
+			addFavorite: async (planId) => {
+				const token = localStorage.getItem("token");
 				try {
 					const response = await fetch(`${backendURL}/favorites/${planId}`, {
-						method: "POST",
+						method: "POST", // Cambiar a POST para agregar un favorito
 						headers: {
 							"Content-Type": "application/json",
-							"Authorization": `Bearer ${token}` 
+							"Authorization": `Bearer ${token}`
 						}
 					});
-		
+			
 					if (response.ok) {
-						const data = await response.json();
-						console.log(data.msg);
-						return true; 
+						console.log("Favorito agregado exitosamente");
 					} else {
 						const errorData = await response.json();
-						console.error("Error al alternar favorito:", errorData.msg);
-						return false; 
+						console.error("Error al agregar favorito:", errorData.msg);
+						alert("Error al agregar favorito");
 					}
 				} catch (error) {
 					console.error("Error en la solicitud:", error);
-					return false; 
+					alert("Error en la solicitud");
 				}
 			},
+			
 			removeFavorite: async (planId) => {
 				const token = localStorage.getItem("token");
 				try {
