@@ -16,37 +16,37 @@ export const Navbar = () => {
       alert("Hubo un problema al cerrar sesión. Intenta nuevamente.");
     }
   };
+  console.log("Is Admin:", store.is_admin)
 
   return (
-    <div className="container-fluid" style={{ background: "#4b3331" }}>
+    <div className="container-fluid" style={{ background: "rgba(250,199,144)" }}>
       <div className="container">
-        <nav className="navbar" style={{ backgroundColor: "#4b3331" }}>
+        <nav className="navbar" style={{ backgroundColor: "rgba(250,199,144)" }}>
           <Link to="/">
             <div className="navbar-brand mb-0">
-              <h2
+              <h1
                 style={{
-                  color: "white",
                   fontWeight: "bold",
                   fontFamily: "Arial, sans-serif",
                 }}
               >
                 Tripeate
-              </h2>
+              </h1>
             </div>
           </Link>
           <div className="ml-auto">
             {store.token ? ( // Si hay token, mostrar "Cerrar Sesión" y el botón del perfil
             <>
-            {location.pathname !== "/userinfo" && (
-              <Link to="/userinfo">
-                <button className="btn btn-light me-2" style={{ fontWeight: "bold" }}>
+            {location.pathname !== ("/userinfo" && "/perfiladmin") && (
+              <Link to={store.is_admin ? "/perfiladmin" : "/userinfo"}>
+                <button className="btn btn-light me-2" style={{ fontWeight: "bold", color: "rgb(165, 68, 65)", backgroundColor: "rgb(243, 234, 214)" }}>
                   Mi Perfil
                 </button>
               </Link>
               )}
                 <button
                   className="btn btn-outline-light ml-2"
-                  onClick={()=>handleLogOut()}
+                  onClick={()=>handleLogOut()} style={{ fontWeight: "bold", color: "rgb(165, 68, 65)"}}
                   >
                   Cerrar Sesión
                 </button>
@@ -54,7 +54,7 @@ export const Navbar = () => {
             ) : ( // Si no hay token y no estamos en la página de login, mostrar "Iniciar Sesión"
               location.pathname !== "/loginuser" && (
               <Link to="/loginuser">
-                <button className="btn btn-light" style={{ fontWeight: "bold" }}>
+                <button className="btn btn-light" style={{ fontWeight: "bold", color: "rgb(165, 68, 65)", backgroundColor: "rgb(243, 234, 214)" }}>
                   Iniciar Sesión
                 </button>
               </Link>
