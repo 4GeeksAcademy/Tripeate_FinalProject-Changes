@@ -50,7 +50,7 @@ export const LoginUser = () => {
 
     return (
         <>
-            <div className="container d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "#f0f2f5" }}>
+            <div className="container d-flex justify-content-center align-items-center vh-100">
                 <div className="card p-5" style={{ maxWidth: "500px", width: "100%", borderRadius: "12px", border: "none", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)" }}>
                     <h2 className="text-center mb-4" style={{ color: "#333", fontWeight: "500", fontSize: "1.8rem" }}>Iniciar Sesión</h2>
                     <form onSubmit={handleSubmit}>
