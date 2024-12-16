@@ -7,6 +7,7 @@ import "../../styles/navuser.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Modal } from "../component/modal";
+import { TripCards } from "../component/tripCards";
 
 
 
@@ -20,6 +21,7 @@ export const PerfilUser = () => {
     const [activeSection, setActiveSection] = useState('favoritos');
     const [userFavorites, setUserFavorites] = useState([]);
     const [showNewTripForm, setShowNewTripForm] = useState(false);
+    const navigate = useNavigate();
 
     const handleSectionChange = (section) => {
         setActiveSection(section);
@@ -155,7 +157,11 @@ export const PerfilUser = () => {
             console.error("Error en la solicitud:", error);
             alert("Error en la solicitud");
         }
-    }
+    };
+
+    const handleCardClick = (id) => {
+		navigate(`/plans/${id}`);
+	};
 
     return (
         <div style={{ display: "flex", marginTop: "0", paddingTop: "0" }}>
@@ -227,38 +233,24 @@ export const PerfilUser = () => {
                 {activeSection === 'favoritos' && (
                     <div className="container mt-5">
                         <h1 className="text-center">Mis Favoritos</h1>
-                        <table className="table" style={{ backgroundColor: "white", borderRadius: "10px" }}>
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nombre del Trip</th>
-                                    <th scope="col">Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {userFavorites.length > 0 ? (
-                                    userFavorites.map((favorite, index) => (
-                                        <tr key={favorite.id}>
-                                            <th scope="row">{index + 1}</th>
-                                            <td>{favorite.name}</td>
-                                            <td>{favorite.status}</td>
-                                            <td>
-                                                <button
-                                                    className="btn btn-danger btn-sm"
-                                                    onClick={() => handleRemoveFavorite(favorite.id)} // Llama a la función para eliminar
-                                                >
-                                                    Eliminar
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="3">No tienes favoritos disponibles</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
+                        <div className="row">
+                            {userFavorites.length > 0 ? (
+                                userFavorites.map((favorite) => (
+                                    <div className="col-md-4" key={favorite.id}>
+                                        <TripCards
+                                            name={favorite.name}
+                                            image={favorite.image} 
+                                            caption={favorite.caption} 
+                                            onClick={() => handleCardClick(favorite.id)} 
+                                            isFavorite={true} 
+                                            onToggleFavorite={() => handleRemoveFavorite(favorite.id)} 
+                                        />
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No tienes favoritos disponibles</p>
+                            )}
+                        </div>
                     </div>
                 )}
                 {activeSection === 'ventas' && (
