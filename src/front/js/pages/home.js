@@ -49,19 +49,15 @@ export const Home = () => {
 			window.location.href ="/loginuser";
 			return;
 		}
-		const isFavorite = favoritePlans.includes(planId);
+		const isFavorite = favoritePlans.some(favorite => favorite.id === planId);
 		if (isFavorite){
 			await actions.removeFavorite(planId);
+			setFavoritePlans(prev => prev.filter(favorite => favorite.id != planId))
 		} else {
 			await actions.addFavorite(planId);
+			const newFavorite = await actions.getPlan(planId);
+			setFavoritePlans(prev => [...prev, newFavorite])
 		}
-        setFavoritePlans(prev => {
-            if (isFavorite) {
-                return prev.filter(id => id !== planId);
-            } else {
-                return [...prev, planId];
-            }
-        });
     };
 
 	return (
