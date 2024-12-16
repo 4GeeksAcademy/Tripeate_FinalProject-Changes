@@ -16,7 +16,10 @@ export const Navbar = () => {
       alert("Hubo un problema al cerrar sesión. Intenta nuevamente.");
     }
   };
-  console.log("Is Admin:", store.is_admin)
+  const handleProfileRedirect = () => {
+    navigate(-1);
+  };
+
 
   return (
     <div className="container-fluid" style={{ background: "rgba(250,199,144)" }}>
@@ -37,12 +40,13 @@ export const Navbar = () => {
           <div className="ml-auto">
             {store.token ? ( // Si hay token, mostrar "Cerrar Sesión" y el botón del perfil
             <>
-            {location.pathname !== ("/userinfo" && "/perfiladmin") && (
-              <Link to={store.is_admin ? "/perfiladmin" : "/userinfo"}>
-                <button className="btn btn-light me-2" style={{ fontWeight: "bold", color: "rgb(165, 68, 65)", backgroundColor: "rgb(243, 234, 214)" }}>
+            {location.pathname !== "/userinfo" && location.pathname !== "/perfiladmin" && (
+              
+                <button className="btn btn-light me-2" style={{ fontWeight: "bold", color: "rgb(165, 68, 65)", backgroundColor: "rgb(243, 234, 214)" }}
+                onClick={handleProfileRedirect}>
                   Mi Perfil
                 </button>
-              </Link>
+              
               )}
                 <button
                   className="btn btn-outline-light ml-2"
