@@ -454,7 +454,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 						body: JSON.stringify(tripPlan)
 					})
 
-					console.log(response)
+					if (response.ok) {
+						getActions().getPlansList()
+					}
+					return response.status
 
 				} catch (error) {
 					console.log(error)

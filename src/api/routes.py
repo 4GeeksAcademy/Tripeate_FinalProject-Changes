@@ -233,7 +233,7 @@ def create_plan():
         plan_register.phone_company = body.get("telefono")
         plan_register.instagram_company= body.get("instagram")
         plan_register.facebook_company= body.get("facebook")
-        plan_register.available_slots = body.get("available_slots") # revisar
+        plan_register.available_slots = body.get("capacidad") # revisar
         plan_register.user_id = 1 # es un cable
         plan_register.categories_id=1 # es un cable
 
@@ -248,7 +248,7 @@ def create_plan():
         db.session.add(plan_register)
         db.session.commit()
 
-        return jsonify("trabajando por usted"), 200
+        return jsonify("trabajando por usted"), 201
         
     except Exception as err:
         print(err.args)

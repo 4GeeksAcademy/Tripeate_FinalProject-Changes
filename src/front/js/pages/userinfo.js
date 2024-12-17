@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Modal } from "../component/modal";
 import { TripCards } from "../component/tripCards";
+import Swal from 'sweetalert2'
 
 
 
@@ -29,6 +30,7 @@ const initialTripState = {
   "telefono": "",
   "instagram": "",
   "facebook": "",
+  "capacidad": ""
 }
 
 export const PerfilUser = () => {
@@ -60,10 +62,22 @@ export const PerfilUser = () => {
   }
 
   const handleSubmitTrip = async (event) => {
-    event.preventDefaul()
+    event.preventDefault()
 
     const response = await actions.registerTrip(trip)
-    console.log(response)
+
+    if (response == 201) {
+      Swal.fire({
+        title: "Registrado!",
+        text: "Da click para continuar!",
+        icon: "success"
+      });
+      setTrip(initialTripState)
+
+
+    } else {
+      alert("error")
+    }
   }
 
 
@@ -73,12 +87,6 @@ export const PerfilUser = () => {
     email: ''
   });
 
-  const [newPlanData, setNewPlanData] = useState({
-    name: '',
-    caption: '',
-    image: '',
-    available_slots: 0,
-  });
 
   const handleNewPlanChange = (e) => {
     const { name, value } = e.target;
@@ -363,7 +371,7 @@ export const PerfilUser = () => {
               <h2 style={{ marginBottom: "20px" }}>Datos del Trip</h2>
 
               <form
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmitTrip}
               >
                 <div className="row mb-3">
                   <div className="col-md-6">

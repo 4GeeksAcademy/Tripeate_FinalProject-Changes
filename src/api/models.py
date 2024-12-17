@@ -148,7 +148,7 @@ class Plan(db.Model):
             "id": self.id,
             "name": self.name,
             "caption": self.caption,
-            "image": self.image,
+            "image_company": self.image_company,
             "user_id": self.user_id,
             #"type": self.type.value,  # Serializar el tipo
             "available_slots": self.available_slots,
