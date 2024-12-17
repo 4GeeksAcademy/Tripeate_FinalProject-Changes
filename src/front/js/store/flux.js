@@ -95,6 +95,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 						const data = await response.json();
 						console.log(data.msg); // Mensaje de confirmación
 						setStore({ token: null, user: null }); // Eliminar token y usuario del estado
+						localStorage.removeItem('currentUser')
+						localStorage.removeItem('token')
 						return true; // Éxito
 					} else {
 						console.error("Error al cerrar sesión", error);

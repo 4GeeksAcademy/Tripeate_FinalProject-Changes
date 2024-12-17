@@ -8,7 +8,7 @@ import { faHeart as SolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as RegularHeart } from '@fortawesome/free-solid-svg-icons';
 
 
-export const TripCards = ({ name, image, caption, onClick, isFavorite, onToggleFavorite }) => {
+export const TripCards = ({ name, image, caption, isFavorite, onClick, onToggleFavorite }) => {
 
 	function imageError(e) {
 		e.target.src = "https://fastly.picsum.photos/id/13/350/192.jpg?hmac=WL2y535NoIb9gWNgdcEs71DBlZXfkdfN6Lt7jypz_v4"
