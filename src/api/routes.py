@@ -344,7 +344,25 @@ def delete_plan(plan_id):
 
 @api.route('/favorites/<int:plan_id>', methods=['POST'])
 @jwt_required()
-def toggle_favorite(plan_id):
+def add_favorite(plan_id):
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    plan = Plan.query.get(plan_id)
+
+    if not plan:
+        return jsonify({"msg": "Plan no encontrado"}), 404
+
+    if plan not in user.favorite_plans:
+        user.favorite_plans.append(plan)
+        db.session.commit()
+        return jsonify({"msg": "Plan agregado a favoritos."}), 200
+
+    return jsonify({"msg": "El plan ya está en la lista de favoritos."}), 400
+
+
+@api.route('/favorites/<int:plan_id>', methods=['DELETE'])
+@jwt_required()
+def remove_favorite(plan_id):
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
     plan = Plan.query.get(plan_id)
@@ -354,18 +372,16 @@ def toggle_favorite(plan_id):
 
     if plan in user.favorite_plans:
         user.favorite_plans.remove(plan)
-        action = "desmarcado"
-    else:
-        user.favorite_plans.append(plan)
-        action = "marcado"
+        db.session.commit()
+        return jsonify({"msg": "Plan eliminado de favoritos."}), 200
 
-    db.session.commit()
-    return jsonify({"msg": f"Plan {action} como favorito."}), 200
+    return jsonify({"msg": "El plan no está en la lista de favoritos."}), 400
+
 
 @api.route('/favorites', methods=['GET'])
 @jwt_required()
 def get_favorites():
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     user = User.query.get(current_user_id)
     favorite_plans = user.favorite_plans
     return jsonify({"favorites": [plan.serialize() for plan in favorite_plans]}), 200

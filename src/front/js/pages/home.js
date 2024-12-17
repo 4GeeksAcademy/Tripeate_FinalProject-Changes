@@ -16,9 +16,23 @@ export const Home = () => {
 		actions.getPlansList().then(plans => {
 			setAcceptedPlans(plans.filter(plan => plan.status === 'Aceptado'))
 		});
-		actions.getFavorites().then(favorites => {
-            setFavoritePlans(favorites);
-        });
+	}, []);
+
+	useEffect(() => {
+		const fetchFavorites = async () => {
+			const token = localStorage.getItem("token");
+			if (token) {
+				try {
+					const favorites = await actions.getFavorites();
+					setFavoritePlans(favorites);
+					console.log("Estos son los planes favoritos:", favorites);
+				} catch (error) {
+					console.error("Error al obtener favoritos:", error);
+				}
+			}
+		};
+	
+		fetchFavorites();
 	}, []);
 
 	const filteredAcceptedPlans = acceptedPlans.filter(plan =>
@@ -30,14 +44,20 @@ export const Home = () => {
 	};
 
 	const handleToggleFavorite = async (planId) => {
-        await actions.toggleFavorite(planId);
-        setFavoritePlans(prev => {
-            if (prev.includes(planId)) {
-                return prev.filter(id => id !== planId);
-            } else {
-                return [...prev, planId];
-            }
-        });
+		const token = localStorage.getItem("token");
+		if (!token) {
+			window.location.href ="/loginuser";
+			return;
+		}
+		const isFavorite = favoritePlans.some(favorite => favorite.id === planId);
+		if (isFavorite){
+			await actions.removeFavorite(planId);
+			setFavoritePlans(prev => prev.filter(favorite => favorite.id != planId))
+		} else {
+			await actions.addFavorite(planId);
+			const newFavorite = await actions.getPlan(planId);
+			setFavoritePlans(prev => [...prev, newFavorite])
+		}
     };
 
 	return (
@@ -122,7 +142,7 @@ export const Home = () => {
 									image={plan.image}
 									caption={plan.caption}
 									onClick={() => handleCardClick(plan.id)}
-									isFavorite={favoritePlans.includes(plan.id)}
+									isFavorite={favoritePlans.some(favorite => favorite.id === plan.id)}
                                     onToggleFavorite={() => handleToggleFavorite(plan.id)} />
 							</div>
 						))

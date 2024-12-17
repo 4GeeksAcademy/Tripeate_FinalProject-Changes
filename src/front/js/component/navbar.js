@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogOut = async () => {
     const result = await actions.logoutUser();
@@ -15,38 +16,53 @@ export const Navbar = () => {
       alert("Hubo un problema al cerrar sesión. Intenta nuevamente.");
     }
   };
+  const handleProfileRedirect = () => {
+    navigate(-1);
+  };
+
 
   return (
-    <div className="container-fluid" style={{ background: "#4b3331" }}>
+    <div className="container-fluid" style={{ background: "rgba(250,199,144)" }}>
       <div className="container">
-        <nav className="navbar" style={{ backgroundColor: "#4b3331" }}>
+        <nav className="navbar" style={{ backgroundColor: "rgba(250,199,144)" }}>
           <Link to="/">
             <div className="navbar-brand mb-0">
-              <h2
+              <h1
                 style={{
-                  color: "white",
                   fontWeight: "bold",
                   fontFamily: "Arial, sans-serif",
                 }}
               >
                 Tripeate
-              </h2>
+              </h1>
             </div>
           </Link>
           <div className="ml-auto">
-            {store.token ? ( // Si hay token, mostrar "Cerrar Sesión"
-              <button
-                className="btn btn-outline-danger ml-2"
-                onClick={()=>handleLogOut()}
-              >
-                Cerrar Sesión
-              </button>
-            ) : ( // Si no hay token, mostrar "Iniciar Sesión"
+            {store.token ? ( // Si hay token, mostrar "Cerrar Sesión" y el botón del perfil
+            <>
+            {location.pathname !== "/userinfo" && location.pathname !== "/perfiladmin" && (
+              
+                <button className="btn btn-light me-2" style={{ fontWeight: "bold", color: "rgb(165, 68, 65)", backgroundColor: "rgb(243, 234, 214)" }}
+                onClick={handleProfileRedirect}>
+                  Mi Perfil
+                </button>
+              
+              )}
+                <button
+                  className="btn btn-outline-light ml-2"
+                  onClick={()=>handleLogOut()} style={{ fontWeight: "bold", color: "rgb(165, 68, 65)"}}
+                  >
+                  Cerrar Sesión
+                </button>
+            </>
+            ) : ( // Si no hay token y no estamos en la página de login, mostrar "Iniciar Sesión"
+              location.pathname !== "/loginuser" && (
               <Link to="/loginuser">
-                <button className="btn btn-light" style={{ fontWeight: "bold" }}>
+                <button className="btn btn-light" style={{ fontWeight: "bold", color: "rgb(165, 68, 65)", backgroundColor: "rgb(243, 234, 214)" }}>
                   Iniciar Sesión
                 </button>
               </Link>
+              )
             )}
           </div>
         </nav>
