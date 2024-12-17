@@ -160,8 +160,8 @@ export const PerfilUser = () => {
     };
 
     const handleCardClick = (id) => {
-		navigate(`/plans/${id}`);
-	};
+        navigate(`/plans/${id}`);
+    };
 
     return (
         <div style={{ display: "flex", marginTop: "0", paddingTop: "0" }}>
@@ -202,13 +202,7 @@ export const PerfilUser = () => {
 
             </nav>
             <div className="container">
-                <div className="container mt-5 text-center" >
-                    <div style={{ marginLeft: "-10px", position: "adsolute" }}>
-                        <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%" }} />
-                        <h1 className="mt-0">¡Hola, {userData.name ? `${userData.name}!` : 'Invitado!'}</h1>
-                        <h5>{store.currentUser ? `${userData.email}` : 'email'}</h5>
-                    </div>
-                </div>
+               
                 {activeSection === 'perfil' && (
                     <div className="container mt-5 p-4" style={{ backgroundColor: "white", maxWidth: "800px", borderRadius: "10px" }}>
                         <form onSubmit={handleSubmit}>
@@ -239,11 +233,11 @@ export const PerfilUser = () => {
                                     <div className="col-md-4" key={favorite.id}>
                                         <TripCards
                                             name={favorite.name}
-                                            image={favorite.image} 
-                                            caption={favorite.caption} 
-                                            onClick={() => handleCardClick(favorite.id)} 
-                                            isFavorite={true} 
-                                            onToggleFavorite={() => handleRemoveFavorite(favorite.id)} 
+                                            image={favorite.image}
+                                            caption={favorite.caption}
+                                            onClick={() => handleCardClick(favorite.id)}
+                                            isFavorite={true}
+                                            onToggleFavorite={() => handleRemoveFavorite(favorite.id)}
                                         />
                                     </div>
                                 ))
@@ -293,8 +287,8 @@ export const PerfilUser = () => {
                         </div>
                     </div>
                 )}
-                {showNewTripForm && (
-                    <form onSubmit={handleNewPlanSubmit}>
+                {showNewTripForm ? (
+                    /*<form onSubmit={handleNewPlanSubmit}>
                         <div>
                             <label>Nombre del Trip:</label>
                             <input type="text" name="name" value={newPlanData.name} onChange={handleNewPlanChange} required />
@@ -312,7 +306,428 @@ export const PerfilUser = () => {
                             <input type="number" name="available_slots" value={newPlanData.available_slots} onChange={handleNewPlanChange} required />
                         </div>
                         <button type="submit">Crear Nuevo Trip</button>
-                    </form>
+                    </form>*/
+                    <>
+         FORMULARIO COMPLETO
+         <div
+           className="form-container"
+           style={{
+             margin: "30px auto",
+             maxWidth: "900px",
+             backgroundColor: "#ffffff",
+             padding: "30px",
+             borderRadius: "16px",
+             boxShadow: "0 6px 20px rgba(0, 0, 0, 0.1)",
+             border: "1px solid #e6e6e6",
+           }}
+         >
+           <h2 style={{ marginBottom: "20px" }}>Datos del Trip</h2>
+           <form>
+             <div className="row mb-3">
+               <div className="col-md-6">
+                 <label className="form-label">Nombre del trip</label>
+                 <input
+                   type="text"
+                   className="form-control"
+                   name="nombreTrip"
+                   
+                   placeholder="Full Day a Cayo Sombrero"
+                 />
+               </div>
+               <div className="col-md-6">
+                 <label className="form-label">Ubicación del trip</label>
+                 <input
+                   type="text"
+                   className="form-control"
+                   name="ubicacionTrip"
+                   
+                 />
+               </div>
+             </div>
+
+             <div className="mb-3">
+               <label className="form-label">Descripción del trip</label>
+               <textarea
+                 className="form-control"
+                 name="descripcionTrip"
+                 
+                 rows="3"
+               />
+             </div>
+
+             <div className="row mb-3">
+               <div className="col-md-6">
+                 <label className="form-label">Categoría</label>
+                 <select
+                   className="form-control"
+                   name="categoria"
+                   
+                 >
+                   <option value="">Selecciona</option>
+                   <option value="playa">Playa</option>
+                   <option value="montaña">Montaña</option>
+                 </select>
+               </div>
+               <div className="col-md-6">
+                 <label className="form-label">Fotos del trip</label>
+                 <input
+                   type="file"
+                   className="form-control"
+                   name="fotosTrip"
+                   multiple
+                 />
+               </div>
+             </div>
+             <div className="row mb-3">
+               <div className="col-md-4">
+                 <label className="form-label">Hora Salida</label>
+                 <input
+                   type="time"
+                   className="form-control"
+                   name="horaSalida"
+                   
+                 />
+               </div>
+               <div className="col-md-4">
+                 <label className="form-label">Hora Llegada</label>
+                 <input
+                   type="time"
+                   className="form-control"
+                   name="horaLlegada"
+                   
+                 />
+               </div>
+               <div className="col-md-4">
+                 <label className="form-label">Fecha</label>
+                 <input
+                   type="date"
+                   className="form-control"
+                   name="fechaTrip"
+                   
+                 />
+               </div>
+             </div>
+
+             <div className="row mb-3">
+               <div className="col-md-4">
+                 <label className="form-label">Ubicación de salida</label>
+                 <input
+                   type="text"
+                   className="form-control"
+                   name="ubicacionSalida"
+                   
+                   placeholder="Punto de partida"
+                 />
+               </div>
+               <div className="col-md-4">
+                 <label className="form-label">Capacidad/Puestos</label>
+                 <select className="form-control" name="capacidad" >
+                   <option value="">Selecciona</option>
+                   {[...Array(50)].map((_, i) => (
+                     <option key={i + 1} value={i + 1}>{i + 1}</option>
+                   ))}
+                 </select>
+               </div>
+               <div className="col-md-4">
+                 <label className="form-label">Ubicación de llegada</label>
+                 <input
+                   type="text"
+                   className="form-control"
+                   name="ubicacionLlegada"
+                   
+                   placeholder="Destino final"
+                 />
+               </div>
+             </div>
+             <h2 className="mt-4 mb-3">Datos de Empresa</h2>
+             <div className="row mb-3">
+               <div className="col-md-6">
+                 <label className="form-label">Nombre de la empresa</label>
+                 <input
+                   type="text"
+                   className="form-control"
+                   name="nombreEmpresa"
+                   
+                 />
+               </div>
+               <div className="col-md-6">
+                 <label className="form-label">Logo de la empresa</label>
+                 <input
+                   type="file"
+                   className="form-control"
+                   name="logoEmpresa"
+                 />
+               </div>
+             </div>
+
+             <div className="row mb-3">
+               <div className="col-md-6">
+                 <label className="form-label">RIF</label>
+                 <input
+                   type="text"
+                   className="form-control"
+                   name="rif"  
+                 />
+               </div>
+               <div className="col-md-6">
+                 <label className="form-label">Descripción de la empresa</label>
+                 <textarea
+                   className="form-control"
+                   name="descripcionEmpresa"    
+                   rows="2"
+                 />
+               </div>
+             </div>
+             <div className="row mb-3">
+               <div className="col-md-6">
+                 <label className="form-label">Email</label>
+                 <input
+                   type="email"
+                   className="form-control"
+                   name="email"              
+                   placeholder="empresa@ejemplo.com"
+                 />
+               </div>
+               <div className="col-md-6">
+                 <label className="form-label">Teléfono</label>
+                 <input
+                   type="tel"
+                   className="form-control"
+                   name="telefono"
+                   
+                   placeholder="+58 XXX-XXXXXXX"
+                 />
+               </div>
+             </div>
+
+             <div className="row mb-3">
+               <div className="col-md-6">
+                 <label className="form-label">Instagram</label>
+                 <div className="input-group">
+                   <span className="input-group-text">@</span>
+                   <input
+                     type="text"
+                     className="form-control"
+                     name="instagram"
+                     
+                     placeholder="usuario_instagram"
+                   />
+                 </div>
+               </div>
+               <div className="col-md-6">
+                 <label className="form-label">Facebook</label>
+                 <input
+                   type="text"
+                   className="form-control"
+                   name="facebook"
+                   
+                   placeholder="facebook.com/pagina"
+                 />
+               </div>
+             </div>
+
+             <h2 className="mt-4 mb-3">Paquetes</h2>
+             <div
+               className="row"
+               style={{
+                 display: "flex",
+                 gap: "20px",
+                 justifyContent: "center",
+                 marginBottom: "2rem",
+               }}
+             >
+               <div className="col" style={{ flex: "1", maxWidth: "300px" }}>
+                 <div
+                   className="card"
+                   style={{ height: "100%", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}
+                 >
+                   <div className="card-body">
+                     <h5
+                       className="card-title"
+                       style={{
+                         color: "#a44a3f",
+                         fontWeight: "bold",
+                         marginBottom: "1rem",
+                       }}
+                     >
+                       Paquete Básico
+                     </h5>
+                     <ul className="list-unstyled" style={{ marginBottom: "1rem" }}>
+                       <li>Transporte</li>
+                       <li>Agua potable</li>
+                     </ul>
+                     <div
+                       style={{
+                         fontSize: "1.25rem",
+                         color: "#a44a3f",
+                         textAlign: "center",
+                         padding: "0.5rem",
+                         borderRadius: "4px",
+                         backgroundColor: "#f8f9fa",
+                         margin: "1rem 0",
+                       }}
+                     >
+                       <strong>$40.00</strong>
+                     </div>
+                     <div className="form-check" style={{ marginTop: "1rem" }}>
+                       <input
+                         className="form-check-input"
+                         type="radio"
+                         name="paqueteSeleccionado"
+                         value="basico"
+                         id="paqueteBasico"
+                         
+                       />
+                       <label
+                         className="form-check-label"
+                         htmlFor="paqueteBasico"
+                         style={{ cursor: "pointer" }}
+                       >
+                         Seleccionar paquete básico
+                       </label>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+               <div className="col" style={{ flex: "1", maxWidth: "300px" }}>
+                 <div
+                   className="card"
+                   style={{ height: "100%", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}
+                 >
+                   <div className="card-body">
+                     <h5
+                       className="card-title"
+                       style={{
+                         color: "#a44a3f",
+                         fontWeight: "bold",
+                         marginBottom: "1rem",
+                       }}
+                     >
+                       Paquete Medio
+                     </h5>
+                     <ul className="list-unstyled" style={{ marginBottom: "1rem" }}>
+                       <li>Transporte</li>
+                       <li>Desayuno</li>
+                       <li>Agua potable</li>
+                       <li>Refrigerios</li>
+                       <li>Bebidas (6)</li>
+                     </ul>
+                     <div
+                       style={{
+                         fontSize: "1.25rem",
+                         color: "#a44a3f",
+                         textAlign: "center",
+                         padding: "0.5rem",
+                         borderRadius: "4px",
+                         backgroundColor: "#f8f9fa",
+                         margin: "1rem 0",
+                       }}
+                     >
+                       <strong>$70.00</strong>
+                     </div>
+                     <div className="form-check" style={{ marginTop: "1rem" }}>
+                       <input
+                         className="form-check-input"
+                         type="radio"
+                         name="paqueteSeleccionado"
+                         value="medio"
+                         id="paqueteMedio"
+                         
+                       />
+                       <label
+                         className="form-check-label"
+                         htmlFor="paqueteMedio"
+                         style={{ cursor: "pointer" }}
+                       >
+                         Seleccionar paquete medio
+                       </label>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+               <div className="col" style={{ flex: "1", maxWidth: "300px" }}>
+                 <div
+                   className="card"
+                   style={{ height: "100%", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}
+                 >
+                   <div className="card-body">
+                     <h5
+                       className="card-title"
+                       style={{
+                         color: "#a44a3f",
+                         fontWeight: "bold",
+                         marginBottom: "1rem",
+                       }}
+                     >
+                       Paquete Full
+                     </h5>
+                     <ul className="list-unstyled" style={{ marginBottom: "1rem" }}>
+                       <li>Transporte</li>
+                       <li>Desayuno</li>
+                       <li>Agua potable</li>
+                       <li>Refrigerios</li>
+                       <li>Bebidas ilimitadas</li>
+                       <li>Almuerzo</li>
+                       <li>Masaje</li>
+                     </ul>
+                     <div
+                       style={{
+                         fontSize: "1.25rem",
+                         color: "#a44a3f",
+                         textAlign: "center",
+                         padding: "0.5rem",
+                         borderRadius: "4px",
+                         backgroundColor: "#f8f9fa",
+                         margin: "1rem 0",
+                       }}
+                     >
+                       <strong>$120.00</strong>
+                     </div>
+                     <div className="form-check" style={{ marginTop: "1rem" }}>
+                       <input
+                         className="form-check-input"
+                         type="radio"
+                         name="paqueteSeleccionado"
+                         value="full"
+                         id="paqueteFull"
+                         
+                       />
+                       <label
+                         className="form-check-label"
+                         htmlFor="paqueteFull"
+                         style={{ cursor: "pointer" }}
+                       >
+                         Seleccionar paquete full
+                       </label>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+
+             <button
+               type="submit"
+               className="btn btn-primary w-100"
+               style={{
+                 backgroundColor: "#a44a3f",
+                 border: "none",
+                 padding: "10px",
+                 fontSize: "1.1em",
+               }}
+             >
+               Registrar Trip
+             </button>
+           </form>
+         </div>
+         </>
+         ):(
+          <div className="container mt-5 text-center" >
+          <div style={{ marginLeft: "-10px", position: "adsolute" }}>
+              <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%" }} />
+              <h1 className="mt-0">¡Hola, {userData.name ? `${userData.name}!` : 'Invitado!'}</h1>
+              <h5>{store.currentUser ? `${userData.email}` : 'email'}</h5>
+          </div>
+      </div>
                 )}
                 <Modal
                     showModal={showModal}
