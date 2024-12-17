@@ -87,28 +87,6 @@ export const PerfilUser = () => {
     email: ''
   });
 
-
-  const handleNewPlanChange = (e) => {
-    const { name, value } = e.target;
-    setNewPlanData({ ...newPlanData, [name]: value });
-  };
-
-  const handleNewPlanSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
-    try {
-      await actions.createPlan(newPlanData.name, newPlanData.caption, newPlanData.image, newPlanData.available_slots, token);
-      alert("Nuevo trip creado exitosamente");
-      setShowNewTripForm(false);
-      const plans = await actions.getPlansList();
-      const filteredPlans = plans.filter(plan => plan.user_id === store.currentUser.id);
-      setUserPlans(filteredPlans);
-    } catch (error) {
-      console.error("Error al crear el trip:", error);
-      alert("Error al crear el trip");
-    }
-  };
-
   useEffect(() => {
     if (store.currentUser) {
       setUserData({
@@ -240,16 +218,26 @@ export const PerfilUser = () => {
               <li className="nav-item">
                 <a className="nav-link" href="#" onClick={() => handleSectionChange('ventas')}>Ventas</a>
               </li>
+              {!showNewTripForm && (
               <li className="nav-item">
-                <button className="btn btn-new" onClick={() => setShowNewTripForm(!showNewTripForm)}><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
+                <button className="btn btn-new" onClick={() => {
+                handleSectionChange('ventas');
+                setShowNewTripForm(true)}}><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
               </li>
+              )}
             </ul>
           </div>
         )}
 
       </nav>
       <div className="container">
-
+        {!showNewTripForm && (
+          <div className="container mt-5 text-center" >
+            <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%" }} />
+            <h1 className="mt-0">¡Hola, {userData.name ? `${userData.name}!` : 'Invitado!'}</h1>
+            <h5>{store.currentUser ? `${userData.email}` : 'email'}</h5>
+          </div>
+        )}
         {activeSection === 'perfil' && (
           <div className="container mt-5 p-4" style={{ backgroundColor: "white", maxWidth: "800px", borderRadius: "10px" }}>
             <form onSubmit={handleSubmit}>
@@ -289,7 +277,13 @@ export const PerfilUser = () => {
                   </div>
                 ))
               ) : (
-                <p>No tienes favoritos disponibles</p>
+                <div><p className="text-center mt-5">No tienes favoritos disponibles</p>
+                  <div className="d-flex align-items-center justify-content-end mt-5">
+                    <Link to="/">
+                      <span href="#" className="btn btn-new rounded-pill">Ir al Home</span>
+                    </Link>
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -329,300 +323,283 @@ export const PerfilUser = () => {
                 )}
               </tbody>
             </table>
+            {!showNewTripForm && (
             <div className="text-center mt-5">
-              <button className="btn btn-new" onClick={() => setShowNewTripForm(!showNewTripForm)}><FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>
+              <button className="btn btn-new" onClick={() => 
+                setShowNewTripForm(true)}>
+                <FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>
             </div>
+            )}
           </div>
         )}
-        {showNewTripForm ? (
-          /*<form onSubmit={handleNewPlanSubmit}>
-              <div>
-                  <label>Nombre del Trip:</label>
-                  <input type="text" name="name" value={newPlanData.name} onChange={handleNewPlanChange} required />
-              </div>
-              <div>
-                  <label>Descripción:</label>
-                  <input type="text" name="caption" value={newPlanData.caption} onChange={handleNewPlanChange} required />
-              </div>
-              <div>
-                  <label>Imagen URL:</label>
-                  <input type="text" name="image" value={newPlanData.image} onChange={handleNewPlanChange} required />
-              </div>
-              <div>
-                  <label>Cupos Disponibles:</label>
-                  <input type="number" name="available_slots" value={newPlanData.available_slots} onChange={handleNewPlanChange} required />
-              </div>
-              <button type="submit">Crear Nuevo Trip</button>
-          </form>*/
-          <>
-            FORMULARIO COMPLETO
-            <div
-              className="form-container"
-              style={{
-                margin: "30px auto",
-                maxWidth: "900px",
-                backgroundColor: "#ffffff",
-                padding: "30px",
-                borderRadius: "16px",
-                boxShadow: "0 6px 20px rgba(0, 0, 0, 0.1)",
-                border: "1px solid #e6e6e6",
-              }}
+        {activeSection === 'ventas' && showNewTripForm && (
+          <div
+            className="form-container"
+            style={{
+              margin: "30px auto",
+              maxWidth: "900px",
+              backgroundColor: "#ffffff",
+              padding: "30px",
+              borderRadius: "16px",
+              boxShadow: "0 6px 20px rgba(0, 0, 0, 0.1)",
+              border: "1px solid #e6e6e6",
+            }}
+          >
+            <h2 style={{ marginBottom: "20px" }}>Datos del Trip</h2>
+
+            <form
+              onSubmit={handleSubmitTrip}
             >
-              <h2 style={{ marginBottom: "20px" }}>Datos del Trip</h2>
-
-              <form
-                onSubmit={handleSubmitTrip}
-              >
-                <div className="row mb-3">
-                  <div className="col-md-6">
-                    <label className="form-label">Nombre del trip</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="nombreTrip"
-                      placeholder="Full Day a Cayo Sombrero"
-                      value={trip.nombreTrip}
-                      onChange={handleChangeTrip}
-
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">Ubicación del trip</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="destinoTrip"
-                      placeholder="una ubicación"
-                      onChange={handleChangeTrip}
-
-
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label">Descripción del trip</label>
-                  <textarea
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label className="form-label">Nombre del trip</label>
+                  <input
+                    type="text"
                     className="form-control"
-                    rows="3"
-                    placeholder="descripcionTrip"
-                    name="descripcionTrip"
-                    value={trip.descripcionTrip}
+                    name="nombreTrip"
+                    placeholder="Full Day a Cayo Sombrero"
+                    value={trip.nombreTrip}
                     onChange={handleChangeTrip}
 
                   />
                 </div>
+                <div className="col-md-6">
+                  <label className="form-label">Ubicación del trip</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="destinoTrip"
+                    placeholder="una ubicación"
+                    onChange={handleChangeTrip}
 
-                <div className="row mb-3">
-                  <div className="col-md-6">
-                    <label className="form-label">Categoría</label>
-                    <select
-                      className="form-control"
-                      name="categoria"
-                      onChange={handleChangeTrip}
 
-                    >
-                      <option value="">Selecciona</option>
-                      <option value="playa">Playa</option>
-                      <option value="montaña">Montaña</option>
-                    </select>
-                  </div>
-
-                  <div className="col-md-6">
-                    <label className="form-label">Fotos del trip</label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      name="imageDestino"
-                    //revisar imagen
-                    // multiple
-                    />
-                  </div>
+                  />
                 </div>
-                <div className="row mb-3">
-                  <div className="col-md-4">
-                    <label className="form-label">Hora Salida</label>
-                    <input
-                      type="time"
-                      className="form-control"
-                      name="horaSalida"
-                      value={trip.horaSalida}
-                      onChange={handleChangeTrip}
+              </div>
 
-                    />
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label">Hora Llegada</label>
-                    <input
-                      type="time"
-                      className="form-control"
-                      name="horaLlegada"
-                      value={trip.horaLlegada}
-                      onChange={handleChangeTrip}
+              <div className="mb-3">
+                <label className="form-label">Descripción del trip</label>
+                <textarea
+                  className="form-control"
+                  rows="3"
+                  placeholder="descripcionTrip"
+                  name="descripcionTrip"
+                  value={trip.descripcionTrip}
+                  onChange={handleChangeTrip}
 
+                />
+              </div>
 
-                    />
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label">Fecha</label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      name="fechaTrip"
-                      value={trip.fechaTrip}
-                      onChange={handleChangeTrip}
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label className="form-label">Categoría</label>
+                  <select
+                    className="form-control"
+                    name="categoria"
+                    onChange={handleChangeTrip}
 
-                    />
-                  </div>
+                  >
+                    <option value="">Selecciona</option>
+                    <option value="playa">Playa</option>
+                    <option value="montaña">Montaña</option>
+                  </select>
                 </div>
 
-                <div className="row mb-3">
-                  <div className="col-md-4">
-                    <label className="form-label">Ubicación de salida</label>
+                <div className="col-md-6">
+                  <label className="form-label">Fotos del trip</label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    name="imageDestino"
+                  //revisar imagen
+                  // multiple
+                  />
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-md-4">
+                  <label className="form-label">Hora Salida</label>
+                  <input
+                    type="time"
+                    className="form-control"
+                    name="horaSalida"
+                    value={trip.horaSalida}
+                    onChange={handleChangeTrip}
+
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Hora Llegada</label>
+                  <input
+                    type="time"
+                    className="form-control"
+                    name="horaLlegada"
+                    value={trip.horaLlegada}
+                    onChange={handleChangeTrip}
+
+
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Fecha</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    name="fechaTrip"
+                    value={trip.fechaTrip}
+                    onChange={handleChangeTrip}
+
+                  />
+                </div>
+              </div>
+
+              <div className="row mb-3">
+                <div className="col-md-4">
+                  <label className="form-label">Ubicación de salida</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Punto de partida"
+                    name="ubicacionSalida"
+                    value={trip.ubicacionSalida}
+                    onChange={handleChangeTrip}
+
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Capacidad/Puestos</label>
+                  <select
+                    className="form-control"
+                    name="capacidad"
+                    onChange={handleChangeTrip}
+
+                  >
+                    <option value="">Selecciona</option>
+                    {[...Array(50)].map((_, i) => (
+                      <option key={i + 1} value={i + 1}>{i + 1}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Ubicación de llegada</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="ubicacionLlegada"
+                    placeholder="Destino final"
+                    value={trip.ubicacionLlegada}
+                    onChange={handleChangeTrip}
+
+                  />
+                </div>
+              </div>
+              <h2 className="mt-4 mb-3">Datos de Empresa</h2>
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label className="form-label">Nombre de la empresa</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="nombreEmpresa"
+                    placeholder="Nombre empresa"
+                    value={trip.nombreEmpresa}
+                    onChange={handleChangeTrip}
+
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label">Logo de la empresa</label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    name="logoEmpresa"
+                  // revisar
+                  />
+                </div>
+              </div>
+
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label className="form-label">RIF</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="rif"
+                    placeholder="rif"
+                    value={trip.rif}
+                    onChange={handleChangeTrip}
+
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label">Descripción de la empresa</label>
+                  <textarea
+                    className="form-control"
+                    name="descripcionEmpresa"
+                    rows="2"
+                    placeholder="Descripción"
+                    value={trip.descripcion}
+                    onChange={handleChangeTrip}
+
+                  />
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label className="form-label">Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    placeholder="empresa@ejemplo.com"
+                    onChange={handleChangeTrip}
+
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label">Teléfono</label>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    name="telefono"
+                    placeholder="+58 XXX-XXXXXXX"
+                    value={trip.telefono}
+                    onChange={handleChangeTrip}
+
+                  />
+                </div>
+              </div>
+
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label className="form-label">Instagram</label>
+                  <div className="input-group">
+                    <span className="input-group-text">@</span>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Punto de partida"
-                      name="ubicacionSalida"
-                      value={trip.ubicacionSalida}
-                      onChange={handleChangeTrip}
-
-                    />
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label">Capacidad/Puestos</label>
-                    <select
-                      className="form-control"
-                      name="capacidad"
-                      onChange={handleChangeTrip}
-
-                    >
-                      <option value="">Selecciona</option>
-                      {[...Array(50)].map((_, i) => (
-                        <option key={i + 1} value={i + 1}>{i + 1}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label">Ubicación de llegada</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="ubicacionLlegada"
-                      placeholder="Destino final"
-                      value={trip.ubicacionLlegada}
+                      name="instagram"
+                      placeholder="usuario_instagram"
+                      value={trip.instagram}
                       onChange={handleChangeTrip}
 
                     />
                   </div>
                 </div>
-                <h2 className="mt-4 mb-3">Datos de Empresa</h2>
-                <div className="row mb-3">
-                  <div className="col-md-6">
-                    <label className="form-label">Nombre de la empresa</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="nombreEmpresa"
-                      placeholder="Nombre empresa"
-                      value={trip.nombreEmpresa}
-                      onChange={handleChangeTrip}
-
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">Logo de la empresa</label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      name="logoEmpresa"
-                    // revisar
-                    />
-                  </div>
+                <div className="col-md-6">
+                  <label className="form-label">Facebook</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="facebook"
+                    placeholder="facebook.com/pagina"
+                    value={trip.facebook}
+                    onChange={handleChangeTrip}
+                  />
                 </div>
+              </div>
 
-                <div className="row mb-3">
-                  <div className="col-md-6">
-                    <label className="form-label">RIF</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="rif"
-                      placeholder="rif"
-                      value={trip.rif}
-                      onChange={handleChangeTrip}
-
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">Descripción de la empresa</label>
-                    <textarea
-                      className="form-control"
-                      name="descripcionEmpresa"
-                      rows="2"
-                      placeholder="Descripción"
-                      value={trip.descripcion}
-                      onChange={handleChangeTrip}
-
-                    />
-                  </div>
-                </div>
-                <div className="row mb-3">
-                  <div className="col-md-6">
-                    <label className="form-label">Email</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      name="email"
-                      placeholder="empresa@ejemplo.com"
-                      onChange={handleChangeTrip}
-
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">Teléfono</label>
-                    <input
-                      type="tel"
-                      className="form-control"
-                      name="telefono"
-                      placeholder="+58 XXX-XXXXXXX"
-                      value={trip.telefono}
-                      onChange={handleChangeTrip}
-
-                    />
-                  </div>
-                </div>
-
-                <div className="row mb-3">
-                  <div className="col-md-6">
-                    <label className="form-label">Instagram</label>
-                    <div className="input-group">
-                      <span className="input-group-text">@</span>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="instagram"
-                        placeholder="usuario_instagram"
-                        value={trip.instagram}
-                        onChange={handleChangeTrip}
-
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label">Facebook</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="facebook"
-                      placeholder="facebook.com/pagina"
-                      value={trip.facebook}
-                      onChange={handleChangeTrip}
-                    />
-                  </div>
-                </div>
-
-                {/* <h2 className="mt-4 mb-3">Paquetes</h2>
+              {/* <h2 className="mt-4 mb-3">Paquetes</h2>
                 <div
                   className="row"
                   style={{
@@ -632,7 +609,7 @@ export const PerfilUser = () => {
                     marginBottom: "2rem",
                   }}
                 > */}
-                {/* <div className="col" style={{ flex: "1", maxWidth: "300px" }}>
+              {/* <div className="col" style={{ flex: "1", maxWidth: "300px" }}>
                     <div
                       className="card"
                       style={{ height: "100%", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}
@@ -801,29 +778,19 @@ export const PerfilUser = () => {
                   </div>
                 </div> */}
 
-                <button
-                  type="submit"
-                  className="btn btn-primary w-100"
-                  style={{
-                    backgroundColor: "#a44a3f",
-                    border: "none",
-                    padding: "10px",
-                    fontSize: "1.1em",
-                  }}
-                >
-                  Registrar Trip
-                </button>
-              </form>
-
-            </div>
-          </>
-        ) : (
-          <div className="container mt-5 text-center" >
-            <div style={{ marginLeft: "-10px", position: "adsolute" }}>
-              <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%" }} />
-              <h1 className="mt-0">¡Hola, {userData.name ? `${userData.name}!` : 'Invitado!'}</h1>
-              <h5>{store.currentUser ? `${userData.email}` : 'email'}</h5>
-            </div>
+              <button
+                type="submit"
+                className="btn btn-primary w-100"
+                style={{
+                  backgroundColor: "#a44a3f",
+                  border: "none",
+                  padding: "10px",
+                  fontSize: "1.1em",
+                }}
+              >
+                Registrar Trip
+              </button>
+            </form>
           </div>
         )}
         <Modal
