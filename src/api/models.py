@@ -112,7 +112,7 @@ class Plan(db.Model):
     name = db.Column(db.String(120), nullable=False)
     caption = db.Column(db.String(1000))
     image = db.Column(db.String(250))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Columngit(db.Integer, db.ForeignKey('users.id'))
     # type = db.Column(db.Enum(PlanType), nullable=False)  # Agregar tipo de plan
     categories_id= db.Column(db.Integer, db.ForeignKey("categories.id"))
     available_slots = db.Column(db.Integer, nullable=False) #Agregar cantidad de cupos disponibles
