@@ -211,35 +211,48 @@ def get_users():
     return jsonify({"users": user_data}), 200
 
 # Ruta para formulario de registro de plan
-@api.route('/create_plan', methods=['POST'])
-@jwt_required()
+@api.route('/create-plan', methods=['POST'])
+# @jwt_required()
 def create_plan():
-    current_user_id = get_jwt_identity()
-    current_user = User.query.get(current_user_id)
-    # Obtener datos del formulario o del request JSON
-    body = request.get_json()
-    if body["name"] is None:
-        return jsonify({"msg":"Debe especificar un Destino"}), 400
-    name = body.get('name')
-    caption = body.get('caption')
-    image = body.get('image')
-    #type = body.get('type')
-    available_slots = body.get('available_slots')
-    status = body.get('status', PlanStatus.Pending)
-    
-# Validación de datos
-    new_plan = Plan(
-        name=name,
-        caption=caption,
-        image=image,
-        #type=type,
-        user_id=current_user_id,
-        available_slots=available_slots,
-        status=status
-    )
-    db.session.add(new_plan)
-    db.session.commit()
-    return jsonify({"msg":"Plan creado exitosamente"}), 201
+    try:
+        body = request.json
+        
+        plan_register = Plan()
+        plan_register.name = body.get("nombreTrip")
+        plan_register.location_trip =  body.get("destinoTrip")
+        plan_register.caption = body.get("descripcionTrip")
+        # plan_register.categories = body.get("categoria")
+        plan_register.time_start = body.get("horaSalida")
+        plan_register.time_end = body.get("horaLlegada")
+        plan_register.date_trip = body.get("fechaTrip")
+        plan_register.location_start = body.get("ubicacionSalida")
+        plan_register.location_end = body.get("ubicacionLlegada")
+        plan_register.company_name = body.get("nombreEmpresa")
+        plan_register.rif = body.get("rif")
+        plan_register.description_company = body.get("descripcionEmpresa")
+        plan_register.phone_company = body.get("telefono")
+        plan_register.instagram_company= body.get("instagram")
+        plan_register.facebook_company= body.get("facebook")
+        plan_register.available_slots = body.get("available_slots") # revisar
+        plan_register.user_id = 1 # es un cable
+        plan_register.categories_id=1 # es un cable
+
+
+        """
+            "categoria": "categoria", #falta
+            "imageDestino": "nose", falta
+            
+            "logoEmpresa": "no tengo",#falta
+        """
+
+        db.session.add(plan_register)
+        db.session.commit()
+
+        return jsonify("trabajando por usted"), 200
+        
+    except Exception as err:
+        print(err.args)
+        return jsonify("Tenemos un problemon hablen con Omar"), 500
 
 
 # Ruta para listar todos los planes existentes

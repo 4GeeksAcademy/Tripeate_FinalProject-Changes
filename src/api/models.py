@@ -38,7 +38,7 @@ class User(db.Model):
             "profile_image": self.profile_image,
             "plans": [{"id": plan.id, "name": plan.name}  for plan in self.plans]
         }
-    # El usuario puede crear un plan
+    # El usuario puede crear un plan classmethod
     def create_plan(self, name, caption, image, plan_type, available_slots):
         new_plan = Plan(name=name, caption=caption, image=image, user_id=self.id, type=plan_type, available_slots=available_slots)
         db.session.add(new_plan)
@@ -110,14 +110,32 @@ class Plan(db.Model):
     __tablename__ = 'plans'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
-    caption = db.Column(db.String(1000))
-    image = db.Column(db.String(250))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    # type = db.Column(db.Enum(PlanType), nullable=False)  # Agregar tipo de plan
-    categories_id= db.Column(db.Integer, db.ForeignKey("categories.id"))
+    location_trip = db.Column(db.String(120), nullable=False)
+    caption = db.Column(db.Text, nullable=False)
+    time_start = db.Column(db.String(100), nullable=False)
+    time_end = db.Column(db.String(100), nullable=False)
+    date_trip = db.Column(db.String(100), nullable=False)
+    location_start = db.Column(db.String(100), nullable=False)
+    location_end = db.Column(db.String(100), nullable=False)
+    company_name = db.Column(db.String(100), nullable=False)
+    rif = db.Column(db.String(100), nullable=False)
+    description_company = db.Column(db.String(100), nullable=False)
+    phone_company = db.Column(db.String(100), nullable=False)
+    instagram_company = db.Column(db.String(100), nullable=False)
+    facebook_company = db.Column(db.String(100), nullable=False)
     available_slots = db.Column(db.Integer, nullable=False) #Agregar cantidad de cupos disponibles
+
+    image_company = db.Column(db.String(100), nullable=False, default="https://i.pravatar.cc/300" )
+    image_location = db.Column(db.String(120), nullable=False, default="https://i.pravatar.cc/300")
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+       
+    categories_id= db.Column(db.Integer, db.ForeignKey("categories.id"))# revisar
     status = db.Column(db.Enum(PlanStatus), default=PlanStatus.Pending) #Estado del plan
     categories = db.relationship('Category', backref='plans')
+
+
+
 
     def __repr__(self):
         return f'<Plan {self.name}>'
