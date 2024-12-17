@@ -16,9 +16,7 @@ export const Navbar = () => {
       alert("Hubo un problema al cerrar sesión. Intenta nuevamente.");
     }
   };
-  // const handleProfileRedirect = () => {
-  //   navigate(-1);
-  // };
+  
 
 
   return (
