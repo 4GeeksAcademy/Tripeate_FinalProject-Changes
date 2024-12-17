@@ -37,7 +37,7 @@ const Layout = () => {
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
-                        <Route element={currentUser.is_admin ? <PerfilAdmin /> : <Navigate to="/" />  } path="/perfiladmin" />
+                        <Route element={currentUser?.is_admin ? <PerfilAdmin /> : <Navigate to="/" />  } path="/perfiladmin" />
                         <Route element={<Home />} path="/" />
                         <Route element={<RegisterUser />} path="/register" />
                         <Route element={<DetailTrip />} path="/plans/:planId" />
