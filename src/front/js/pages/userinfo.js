@@ -30,7 +30,7 @@ const initialTripState = {
   "telefono": "",
   "instagram": "",
   "facebook": "",
-  "capacidad": ""
+  "capacidad": "",
 }
 
 export const PerfilUser = () => {
@@ -64,7 +64,29 @@ export const PerfilUser = () => {
   const handleSubmitTrip = async (event) => {
     event.preventDefault()
 
-    const response = await actions.registerTrip(trip)
+    const formData = new FormData()
+    formData.append("nombreTrip", trip.nombreTrip)
+    formData.append("destinoTrip", trip.destinoTrip)
+    formData.append("descripcionTrip", trip.descripcionTrip)
+    formData.append("categoria", trip.categoria)
+    formData.append("horaSalida", trip.horaSalida)
+    formData.append("horaLlegada", trip.horaLlegada)
+    formData.append("fechaTrip", trip.fechaTrip)
+    formData.append("ubicacionSalida", trip.ubicacionSalida)
+    formData.append("ubicacionLlegada", trip.ubicacionLlegada)
+    formData.append("nombreEmpresa", trip.nombreEmpresa)
+    formData.append("logoEmpresa", trip.logoEmpresa)
+    formData.append("rif", trip.rif)
+    formData.append("descripcionEmpresa", trip.descripcionEmpresa)
+    formData.append("telefono", trip.telefono)
+    formData.append("instagram", trip.instagram)
+    formData.append("facebook", trip.facebook)
+    formData.append("capacidad", trip.capacidad)
+    formData.append("imageDestino", trip.imageDestino)
+    
+
+    const response = await actions.registerTrip(formData)
+
 
     if (response == 201) {
       Swal.fire({
@@ -400,8 +422,8 @@ export const PerfilUser = () => {
 
                   >
                     <option value="">Selecciona</option>
-                    <option value="playa">Playa</option>
-                    <option value="montaña">Montaña</option>
+                    <option value="1">Playa</option>
+                    <option value="2">Montaña</option>
                   </select>
                 </div>
 
@@ -411,6 +433,11 @@ export const PerfilUser = () => {
                     type="file"
                     className="form-control"
                     name="imageDestino"
+                    onChange={(event)=>{
+                      setTrip({
+                        ...trip, imageDestino: event.target.files[0]
+                      })
+                    }}
                   //revisar imagen
                   // multiple
                   />
@@ -513,6 +540,11 @@ export const PerfilUser = () => {
                     type="file"
                     className="form-control"
                     name="logoEmpresa"
+                    onChange={(event)=>{
+                      setTrip({
+                        ...trip, logoEmpresa: event.target.files[0]
+                      })
+                    }}
                   // revisar
                   />
                 </div>

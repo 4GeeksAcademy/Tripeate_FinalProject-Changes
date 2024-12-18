@@ -446,12 +446,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			registerTrip: async (tripPlan) => {
 				try {
+					const store = getStore()
+
 					const response = await fetch(`${process.env.BACKEND_URL}/create-plan`, {
 						method: "POST",
 						headers: {
-							"Content-Type": "application/json"
+							
+							"Authorization":`Bearer ${store.token}`
 						},
-						body: JSON.stringify(tripPlan)
+						body: tripPlan
 					})
 
 					if (response.ok) {

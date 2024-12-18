@@ -12,6 +12,7 @@ from flask_cors import CORS
 import os 
 import requests
 import json
+import cloudinary.uploader as uploader
 
 
 
@@ -212,36 +213,55 @@ def get_users():
 
 # Ruta para formulario de registro de plan
 @api.route('/create-plan', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def create_plan():
     try:
-        body = request.json
-        
-        plan_register = Plan()
-        plan_register.name = body.get("nombreTrip")
-        plan_register.location_trip =  body.get("destinoTrip")
-        plan_register.caption = body.get("descripcionTrip")
-        # plan_register.categories = body.get("categoria")
-        plan_register.time_start = body.get("horaSalida")
-        plan_register.time_end = body.get("horaLlegada")
-        plan_register.date_trip = body.get("fechaTrip")
-        plan_register.location_start = body.get("ubicacionSalida")
-        plan_register.location_end = body.get("ubicacionLlegada")
-        plan_register.company_name = body.get("nombreEmpresa")
-        plan_register.rif = body.get("rif")
-        plan_register.description_company = body.get("descripcionEmpresa")
-        plan_register.phone_company = body.get("telefono")
-        plan_register.instagram_company= body.get("instagram")
-        plan_register.facebook_company= body.get("facebook")
-        plan_register.available_slots = body.get("capacidad") # revisar
-        plan_register.user_id = 1 # es un cable
-        plan_register.categories_id=1 # es un cable
+        # body = request.json
+        body_form = request.form
+        body_files = request.files
 
+        print(body_form)
+        print(body_files)
+
+        image_company = body_files.get("logoEmpresa", None)
+        image_location = body_files.get("imageDestino", None)
+
+        if image_company is not None:
+            image_company = uploader.upload(image_company)
+            image_company = image_company.get("secure_url")
+        
+        if image_location is not None:
+            image_location = uploader.upload(image_location)
+            image_location = image_location.get("secure_url")
+        
+        print(image_location)
+        print(image_company)
+
+        plan_register = Plan()
+        plan_register.name = body_form.get("nombreTrip")
+        plan_register.location_trip =  body_form.get("destinoTrip")
+        plan_register.caption = body_form.get("descripcionTrip")
+        plan_register.time_start = body_form.get("horaSalida")
+        plan_register.time_end = body_form.get("horaLlegada")
+        plan_register.date_trip = body_form.get("fechaTrip")
+        plan_register.location_start = body_form.get("ubicacionSalida")
+        plan_register.location_end = body_form.get("ubicacionLlegada")
+        plan_register.company_name = body_form.get("nombreEmpresa")
+        plan_register.rif = body_form.get("rif")
+        plan_register.description_company = body_form.get("descripcionEmpresa")
+        plan_register.phone_company = body_form.get("telefono")
+        plan_register.instagram_company= body_form.get("instagram")
+        plan_register.facebook_company= body_form.get("facebook")
+        plan_register.available_slots = body_form.get("capacidad")
+        plan_register.user_id = get_jwt_identity()
+        plan_register.categories_id=body_form.get("categoria")
+        
+        plan_register.image_company=image_company
+        plan_register.image_location=image_location
 
         """
             "categoria": "categoria", #falta
             "imageDestino": "nose", falta
-            
             "logoEmpresa": "no tengo",#falta
         """
 
