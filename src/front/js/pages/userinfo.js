@@ -83,7 +83,8 @@ export const PerfilUser = () => {
     formData.append("facebook", trip.facebook)
     formData.append("capacidad", trip.capacidad)
     formData.append("imageDestino", trip.imageDestino)
-    
+    formData.append("precioTrip", trip.precioTrip)
+
 
     const response = await actions.registerTrip(formData)
 
@@ -241,11 +242,12 @@ export const PerfilUser = () => {
                 <a className="nav-link" href="#" onClick={() => handleSectionChange('ventas')}>Ventas</a>
               </li>
               {!showNewTripForm && (
-              <li className="nav-item">
-                <button className="btn btn-new" onClick={() => {
-                handleSectionChange('ventas');
-                setShowNewTripForm(true)}}><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
-              </li>
+                <li className="nav-item">
+                  <button className="btn btn-new" onClick={() => {
+                    handleSectionChange('ventas');
+                    setShowNewTripForm(true)
+                  }}><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
+                </li>
               )}
             </ul>
           </div>
@@ -346,11 +348,11 @@ export const PerfilUser = () => {
               </tbody>
             </table>
             {!showNewTripForm && (
-            <div className="text-center mt-5">
-              <button className="btn btn-new" onClick={() => 
-                setShowNewTripForm(true)}>
-                <FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>
-            </div>
+              <div className="text-center mt-5">
+                <button className="btn btn-new" onClick={() =>
+                  setShowNewTripForm(true)}>
+                  <FontAwesomeIcon icon={faPlus} /> Agregar nuevo trip</button>
+              </div>
             )}
           </div>
         )}
@@ -413,7 +415,7 @@ export const PerfilUser = () => {
               </div>
 
               <div className="row mb-3">
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <label className="form-label">Categoría</label>
                   <select
                     className="form-control"
@@ -427,13 +429,30 @@ export const PerfilUser = () => {
                   </select>
                 </div>
 
-                <div className="col-md-6">
+                <div className="col-md-4">
+                  <label className="form-label">Precio</label>
+                  <div className="input-group">
+                    <span className="input-group-text">$</span>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="0.00"
+                      name="precioTrip"
+                      value={trip.precioTrip} 
+                      onChange={handleChangeTrip} 
+                      aria-label="Dollar amount (with dot and two decimal places)"
+                    />
+                    <span className="input-group-text">.00</span>
+                  </div>
+                </div>
+
+                <div className="col-md-4">
                   <label className="form-label">Fotos del trip</label>
                   <input
                     type="file"
                     className="form-control"
                     name="imageDestino"
-                    onChange={(event)=>{
+                    onChange={(event) => {
                       setTrip({
                         ...trip, imageDestino: event.target.files[0]
                       })
@@ -540,7 +559,7 @@ export const PerfilUser = () => {
                     type="file"
                     className="form-control"
                     name="logoEmpresa"
-                    onChange={(event)=>{
+                    onChange={(event) => {
                       setTrip({
                         ...trip, logoEmpresa: event.target.files[0]
                       })
