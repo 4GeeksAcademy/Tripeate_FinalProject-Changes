@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+import cloudinary
 from enum import Enum 
 
 
@@ -144,11 +145,14 @@ class Plan(db.Model):
         return self.user.email if self.user else None
 
     def serialize(self):
+       
+        
         return {
             "id": self.id,
             "name": self.name,
             "caption": self.caption,
             "image_company": self.image_company,
+            "image_location": self.image_location,
             "user_id": self.user_id,
             #"type": self.type.value,  # Serializar el tipo
             "available_slots": self.available_slots,

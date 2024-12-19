@@ -7,6 +7,7 @@ import tripArte from "../../img/arteTrips.png";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
+	const { plans } = store
 	const [acceptedPlans, setAcceptedPlans] = useState([]);
 	const [favoritePlans, setFavoritePlans] = useState([]);
 	const navigate = useNavigate();
@@ -135,15 +136,15 @@ export const Home = () => {
 			<div className="container allCards">
 				<div className="row ">
 					{filteredAcceptedPlans.length > 0 ? (
-						filteredAcceptedPlans.map((plan) => (
-							<div className="col-md-4" key={plan.id}>
+						filteredAcceptedPlans.map((plans) => (
+							<div className="col-md-4" key={plans.id}>
 								<TripCards
-									name={plan.name}
-									image={plan.image}
-									caption={plan.caption}
-									onClick={() => handleCardClick(plan.id)}
-									isFavorite={favoritePlans.some(favorite => favorite.id === plan.id)}
-                                    onToggleFavorite={() => handleToggleFavorite(plan.id)} />
+									name={plans?.name}
+									image={plans?.image_location}
+									caption={plans?.caption}
+									onClick={() => handleCardClick(plans.id)}
+									isFavorite={favoritePlans.some(favorite => favorite.id === plans.id)}
+                                    onToggleFavorite={() => handleToggleFavorite(plans.id)} />
 							</div>
 						))
 					) : (
