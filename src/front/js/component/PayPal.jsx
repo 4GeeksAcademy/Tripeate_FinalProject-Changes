@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 
-export const Paypal = () => {
+export const Paypal = ({tripPrice, name, travelers}) => {
 
     const paypal = useRef();
 
@@ -13,11 +14,11 @@ export const Paypal = () => {
                     intent: "CAPTURE",
                     purchase_units: [
                         {  
-                            description: "Buen Viaje",
+                            description: name +" X"+ travelers ,
                             amount: 
                             {
                                 currency_code: "USD",
-                                value: 1.00,
+                                value: tripPrice,
                             }
                         },
                     ]

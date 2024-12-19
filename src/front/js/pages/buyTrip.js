@@ -41,13 +41,18 @@ export const BuyTrip = () => {
 
 
         return (
-            <div className="container">
-                <div className="container mt-5">
+            // <div className="container">
+            //     <div className="container mt-5">
                     <div className="row g-0">
-                        <div className="col-md-6">
-                            <div className="card buyCard ">
+                        <div className="col-md-4 col-12 col-sm-6 offset-md-2 overflow-y-auto">
+                            <div className="card buyCard">
                                 <div className="card-body m-3">
-                                    < Paypal />
+                                    < Paypal
+                                        name={plan.name}
+                                        tripPrice={plan.trip_price}
+                                        travelers={2}
+                                    />
+                                    
                                     <h4 className="card-title">Datos de la empresa</h4>
                                     <div className="card-text mt-3">
                                         <i className="ms-3 fa-solid fa-phone"></i>
@@ -70,7 +75,7 @@ export const BuyTrip = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-4 col-12 col-sm-6">
                             <div className="card buyCard">
                                 <div className="card-body">
                                     <div className="d-flex">
@@ -114,7 +119,7 @@ export const BuyTrip = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+            //     </div>
+            // </div>
         );
     };

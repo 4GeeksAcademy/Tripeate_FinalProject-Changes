@@ -155,10 +155,14 @@ class Plan(db.Model):
             "image_company": self.image_company,
             "image_location": self.image_location,
             "user_id": self.user_id,
+            "trip_price": self.trip_price,
             #"type": self.type.value,  # Serializar el tipo
             "available_slots": self.available_slots,
             "status": self.status.value, # Serializar la cantidad de cupos disponibles 
-            "user_email": self.get_user_email()
+            "user_email": self.get_user_email(),
+            "time_start": self.time_start,
+            "time_end": self.time_end
+
         }
 
 class Category(db.Model):
