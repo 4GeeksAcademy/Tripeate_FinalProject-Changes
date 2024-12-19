@@ -3,8 +3,10 @@ import PropTypes from "prop-types";
 
 export const Paypal = ({tripPrice, name, travelers}) => {
 
-    const paypal = useRef();
+    
 
+    const paypal = useRef();
+    console.log(tripPrice * travelers)
     useEffect( () => {
         window.paypal.Buttons({
 
@@ -14,11 +16,11 @@ export const Paypal = ({tripPrice, name, travelers}) => {
                     intent: "CAPTURE",
                     purchase_units: [
                         {  
-                            description: name +" X"+ travelers ,
+                            description: name +" X"+ travelers,
                             amount: 
                             {
                                 currency_code: "USD",
-                                value: tripPrice,
+                                value: tripPrice * travelers,
                             }
                         },
                     ]
@@ -37,8 +39,12 @@ export const Paypal = ({tripPrice, name, travelers}) => {
             }
         })
         .render(paypal.current)
+        
+        return () => { paypal.current.innerHTML = ""; };
 
-    },[])
+       
+
+    },[travelers])
 
     return (
     <div>
