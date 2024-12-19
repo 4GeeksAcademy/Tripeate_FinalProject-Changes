@@ -8,7 +8,7 @@ export const DetailTrip = () => {
     const { planId } = useParams(); // Obtener el ID del plan de la URL
     const { store, actions } = useContext(Context);
     const [plan, setPlan] = useState(null);
-    
+
 
 
     useEffect(() => {
@@ -34,8 +34,8 @@ export const DetailTrip = () => {
     };
 
     function imageError(e) {
-		e.target.src = "https://fastly.picsum.photos/id/13/350/192.jpg?hmac=WL2y535NoIb9gWNgdcEs71DBlZXfkdfN6Lt7jypz_v4"
-	};
+        e.target.src = "https://fastly.picsum.photos/id/13/350/192.jpg?hmac=WL2y535NoIb9gWNgdcEs71DBlZXfkdfN6Lt7jypz_v4"
+    };
 
     return (
 
@@ -45,9 +45,9 @@ export const DetailTrip = () => {
             <div id="carouselExampleFade" className="carousel slide carousel-fade mt-5" data-bs-ride="carousel">
                 <div className="carousel-inner">
 
-                        <div key={plan.id}>
-                            <img src={plan.image_location} onError={imageError} className="d-block w-100" alt="..." />
-                        </div>
+                    <div key={plan.id}>
+                        <img src={plan.image_location} onError={imageError} className="d-block w-100" alt="..." />
+                    </div>
 
                 </div>
             </div>
@@ -66,19 +66,19 @@ export const DetailTrip = () => {
 
 
                     {/* Info de Empresa */}
-                    <div className="card-body d-flex">
+                    <div className="card-body d-flex justify-content-evenly">
                         <div className="me-5 text-center">
-                            <img src={plan.image_company} className="card-img-top" alt="..." />
-                            <p className="card-text dniSeller">J-{plan.rif}</p>
+                            <img src={plan.image_company} className="img-fluid small-image" alt="" />
+                            <p className="card-text dniSeller">{plan.rif}</p>
                         </div>
 
-                        <div className="card border-0 sellerInfo">
+                        <div className="card-body sellerInfo">
                             <div className="d-flex justify-content-between">
                                 <h4 className="card-title d-inline-flex">{plan.company_name}</h4>
 
                                 <div className="d-flex flex-row  rrSS">
-                                    <i className="fa-brands fa-instagram mx-1">{plan.instagram_company}</i>
-                                    <i className="fa-brands fa-facebook">{plan.facebook_company}</i>
+                                    <i className="fa-brands fa-instagram mx-1"></i>
+                                    <i className="fa-brands fa-facebook"></i>
                                 </div>
 
                             </div>
@@ -114,16 +114,13 @@ export const DetailTrip = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Compra de Planes */}
-            
-                            <ul className="dropdown-menu">
-                                <li><a className="list-item text-black">${plan.trip_price}(USD)</a></li>
-                                <li className=''><hr className="dropdown-divider" /></li>
-                                <Link to={`/buyTrip/${plan.id}`}>
-                                    <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
-                                </Link>
-                            </ul>
+            <div className="card-footer d-flex justify-content-end align-items-center" style={{ borderBottomRightRadius: '15px', borderBottomLeftRadius: '15px', boxShadow: '0px 15px 8px -9px rgba(0,0,0,0.41' }}>
+                <h4 className='m-0 pe-3'>Precio:</h4>
+                <h4 className='m-0 pe-5'><strong>${plan.trip_price}</strong></h4>
+                <Link to={`/buyTrip/${plan.id}`}>
+                    <span type="button" className="btn-custom btn btn-primary btn-lg rounded-pill"><strong>ir a Comprar</strong></span>
+                </Link>
+            </div>
         </div>
     )
 };
