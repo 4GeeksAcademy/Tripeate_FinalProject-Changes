@@ -424,6 +424,10 @@ export const PerfilUser = () => {
                     <option value="">Selecciona</option>
                     <option value="1">Playa</option>
                     <option value="2">Montaña</option>
+                    <option value="3">Aventura</option>
+                    <option value="4">Religioso</option>
+                    <option value="5">Bienestar</option>
+                    <option value="6">Ciudad</option>
                   </select>
                 </div>
 
