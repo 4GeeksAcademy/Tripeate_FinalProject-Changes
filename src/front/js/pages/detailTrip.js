@@ -96,8 +96,8 @@ export const DetailTrip = () => {
 
                                 <div className="card-body text-center mt-4">
                                     <i className="card-img-top fa-solid fa-van-shuttle"></i>
-                                    <p className="card-text">{plan.available_slots}</p>
-                                    <p>8</p>
+                                    <p className="card-text">Capacidad de puestos</p>
+                                    <p>{plan.available_slots}</p>
                                 </div>
 
                                 <div className="card-body d-block text-center mt-4">
@@ -140,7 +140,7 @@ export const DetailTrip = () => {
                                 ver precio
                             </button>
                             <ul className="dropdown-menu">
-                                <li><span className="list-item text-black">$40,00 (USD)</span></li>
+                                <li><span className="list-item text-black">${plan.trip_price}(USD)</span></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
                                 <Link to={`/buyTrip/${plan.id}`}>
                                     <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
@@ -165,7 +165,7 @@ export const DetailTrip = () => {
                                 ver precio
                             </button>
                             <ul className="dropdown-menu">
-                                <li><a className="list-item text-black">$70,00 (USD)</a></li>
+                                <li><a className="list-item text-black">${plan.trip_price}(USD)</a></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
                                 <Link to={`/buyTrip/${plan.id}`}>
                                     <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
@@ -192,7 +192,7 @@ export const DetailTrip = () => {
                                 ver precio
                             </button>
                             <ul className="dropdown-menu">
-                                <li><a className="list-item text-black">$120,00 (USD)</a></li>
+                                <li><a className="list-item text-black">${plan.trip_price}(USD)</a></li>
                                 <li className=''><hr className="dropdown-divider" /></li>
                                 <Link to={`/buyTrip/${plan.id}`}>
                                     <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>

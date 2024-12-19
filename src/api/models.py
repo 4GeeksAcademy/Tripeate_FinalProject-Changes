@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+import cloudinary
 from enum import Enum 
 
 
@@ -124,6 +125,7 @@ class Plan(db.Model):
     instagram_company = db.Column(db.String(100), nullable=False)
     facebook_company = db.Column(db.String(100), nullable=False)
     available_slots = db.Column(db.Integer, nullable=False) #Agregar cantidad de cupos disponibles
+    trip_price = db.Column(db.Integer, nullable=False)
 
     image_company = db.Column(db.String(100), nullable=False, default="https://i.pravatar.cc/300" )
     image_location = db.Column(db.String(120), nullable=False, default="https://i.pravatar.cc/300")
@@ -144,16 +146,23 @@ class Plan(db.Model):
         return self.user.email if self.user else None
 
     def serialize(self):
+       
+        
         return {
             "id": self.id,
             "name": self.name,
             "caption": self.caption,
             "image_company": self.image_company,
+            "image_location": self.image_location,
             "user_id": self.user_id,
+            "trip_price": self.trip_price,
             #"type": self.type.value,  # Serializar el tipo
             "available_slots": self.available_slots,
             "status": self.status.value, # Serializar la cantidad de cupos disponibles 
-            "user_email": self.get_user_email()
+            "user_email": self.get_user_email(),
+            "time_start": self.time_start,
+            "time_end": self.time_end
+
         }
 
 class Category(db.Model):

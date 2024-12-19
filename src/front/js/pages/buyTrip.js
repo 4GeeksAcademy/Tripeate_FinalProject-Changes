@@ -1,12 +1,15 @@
 import React, {useContext, useState, useEffect} from "react";
 import { Link, useParams } from "react-router-dom";
 import "../../styles/buyTrip.css"
+import { Paypal } from "../component/PayPal.jsx";
 import { Context } from "../store/appContext";
 
 export const BuyTrip = () => {
     const { planId } = useParams(); // 
         const { store, actions } = useContext(Context);
         const [plan, setPlan] = useState(null);
+
+        
 
 
         useEffect(() => {
@@ -38,12 +41,18 @@ export const BuyTrip = () => {
 
 
         return (
-            <div className="container">
-                <div className="container mt-5">
+            // <div className="container">
+            //     <div className="container mt-5">
                     <div className="row g-0">
-                        <div className="col-md-6">
-                            <div className="card buyCard ">
+                        <div className="col-md-4 col-12 col-sm-6 offset-md-2 overflow-y-auto">
+                            <div className="card buyCard">
                                 <div className="card-body m-3">
+                                    < Paypal
+                                        name={plan.name}
+                                        tripPrice={plan.trip_price}
+                                        travelers={2}
+                                    />
+                                    
                                     <h4 className="card-title">Datos de la empresa</h4>
                                     <div className="card-text mt-3">
                                         <i className="ms-3 fa-solid fa-phone"></i>
@@ -55,9 +64,9 @@ export const BuyTrip = () => {
                                         <i className="ms-3 fa-brands fa-facebook"></i>
                                         <span className="ms-3">@tufulldayvenezuela</span>
                                     </div>
-                                    <div className="alert alert-warning mt-3" role="alert">
-                                        <strong>Para completar tu reserva</strong> <br /> comunicate con el proveedor del servicio.
-                                    </div>
+                                    {/* <div className="alert alert-warning mt-3" role="alert"> 
+                                        <strong>Para completar tu reserva</strong> <br /> comunicate con el proveedor del servicio.  /////// Esto era en caso de que no se integrara paypal
+                                    </div> */}
                                 </div>
                                 <div className="card-footer border-0 d-flex align-items-center justify-content-end">
                                     <Link to="/">
@@ -66,7 +75,7 @@ export const BuyTrip = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-4 col-12 col-sm-6">
                             <div className="card buyCard">
                                 <div className="card-body">
                                     <div className="d-flex">
@@ -101,6 +110,7 @@ export const BuyTrip = () => {
                                     <div className="card-text p-2 mt-3 d-flex justify-content-between">
                                         <p>Viajeros</p> <p>{plan.travelers}</p>
                                     </div>
+                                    
                                 </div>
                                 <div className="card-footer border-0 d-flex align-items-center justify-content-between">
                                     <h4>Total</h4>
@@ -109,7 +119,7 @@ export const BuyTrip = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+            //     </div>
+            // </div>
         );
     };

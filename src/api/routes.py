@@ -255,6 +255,7 @@ def create_plan():
         plan_register.available_slots = body_form.get("capacidad")
         plan_register.user_id = get_jwt_identity()
         plan_register.categories_id=body_form.get("categoria")
+        plan_register.trip_price=body_form.get("precioTrip")
         
         plan_register.image_company=image_company
         plan_register.image_location=image_location
