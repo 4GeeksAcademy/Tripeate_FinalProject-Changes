@@ -41,12 +41,13 @@ export const BuyTrip = () => {
 
 
         return (
-            // <div className="container">
-            //     <div className="container mt-5">
+            <div className="container">
+                <div className="container mt-5">
                     <div className="row g-0">
-                        <div className="col-md-4 col-12 col-sm-6 offset-md-2 overflow-y-auto">
+                        <div className="col-md-6">
                             <div className="card buyCard">
                                 <div className="card-body m-3">
+                                    <h4 className="card-title">Forma de pago</h4>
                                     < Paypal
                                         name={plan.name}
                                         tripPrice={plan.trip_price}
@@ -64,9 +65,9 @@ export const BuyTrip = () => {
                                         <i className="ms-3 fa-brands fa-facebook"></i>
                                         <span className="ms-3">@tufulldayvenezuela</span>
                                     </div>
-                                    {/* <div className="alert alert-warning mt-3" role="alert"> 
-                                        <strong>Para completar tu reserva</strong> <br /> comunicate con el proveedor del servicio.  /////// Esto era en caso de que no se integrara paypal
-                                    </div> */}
+                                    <div className="alert alert-warning mt-3" role="alert"> 
+                                        <strong>Comunicate con el proveedor del servicio.</strong> <br /> para otros métodos de pago.
+                                    </div>
                                 </div>
                                 <div className="card-footer border-0 d-flex align-items-center justify-content-end">
                                     <Link to="/">
@@ -75,7 +76,7 @@ export const BuyTrip = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-4 col-12 col-sm-6">
+                        <div className="col-md-6">
                             <div className="card buyCard">
                                 <div className="card-body">
                                     <div className="d-flex">
@@ -84,22 +85,15 @@ export const BuyTrip = () => {
                                             <span className="card-subtitle mb-2 text-muted">
                                                 <span href="#" className="card-link text-black">por TuFullDayVenezuela</span>
                                             </span>
-                                            <div className="mt-5 d-flex align-items-center">
-                                                <h5 className="card-subtitle me-3"><strong>Paquete:</strong></h5>
-                                                <p className="me-3">{plan.package}</p>
-                                                <Link to="/detailTrip">
-                                                    <span href="#" className="btn btn-outline-primary rounded-pill btn-sm">cambiar plan</span>
-                                                </Link>
-                                            </div>
                                         </div>
                                         <div className="card-body">
-                                            <img src={plan.image} onError={imageError} className="border-0 img-fluid img-thumbnail" alt="..." />
+                                            <img src={plan.image_company} onError={imageError} className="border-0 img-fluid img-thumbnail" alt="..." />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="card-body">
                                     <div className="card-text p-2 m-0 d-flex justify-content-between">
-                                        <p>Fecha</p> <p>{plan.date}</p>
+                                        <p>Fecha</p> <p>{plan.date_trip}</p>
                                     </div>
                                     <div className="card-text p-2 mt-3 d-flex justify-content-between">
                                         <p>Hora de salida/llegada</p> <p>{plan.departureTime} / {plan.arrivalTime}</p>
@@ -119,7 +113,7 @@ export const BuyTrip = () => {
                             </div>
                         </div>
                     </div>
-            //     </div>
-            // </div>
+                 </div>
+             </div>
         );
     };
