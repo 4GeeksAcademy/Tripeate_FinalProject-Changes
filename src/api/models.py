@@ -125,6 +125,7 @@ class Plan(db.Model):
     instagram_company = db.Column(db.String(100), nullable=False)
     facebook_company = db.Column(db.String(100), nullable=False)
     available_slots = db.Column(db.Integer, nullable=False) #Agregar cantidad de cupos disponibles
+    trip_price = db.Column(db.Integer, nullable=False)
 
     image_company = db.Column(db.String(100), nullable=False, default="https://i.pravatar.cc/300" )
     image_location = db.Column(db.String(120), nullable=False, default="https://i.pravatar.cc/300")
