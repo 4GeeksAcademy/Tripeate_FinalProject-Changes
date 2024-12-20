@@ -31,16 +31,19 @@ export const Navbar = () => {
   };
 
   return (
-    <div className="container-fluid" style={{ background: "rgba(0)" }}>
+    <div className="container-fluid" style={{ background: "rgba(250,199,144)" }}>
       <div className="container">
-        <nav className="navbar" style={{ backgroundColor: "rgba(0)" }}>
+        <nav className="navbar" style={{ backgroundColor: "rgba(250,199,144)" }}>
           <Link to="/">
             <div className="navbar-brand mb-0">
-              <img
-                src={Tripea}
-                style={{ width: "14rem", height: "6rem" }}
-                alt="Logo"
-              />
+              <Link to="/">
+            <div className="navbar-brand mb-0">
+              <a class="navbar-brand" href="#">
+                <img className="w-50" src="https://res.cloudinary.com/dazzcuinm/image/upload/v1734670598/Logo_tripeate-09_utqr8x.svg" alt="..."/>
+              </a>
+
+            </div>
+          </Link>
             </div>
           </Link>
           <div className="ml-auto">
@@ -51,7 +54,7 @@ export const Navbar = () => {
               style={{ position: "relative" }}
             >
               <button
-                className="btn btn-light dropdown"
+                className="dropdown"
                 style={{
                   background: "transparent",
                   border: "0",
@@ -169,7 +172,7 @@ export const Navbar = () => {
                         transition: "background-color 0.3s",
                       }}
                     >
-                      <i className="fa-solid fa-right-from-bracket"></i> Cerrar
+                      <i className="fa-solid fa-right-from-bracket" style={{color: 'red', }}></i> Cerrar
                       Sesión
                     </button>
                   )}

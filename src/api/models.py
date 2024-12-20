@@ -156,12 +156,21 @@ class Plan(db.Model):
             "image_location": self.image_location,
             "user_id": self.user_id,
             "trip_price": self.trip_price,
-            #"type": self.type.value,  # Serializar el tipo
             "available_slots": self.available_slots,
             "status": self.status.value, # Serializar la cantidad de cupos disponibles 
             "user_email": self.get_user_email(),
             "time_start": self.time_start,
-            "time_end": self.time_end
+            "time_end": self.time_end,
+            "location_trip": self.location_trip,
+            "date_trip": self.date_trip,
+            "location_start": self.location_start,
+            "location_end": self.location_end,
+            "company_name": self.company_name,
+            "rif": self.rif,
+            "description_company": self.description_company,
+            "phone_company": self.phone_company,
+            "instagram_company": self.instagram_company,
+            "facebook_company": self.facebook_company
 
         }
 

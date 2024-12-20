@@ -8,7 +8,7 @@ export const DetailTrip = () => {
     const { planId } = useParams(); // Obtener el ID del plan de la URL
     const { store, actions } = useContext(Context);
     const [plan, setPlan] = useState(null);
-    
+
 
 
     useEffect(() => {
@@ -34,8 +34,8 @@ export const DetailTrip = () => {
     };
 
     function imageError(e) {
-		e.target.src = "https://fastly.picsum.photos/id/13/350/192.jpg?hmac=WL2y535NoIb9gWNgdcEs71DBlZXfkdfN6Lt7jypz_v4"
-	};
+        e.target.src = "https://fastly.picsum.photos/id/13/350/192.jpg?hmac=WL2y535NoIb9gWNgdcEs71DBlZXfkdfN6Lt7jypz_v4"
+    };
 
     return (
 
@@ -45,19 +45,11 @@ export const DetailTrip = () => {
             <div id="carouselExampleFade" className="carousel slide carousel-fade mt-5" data-bs-ride="carousel">
                 <div className="carousel-inner">
 
-                        <div className={`carousel-item ${plan.id === 0 ? 'active' : ''}`} key={plan.id}>
-                            <img src={plan.image} onError={imageError} className="d-block w-100" alt="..." />
-                        </div>
+                    <div key={plan.id}>
+                        <img src={plan.image_location} onError={imageError} className="d-block w-100" alt="..." />
+                    </div>
 
                 </div>
-                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-                    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Anterior</span>
-                </button>
-                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Siguiente</span>
-                </button>
             </div>
 
             {/* Info de lugar */}
@@ -66,23 +58,23 @@ export const DetailTrip = () => {
                     <h3 className="card-title">{plan.name}</h3>
                     <span className="card-subtitle mb-2 text-muted">
                         <i className="fa-solid fa-location-dot me-1"></i>
-                        <a href="#" className="card-link">{plan.caption}</a> </span>
-                    <p className="card-text my-3">{plan.description}</p>
+                        <a href="#" className="card-link">{plan.location_trip}</a> </span>
+                    <p className="card-text my-3">{plan.caption}</p>
 
                     <div className="container border-bottom my-3 linea"></div>
 
 
 
                     {/* Info de Empresa */}
-                    <div className="card-body d-flex">
+                    <div className="card-body d-flex justify-content-evenly">
                         <div className="me-5 text-center">
-                            {/*<img src={plan.user.profile_image} className="card-img-top" alt="..." />
-                            <p className="card-text dniSeller">{plan.user.id}</p>*/}
+                            <img src={plan.image_company} className="img-fluid small-image" alt="" />
+                            <p className="card-text dniSeller">{plan.rif}</p>
                         </div>
 
-                        <div className="card border-0 sellerInfo">
+                        <div className="card-body sellerInfo">
                             <div className="d-flex justify-content-between">
-                                {/* <h4 className="card-title d-inline-flex">{plan.user.name}</h4> */}
+                                <h4 className="card-title d-inline-flex">{plan.company_name}</h4>
 
                                 <div className="d-flex flex-row  rrSS">
                                     <i className="fa-brands fa-instagram mx-1"></i>
@@ -90,7 +82,7 @@ export const DetailTrip = () => {
                                 </div>
 
                             </div>
-                            <p className="card-text"> Empresa dedicada a los full-day en venezuela, contamos con mas de 15 años realizando los viajes mas fantasticos de la region, ven y disfruta de una experiencia unica.</p>
+                            <p className="card-text">{plan.description_company}</p>
 
                             <div className="card-group">
 
@@ -103,104 +95,31 @@ export const DetailTrip = () => {
                                 <div className="card-body d-block text-center mt-4">
                                     <i className="card-img-top fa-regular fa-calendar-check"></i>
                                     <p>Salida/Llegada</p>
-                                    <p>8-11-24 /<br /> 8-11-24</p>
+                                    <p>{plan.date_trip}/<br />{plan.date_trip}</p>
                                 </div>
 
                                 <div className="card-body d-block text-center mt-4">
                                     <i className="fa-solid fa-stopwatch"></i>
                                     <p>Salida/Llegada</p>
-                                    <p>6:30 AM /<br /> 6:00 PM</p>
+                                    <p>{plan.time_start} /<br />{plan.time_end}</p>
                                 </div>
 
                                 <div className="card-body d-block text-center mt-4">
                                     <i className="card-img-top fa-solid fa-map-location"></i>
-                                    <p>Capacidad/Puestos</p>
-                                    <p>Pza. Venezuela</p>
+                                    <p>Ubiación de Salida</p>
+                                    <p>{plan.location_start}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <img src={TripArte2} className="imgPlanes card-img" />
                 </div>
             </div>
-
-
-            {/* Compra de Planes */}
-            <div className="card-group text-center">
-                <div className=" planBasico card">
-                    <div className="card-body">
-                        <h1 className="card-title">Basico</h1>
-                        <ul className="list-group list-group-flush">
-                            <li className="list-group-item">Transporte</li>
-                            <li className="list-group-item">Ague potable</li>
-                            <li className="list-group-item">Refrigerios</li>
-                        </ul>
-                        <div className="btn-group mt-5">
-                            <button type="button" className="btn btn-custom rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                ver precio
-                            </button>
-                            <ul className="dropdown-menu">
-                                <li><span className="list-item text-black">${plan.trip_price}(USD)</span></li>
-                                <li className=''><hr className="dropdown-divider" /></li>
-                                <Link to={`/buyTrip/${plan.id}`}>
-                                    <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
-                                </Link>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div className=" planMedio card">
-                    <div className="card-body">
-                        <h1 className="card-title">Medio</h1>
-                        <ul className="list-group list-group-flush">
-                            <li className="list-group-item">Transporte</li>
-                            <li className="list-group-item">Desayuno</li>
-                            <li className="list-group-item">Agua potable</li>
-                            <li className="list-group-item">Refrigerios</li>
-                            <li className="list-group-item">Bebidas(6)</li>
-                        </ul>
-                        <div className="btn-group mt-5">
-                            <button type="button" className="btn btn-custom rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                ver precio
-                            </button>
-                            <ul className="dropdown-menu">
-                                <li><a className="list-item text-black">${plan.trip_price}(USD)</a></li>
-                                <li className=''><hr className="dropdown-divider" /></li>
-                                <Link to={`/buyTrip/${plan.id}`}>
-                                    <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
-                                </Link>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div className=" planFull card">
-                    <div className="card-body">
-                        <h1 className="card-title">Full-Trip</h1>
-                        <ul className="list-group list-group-flush">
-                            <li className="list-group-item">Transporte</li>
-                            <li className="list-group-item">Desayuno</li>
-                            <li className="list-group-item">Agua potable</li>
-                            <li className="list-group-item">Refrigerios</li>
-                            <li className="list-group-item">Bebidas ilimitadas</li>
-                            <li className="list-group-item">Almuerzo</li>
-                            <li className="list-group-item">Masaje</li>
-                        </ul>
-                        <div className="btn-group mt-5">
-                            <button type="button" className="btn btn-custom rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                ver precio
-                            </button>
-                            <ul className="dropdown-menu">
-                                <li><a className="list-item text-black">${plan.trip_price}(USD)</a></li>
-                                <li className=''><hr className="dropdown-divider" /></li>
-                                <Link to={`/buyTrip/${plan.id}`}>
-                                    <span type="button" className="btn btn-link text-black"><strong>Comprar</strong></span>
-                                </Link>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            <div className="card-footer d-flex justify-content-end align-items-center" style={{ borderBottomRightRadius: '15px', borderBottomLeftRadius: '15px', boxShadow: '0px 15px 8px -9px rgba(0,0,0,0.41' }}>
+                <h4 className='m-0 pe-3'>Precio:</h4>
+                <h4 className='m-0 pe-5'><strong>${plan.trip_price}</strong></h4>
+                <Link to={`/buyTrip/${plan.id}`}>
+                    <span type="button" className="btn-custom btn btn-primary btn-lg rounded-pill"><strong>ir a Comprar</strong></span>
+                </Link>
             </div>
         </div>
     )
