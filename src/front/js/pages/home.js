@@ -76,27 +76,27 @@ export const Home = () => {
 
 
 					<div className="carousel-item active">
-						<img src="https://fastly.picsum.photos/id/15/1180/520.jpg?hmac=l3V9r2I2L2s9ASxJaLo_3FZ-PnqkMNJ13zaq8pJZCDs" className="d-block w-100" alt="..." />
+						<img src="https://res.cloudinary.com/dazzcuinm/image/upload/v1734673943/Imagenes_para_carrusel-03_ox6asu.jpg" className="d-block w-100" alt="..." />
 						<div className="overlay"></div>
 						<div className=" carousel-caption d-none d-md-block texto-fotos ">
-							<h5>First slide label</h5>
-							<p>Some representative placeholder content for the first slide.</p>
+							<h5>Trip a Mukumbari</h5>
+							<p>Explora mérida con sus mejores vistas.</p>
 						</div>
 					</div>
 					<div className="carousel-item">
-						<img src="https://fastly.picsum.photos/id/15/1180/520.jpg?hmac=l3V9r2I2L2s9ASxJaLo_3FZ-PnqkMNJ13zaq8pJZCDs" className="d-block w-100" alt="..." />
+						<img src="https://res.cloudinary.com/dazzcuinm/image/upload/v1734673942/Imagenes_para_carrusel-02_zejzre.jpg" className="d-block w-100" alt="..." />
 						<div className="overlay"></div>
 						<div className="carousel-caption d-none d-md-block  texto-fotos">
-							<h5>Second slide label</h5>
-							<p>Some representative placeholder content for the second slide.</p>
+							<h5>Full Day a Cayo Sombrero</h5>
+							<p>Disfruta de uno de los mejores parajes venezolanos con este Full Day.</p>
 						</div>
 					</div>
 					<div className="carousel-item">
-						<img src="https://fastly.picsum.photos/id/15/1180/520.jpg?hmac=l3V9r2I2L2s9ASxJaLo_3FZ-PnqkMNJ13zaq8pJZCDs" className="d-block w-100" alt="..." />
+						<img src="https://res.cloudinary.com/dazzcuinm/image/upload/v1734673942/Imagenes_para_carrusel_Mesa_de_trabajo_1_lif30y.jpg" className="d-block w-100" alt="..." />
 						<div className="overlay"></div>
 						<div className="carousel-caption d-none d-md-block texto-fotos">
-							<h5>Third slide label</h5>
-							<p>Some representative placeholder content for the second slide.</p>
+							<h5>Hacienda Santa Teresa</h5>
+							<p>Conoce la Hacienda Santa Teresa a través de un recorrido donde descubrirás como el ron.</p>
 						</div>
 					</div>
 				</div>
@@ -118,7 +118,7 @@ export const Home = () => {
 				<img src={tripArte} className="img-fluid" />
 			</div>
 
-			<div className="container d-inline-flex justify-content-between">
+			{/* <div className="container d-inline-flex justify-content-between">
 				<h4>Trips</h4>
 				<div className="btn-group dropend">
 					<button type="button" className="rounded-pill btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -131,7 +131,7 @@ export const Home = () => {
 						<li>Otros</li>
 					</ul>
 				</div>
-			</div>
+			</div> */}
 
 			<div className="container allCards">
 				<div className="row ">
