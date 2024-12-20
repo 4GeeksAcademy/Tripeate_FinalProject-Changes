@@ -252,7 +252,6 @@ export const PerfilUser = () => {
             </ul>
           </div>
         )}
-
       </nav>
       <div className="container">
         {!showNewTripForm && (
@@ -292,7 +291,7 @@ export const PerfilUser = () => {
                   <div className="col-md-4" key={favorite.id}>
                     <TripCards
                       name={favorite.name}
-                      image={favorite.image}
+                      image={favorite.image_location}
                       caption={favorite.caption}
                       onClick={() => handleCardClick(favorite.id)}
                       isFavorite={true}
