@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import ErrorModal from "../component/modalError";
 import "../../styles/modalError.css";
 
@@ -12,6 +12,7 @@ export const ChangePassword = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     let [params, setSearchParams] = useSearchParams();
+    const navigate = useNavigate()
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
@@ -26,6 +27,9 @@ export const ChangePassword = () => {
                 setSuccessMessage("Contraseña cambiada con éxito.");
                 setNewPassword("");
                 setConfirmNewPassword("");
+                setTimeout(() => {
+                    navigate('/loginuser'); 
+                }, 4000)
             } else {
                 setError(response.msg);
                 setIsModalOpen(true);
@@ -39,7 +43,7 @@ export const ChangePassword = () => {
 
     return (
         <>
-            <div className="container d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "#f0f2f5" }}>
+            <div className="container d-flex justify-content-center align-items-center vh-100">
                 <div className="card p-5" style={{ maxWidth: "500px", width: "100%", borderRadius: "12px", border: "none", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)" }}>
                     <h2 className="text-center mb-4" style={{ color: "#333", fontWeight: "500", fontSize: "1.8rem" }}>Cambiar Contraseña</h2>
                     <form onSubmit={handleChangePassword}>
