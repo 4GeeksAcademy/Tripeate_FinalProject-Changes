@@ -25,7 +25,10 @@ export const TripCards = ({ name, image, caption, isFavorite, onClick, onToggleF
 						Tripea más
 					</Link>
 					<button className={`btn ${isFavorite ? 'btn-danger' : 'btn-outline-danger'}`}
-						onClick={onToggleFavorite}>
+						onClick={(event) => {
+							event.stopPropagation(); 
+							onToggleFavorite();
+						}}>
                         <FontAwesomeIcon icon={isFavorite ? SolidHeart : RegularHeart} />
 					</button>
 				</div>
