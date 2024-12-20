@@ -1,7 +1,7 @@
 .footer {
     margin-top: 10rem;
     position: relative; /* Posicionamiento relativo para el footer */
-    background-color: rgb(75, 55, 54); /* Color de fondo del rectángulo */
+    background-color: rgb(122, 79, 82 ); /* Color de fondo del rectángulo */
     color: white; /* Color del texto */
     text-align: center; /* Alineación del texto */
     height: 150px; /* Altura total del footer */
@@ -14,7 +14,7 @@
     left: 0; /* Alineación a la izquierda */
     right: 0; /* Alineación a la derecha */
     height: 100px; /* Altura del ovalo */
-    background-color: rgb(75, 55, 54); /* Color de fondo del ovalo */
+    background-color: rgb(122, 79, 82 ); /* Color de fondo del ovalo */
     border-radius: 100% 100% 0 0; /* Curvatura en la parte superior */
     z-index: -1; /* Asegura que el ovalo esté detrás del contenido */
 }

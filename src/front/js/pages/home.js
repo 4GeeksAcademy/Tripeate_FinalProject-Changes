@@ -62,7 +62,7 @@ export const Home = () => {
     };
 
 	return (
-		<div className="container-fluid text-center mt-3">
+		<div className="container text-center mt-3">
 
 			<div id="carouselExampleCaptions" className="carousel slide" data-bs-ride="carousel">
 				<div className="carousel-indicators">
