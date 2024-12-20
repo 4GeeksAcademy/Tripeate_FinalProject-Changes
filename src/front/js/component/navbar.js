@@ -36,14 +36,9 @@ export const Navbar = () => {
         <nav className="navbar" style={{ backgroundColor: "rgba(250,199,144)" }}>
           <Link to="/">
             <div className="navbar-brand mb-0">
-              <Link to="/">
-            <div className="navbar-brand mb-0">
-              <a class="navbar-brand" href="#">
-                <img className="w-50" src="https://res.cloudinary.com/dazzcuinm/image/upload/v1734670598/Logo_tripeate-09_utqr8x.svg" alt="..."/>
+              <a className="navbar-brand" href="#">
+                <img className="w-50" src="https://res.cloudinary.com/dazzcuinm/image/upload/v1734670598/Logo_tripeate-09_utqr8x.svg" alt="..." />
               </a>
-
-            </div>
-          </Link>
             </div>
           </Link>
           <div className="ml-auto">
@@ -114,26 +109,25 @@ export const Navbar = () => {
                     zIndex: "1000",
                   }}
                 >
-                  {/* Always show Profile */}
-                  {location.pathname !== "/userinfo" &&
-                    location.pathname !== "/perfiladmin" && (
-                      <Link
-                        className="dropdown-item"
-                        style={{
-                          padding: "20px 25px",
-                          fontSize: "20px",
-                          fontWeight: "600",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                          borderRadius: "8px",
-                          transition: "background-color 0.3s",
-                        }}
-                        to={store.currentUser?.is_admin ? "/perfiladmin" : "/userinfo"}
-                      >
-                        <i className="fa-solid fa-user"></i> Mi Perfil
-                      </Link>
-                    )}
+                  {/* Show Profile only if logged in */}
+                  {store.token && location.pathname !== "/userinfo" && location.pathname !== "/perfiladmin" && (
+                    <Link
+                      className="dropdown-item"
+                      style={{
+                        padding: "20px 25px",
+                        fontSize: "20px",
+                        fontWeight: "600",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        borderRadius: "8px",
+                        transition: "background-color 0.3s",
+                      }}
+                      to={store.currentUser?.is_admin ? "/perfiladmin" : "/userinfo"}
+                    >
+                      <i className="fa-solid fa-user"></i> Mi Perfil
+                    </Link>
+                  )}
                   {/* Show Login or Logout */}
                   {!store.token ? (
                     <Link
@@ -150,8 +144,7 @@ export const Navbar = () => {
                         transition: "background-color 0.3s",
                       }}
                     >
-                      <i className="fa-solid fa-right-to-bracket"></i> Iniciar
-                      Sesión
+                      <i className="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                     </Link>
                   ) : (
                     <button
@@ -172,8 +165,7 @@ export const Navbar = () => {
                         transition: "background-color 0.3s",
                       }}
                     >
-                      <i className="fa-solid fa-right-from-bracket" style={{color: 'red', }}></i> Cerrar
-                      Sesión
+                      <i className="fa-solid fa-right-from-bracket" style={{ color: "red" }}></i> Cerrar Sesión
                     </button>
                   )}
                 </div>
