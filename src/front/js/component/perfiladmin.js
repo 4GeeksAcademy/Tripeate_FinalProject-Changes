@@ -221,11 +221,7 @@ export const PerfilAdmin = () => {
               </li>
               <hr className="dropdown-divider border border-dark" style={{ width: "135px" }} />
               <li className="nav-item">
-                <button className="btn btn-new" type="submit"><FontAwesomeIcon icon={faPlus} /> Nuevo trip</button>
-              </li>
-              <hr className="dropdown-divider border border-dark" style={{ width: "135px" }} />
-              <li className="nav-item">
-                <button className="btn btn-new" onClick={handleLogOut} type="submit" style={{ marginTop: "225px" }}>
+                <button className="btn btn-new" onClick={handleLogOut} type="submit">
                   Cerrar sesión
                 </button>
               </li>
