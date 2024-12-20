@@ -259,7 +259,6 @@ export const PerfilUser = () => {
           <div className="container mt-5 text-center" >
             <img src="https://picsum.photos/300/200" width="125" height="125" style={{ borderRadius: "50%" }} />
             <h1 className="mt-0">¡Hola, {userData.name ? `${userData.name}!` : 'Invitado!'}</h1>
-            <h5>{store.currentUser ? `${userData.email}` : 'email'}</h5>
           </div>
         )}
         {activeSection === 'perfil' && (
