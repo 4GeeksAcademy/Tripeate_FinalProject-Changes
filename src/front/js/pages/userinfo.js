@@ -140,10 +140,18 @@ export const PerfilUser = () => {
         last_name: userData.last_name,
         email: userData.email
       });
-      alert("Información actualizada con éxito");
+      Swal.fire({
+        title: "Información actualizada con éxito",
+        icon: "success",
+        draggable: true
+      });
     } catch (error) {
       console.error("Error al actualizar:", error);
-      alert("Error al actualizar la información");
+      Swal.fire({
+        title: "Error al actualizar la información",
+        icon: "error",
+        draggable: true
+      });
     }
   };
 
@@ -437,8 +445,8 @@ export const PerfilUser = () => {
                       className="form-control"
                       placeholder="0.00"
                       name="precioTrip"
-                      value={trip.precioTrip} 
-                      onChange={handleChangeTrip} 
+                      value={trip.precioTrip}
+                      onChange={handleChangeTrip}
                       aria-label="Dollar amount (with dot and two decimal places)"
                     />
                     <span className="input-group-text">.00</span>
